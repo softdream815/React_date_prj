@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { storiesOf } from '@kadira/storybook';
 
-import { VERTICAL_ORIENTATION } from '../constants';
+import { VERTICAL_ORIENTATION } from '../src/constants';
 
 import isSameDay from '../src/utils/isSameDay';
 import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
@@ -51,6 +51,12 @@ storiesOf('DateRangePicker', module)
   .add('with clear dates button', () => (
     <DateRangePickerWrapper
       showClearDates
+    />
+  ))
+  .add('with clear dates button (Picker Displayed)', () => (
+    <DateRangePickerWrapper
+      showClearDates
+      reopenPickerOnClearDates
     />
   ))
   .add('non-english locale', () => {
