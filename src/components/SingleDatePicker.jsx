@@ -3,11 +3,11 @@ import moment from 'moment';
 import cx from 'classnames';
 import Portal from 'react-portal';
 import includes from 'array-includes';
-import TetherComponent from 'react-tether';
 
 import toMomentObject from '../utils/toMomentObject';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
 
+import OutsideClickHandler from './OutsideClickHandler';
 import SingleDatePickerInput from './SingleDatePickerInput';
 import DayPicker from './DayPicker';
 
@@ -204,7 +204,7 @@ export default class SingleDatePicker extends React.Component {
       selected: day => this.isSelected(day),
     };
 
-    const onOutsideClick = !withFullScreenPortal ? this.onClearFocus : undefined;
+    const onOutsideClick = withPortal ? this.onClearFocus : () => {};
 
     return (
       <div className={this.getDayPickerContainerClasses()}>
@@ -249,33 +249,22 @@ export default class SingleDatePicker extends React.Component {
       focused,
       disabled,
       date,
-      anchorDirection,
       withPortal,
       withFullScreenPortal,
     } = this.props;
 
-    const dateString = this.getDateString(date);
+    const onOutsideClick = withPortal || withFullScreenPortal ? () => {} : this.onClearFocus;
 
-    const tetherPinDirection = anchorDirection === ANCHOR_LEFT ? ANCHOR_RIGHT : ANCHOR_LEFT;
+    const dateString = this.getDateString(date);
 
     return (
       <div className="SingleDatePicker">
-        <TetherComponent
-          attachment={`top ${anchorDirection}`}
-          targetAttachment={`bottom ${anchorDirection}`}
-          offset="-23px 0"
-          constraints={[{
-            to: 'scrollParent',
-            attachment: 'none',
-            pin: [tetherPinDirection],
-          }]}
-        >
+        <OutsideClickHandler onOutsideClick={onOutsideClick}>
           <SingleDatePickerInput
             id={id}
             placeholder={placeholder}
             focused={focused}
             disabled={disabled}
-            showCaret={!withPortal && !withFullScreenPortal}
             dateValue={dateString}
             onChange={this.onChange}
             onFocus={this.onFocus}
@@ -285,7 +274,7 @@ export default class SingleDatePicker extends React.Component {
           />
 
           {this.maybeRenderDayPickerWithPortal()}
-        </TetherComponent>
+        </OutsideClickHandler>
       </div>
     );
   }

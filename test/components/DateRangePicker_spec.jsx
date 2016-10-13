@@ -4,12 +4,13 @@ import moment from 'moment';
 import sinon from 'sinon-sandbox';
 import { shallow } from 'enzyme';
 import Portal from 'react-portal';
-import TetherComponent from 'react-tether';
 
 import DateRangePicker from '../../src/components/DateRangePicker';
 
 import DateRangePickerInput from '../../src/components/DateRangePickerInput';
 import DayPicker from '../../src/components/DayPicker';
+
+import OutsideClickHandler from '../../src/components/OutsideClickHandler';
 
 import isSameDay from '../../src/utils/isSameDay';
 import isInclusivelyAfterDay from '../../src/utils/isInclusivelyAfterDay';
@@ -37,9 +38,9 @@ describe('DateRangePicker', () => {
       expect(wrapper.find('.DateRangePicker__picker')).to.have.length(1);
     });
 
-    it('renders <TetherComponent />', () => {
+    it('renders <OutsideClickHandler />', () => {
       const wrapper = shallow(<DateRangePicker />);
-      expect(wrapper.find(TetherComponent)).to.have.length(1);
+      expect(wrapper.find(OutsideClickHandler)).to.have.length(1);
     });
 
     it('renders <DateRangePickerInput />', () => {
@@ -893,12 +894,12 @@ describe('DateRangePicker', () => {
       });
     });
 
-    describe('props.orientation = VERTICAL_ORIENTATION', () => {
+    describe('props.withFullScreenPortal is truthy', () => {
       it('calls props.onFocusChange once with arg START_DATE', () => {
         const onFocusChangeStub = sinon.stub();
         const wrapper = shallow(
           <DateRangePicker
-            orientation={VERTICAL_ORIENTATION}
+            withFullScreenPortal
             onFocusChange={onFocusChangeStub}
           />
         );
