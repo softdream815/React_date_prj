@@ -108,8 +108,8 @@ export default class DayPicker extends React.Component {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.monthTransition || !this.state.currentMonth.isSame(prevState.currentMonth)) {
+  componentDidUpdate() {
+    if (this.state.monthTransition) {
       if (this.isHorizontal()) {
         this.adjustDayPickerHeight();
       }
