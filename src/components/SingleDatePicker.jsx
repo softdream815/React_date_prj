@@ -185,26 +185,23 @@ export default class SingleDatePicker extends React.Component {
 
   /* istanbul ignore next */
   responsivizePickerPosition() {
-    const { anchorDirection, horizontalMargin, withPortal, withFullScreenPortal } = this.props;
+    const { anchorDirection, horizontalMargin } = this.props;
     const { dayPickerContainerStyles } = this.state;
 
     const isAnchoredLeft = anchorDirection === ANCHOR_LEFT;
 
-    if (!withPortal && !withFullScreenPortal) {
-      const containerRect = this.dayPickerContainer.getBoundingClientRect();
-      const currentOffset = dayPickerContainerStyles[anchorDirection] || 0;
-      const containerEdge =
-        isAnchoredLeft ? containerRect[ANCHOR_RIGHT] : containerRect[ANCHOR_LEFT];
+    const containerRect = this.dayPickerContainer.getBoundingClientRect();
+    const currentOffset = dayPickerContainerStyles[anchorDirection] || 0;
+    const containerEdge = isAnchoredLeft ? containerRect[ANCHOR_RIGHT] : containerRect[ANCHOR_LEFT];
 
-      this.setState({
-        dayPickerContainerStyles: getResponsiveContainerStyles(
-          anchorDirection,
-          currentOffset,
-          containerEdge,
-          horizontalMargin
-        ),
-      });
-    }
+    this.setState({
+      dayPickerContainerStyles: getResponsiveContainerStyles(
+        anchorDirection,
+        currentOffset,
+        containerEdge,
+        horizontalMargin
+      ),
+    });
   }
 
   isBlocked(day) {
