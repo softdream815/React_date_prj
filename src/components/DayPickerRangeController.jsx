@@ -107,15 +107,10 @@ export default class DayPickerRangeController extends React.Component {
     };
 
     this.isTouchDevice = isTouchDevice();
-    this.today = moment();
 
     this.onDayClick = this.onDayClick.bind(this);
     this.onDayMouseEnter = this.onDayMouseEnter.bind(this);
     this.onDayMouseLeave = this.onDayMouseLeave.bind(this);
-  }
-
-  componentWillUpdate() {
-    this.today = moment();
   }
 
   onDayClick(day, modifiers, e) {
@@ -228,10 +223,6 @@ export default class DayPickerRangeController extends React.Component {
     return isDayBlocked(day) || isOutsideRange(day) || this.doesNotMeetMinimumNights(day);
   }
 
-  isToday(day) {
-    return isSameDay(day, this.today);
-  }
-
   render() {
     const {
       isDayBlocked,
@@ -251,7 +242,6 @@ export default class DayPickerRangeController extends React.Component {
     } = this.props;
 
     const modifiers = {
-      today: day => this.isToday(day),
       blocked: day => this.isBlocked(day),
       'blocked-calendar': day => isDayBlocked(day),
       'blocked-out-of-range': day => isOutsideRange(day),
