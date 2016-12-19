@@ -75,8 +75,6 @@ export default class SingleDatePicker extends React.Component {
       hoverDate: null,
     };
 
-    this.today = moment();
-
     this.onDayMouseEnter = this.onDayMouseEnter.bind(this);
     this.onDayMouseLeave = this.onDayMouseLeave.bind(this);
     this.onDayClick = this.onDayClick.bind(this);
@@ -93,10 +91,6 @@ export default class SingleDatePicker extends React.Component {
   componentDidMount() {
     window.addEventListener('resize', this.responsivizePickerPosition);
     this.responsivizePickerPosition();
-  }
-
-  componentWillUpdate() {
-    this.today = moment();
   }
 
   /* istanbul ignore next */
@@ -227,10 +221,6 @@ export default class SingleDatePicker extends React.Component {
     return isSameDay(day, this.props.date);
   }
 
-  isToday(day) {
-    return isSameDay(day, this.today);
-  }
-
   maybeRenderDayPickerWithPortal() {
     const { focused, withPortal, withFullScreenPortal } = this.props;
 
@@ -266,7 +256,6 @@ export default class SingleDatePicker extends React.Component {
     const { dayPickerContainerStyles } = this.state;
 
     const modifiers = {
-      today: day => this.isToday(day),
       blocked: day => this.isBlocked(day),
       'blocked-calendar': day => isDayBlocked(day),
       'blocked-out-of-range': day => isOutsideRange(day),
