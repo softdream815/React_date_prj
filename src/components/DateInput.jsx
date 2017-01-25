@@ -6,8 +6,7 @@ import isTouchDevice from '../utils/isTouchDevice';
 const propTypes = {
   id: PropTypes.string.isRequired,
   placeholder: PropTypes.string, // also used as label
-  displayValue: PropTypes.string,
-  inputValue: PropTypes.string,
+  dateValue: PropTypes.string,
   focused: PropTypes.bool,
   disabled: PropTypes.bool,
   required: PropTypes.bool,
@@ -21,8 +20,7 @@ const propTypes = {
 
 const defaultProps = {
   placeholder: 'Select Date',
-  displayValue: '',
-  inputValue: '',
+  dateValue: '',
   focused: false,
   disabled: false,
   required: false,
@@ -48,7 +46,7 @@ export default class DateInput extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.displayValue && nextProps.displayValue) {
+    if (!this.props.dateValue && nextProps.dateValue) {
       this.setState({
         dateString: '',
       });
@@ -90,8 +88,7 @@ export default class DateInput extends React.Component {
     const {
       id,
       placeholder,
-      displayValue,
-      inputValue,
+      dateValue,
       focused,
       showCaret,
       onFocus,
@@ -99,8 +96,7 @@ export default class DateInput extends React.Component {
       required,
     } = this.props;
 
-    const displayText = displayValue || inputValue || dateString || placeholder || '';
-    const value = inputValue || displayValue || '';
+    const value = dateValue || dateString;
 
     return (
       <div
@@ -138,7 +134,7 @@ export default class DateInput extends React.Component {
             'DateInput__display-text--disabled': disabled,
           })}
         >
-          {displayText}
+          {value || placeholder}
         </div>
       </div>
     );
