@@ -27,13 +27,8 @@ const propTypes = {
   modifiers: PropTypes.object,
   orientation: ScrollableOrientationShape,
   onDayClick: PropTypes.func,
-  onDayMouseDown: PropTypes.func,
-  onDayMouseUp: PropTypes.func,
   onDayMouseEnter: PropTypes.func,
   onDayMouseLeave: PropTypes.func,
-  onDayTouchStart: PropTypes.func,
-  onDayTouchEnd: PropTypes.func,
-  onDayTouchTap: PropTypes.func,
   onMonthTransitionEnd: PropTypes.func,
   transformValue: PropTypes.string,
 
@@ -50,13 +45,8 @@ const defaultProps = {
   modifiers: {},
   orientation: HORIZONTAL_ORIENTATION,
   onDayClick() {},
-  onDayMouseDown() {},
-  onDayMouseUp() {},
   onDayMouseEnter() {},
   onDayMouseLeave() {},
-  onDayTouchStart() {},
-  onDayTouchEnd() {},
-  onDayTouchTap() {},
   onMonthTransitionEnd() {},
   transformValue: 'none',
 
@@ -111,7 +101,14 @@ export default class CalendarMonthGrid extends React.Component {
     }
 
     if (hasNumberOfMonthsChanged) {
-      newMonths = getMonths(initialMonth, numberOfMonths);
+      if (this.props.numberOfMonths < numberOfMonths) {
+        newMonths = months.slice();
+        for (let i = 0; i < numberOfMonths - this.props.numberOfMonths; i += 1) {
+          newMonths.push(months[months.length - 1].clone().add(i, 'month'));
+        }
+      } else {
+        newMonths = months.slice(0, numberOfMonths + 3);
+      }
     }
 
     this.setState({
@@ -153,12 +150,7 @@ export default class CalendarMonthGrid extends React.Component {
       transformValue,
       onDayMouseEnter,
       onDayMouseLeave,
-      onDayMouseDown,
-      onDayMouseUp,
       onDayClick,
-      onDayTouchStart,
-      onDayTouchEnd,
-      onDayTouchTap,
       onMonthTransitionEnd,
     } = this.props;
 
@@ -184,7 +176,7 @@ export default class CalendarMonthGrid extends React.Component {
             (i >= firstVisibleMonthIndex) && (i < firstVisibleMonthIndex + numberOfMonths);
           return (
             <CalendarMonth
-              key={month.format('YYYY-MM')}
+              key={month.month()}
               month={month}
               isVisible={isVisible}
               enableOutsideDays={enableOutsideDays}
@@ -193,12 +185,7 @@ export default class CalendarMonthGrid extends React.Component {
               orientation={orientation}
               onDayMouseEnter={onDayMouseEnter}
               onDayMouseLeave={onDayMouseLeave}
-              onDayMouseDown={onDayMouseDown}
-              onDayMouseUp={onDayMouseUp}
               onDayClick={onDayClick}
-              onDayTouchStart={onDayTouchStart}
-              onDayTouchEnd={onDayTouchEnd}
-              onDayTouchTap={onDayTouchTap}
             />
           );
         })}

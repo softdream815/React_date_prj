@@ -54,6 +54,7 @@ const defaultProps = {
   horizontalMargin: 0,
   withPortal: false,
   withFullScreenPortal: false,
+  screenReaderInputMessage: '',
   initialVisibleMonth: () => moment(),
 
   onPrevMonthClick() {},
@@ -290,10 +291,9 @@ export default class SingleDatePicker extends React.Component {
           enableOutsideDays={enableOutsideDays}
           modifiers={modifiers}
           numberOfMonths={numberOfMonths}
+          onDayClick={this.onDayClick}
           onDayMouseEnter={this.onDayMouseEnter}
           onDayMouseLeave={this.onDayMouseLeave}
-          onDayMouseDown={this.onDayClick}
-          onDayTouchTap={this.onDayClick}
           onPrevMonthClick={onPrevMonthClick}
           onNextMonthClick={onNextMonthClick}
           monthFormat={monthFormat}
@@ -333,6 +333,7 @@ export default class SingleDatePicker extends React.Component {
       phrases,
       withPortal,
       withFullScreenPortal,
+      screenReaderInputMessage,
     } = this.props;
 
     const dateString = this.getDateString(date);
@@ -359,6 +360,7 @@ export default class SingleDatePicker extends React.Component {
             onFocus={this.onFocus}
             onKeyDownShiftTab={this.onClearFocus}
             onKeyDownTab={this.onClearFocus}
+            screenReaderMessage={screenReaderInputMessage}
           />
 
           {this.maybeRenderDayPickerWithPortal()}

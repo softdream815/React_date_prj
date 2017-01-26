@@ -11,6 +11,7 @@ import { START_DATE, END_DATE } from '../../constants';
 const propTypes = {
   startDateId: PropTypes.string,
   startDatePlaceholderText: PropTypes.string,
+  screenReaderMessage: PropTypes.string,
 
   endDateId: PropTypes.string,
   endDatePlaceholderText: PropTypes.string,
@@ -36,6 +37,7 @@ const propTypes = {
   showCaret: PropTypes.bool,
   showDefaultInputIcon: PropTypes.bool,
   customInputIcon: PropTypes.node,
+  customArrowIcon: PropTypes.node,
 
   // i18n
   phrases: PropTypes.shape({
@@ -48,6 +50,7 @@ const defaultProps = {
   endDateId: END_DATE,
   startDatePlaceholderText: 'Start Date',
   endDatePlaceholderText: 'End Date',
+  screenReaderMessage: '',
   onStartDateFocus() {},
   onEndDateFocus() {},
   onStartDateChange() {},
@@ -69,6 +72,7 @@ const defaultProps = {
   showCaret: false,
   showDefaultInputIcon: false,
   customInputIcon: null,
+  customArrowIcon: null,
 
   // i18n
   phrases: {
@@ -106,6 +110,7 @@ export default class DateRangePickerInput extends React.Component {
       startDateValue,
       startDateId,
       startDatePlaceholderText,
+      screenReaderMessage,
       isStartDateFocused,
       onStartDateChange,
       onStartDateFocus,
@@ -125,10 +130,12 @@ export default class DateRangePickerInput extends React.Component {
       showCaret,
       showDefaultInputIcon,
       customInputIcon,
+      customArrowIcon,
       phrases,
     } = this.props;
 
     const inputIcon = customInputIcon || (<CalendarIcon />);
+    const arrowIcon = customArrowIcon || (<RightArrow />);
 
     return (
       <div
@@ -149,6 +156,7 @@ export default class DateRangePickerInput extends React.Component {
           placeholder={startDatePlaceholderText}
           displayValue={startDate}
           inputValue={startDateValue}
+          screenReaderMessage={screenReaderMessage}
           focused={isStartDateFocused}
           disabled={disabled}
           required={required}
@@ -160,7 +168,7 @@ export default class DateRangePickerInput extends React.Component {
         />
 
         <div className="DateRangePickerInput__arrow">
-          <RightArrow />
+          {arrowIcon}
         </div>
 
         <DateInput
@@ -168,6 +176,7 @@ export default class DateRangePickerInput extends React.Component {
           placeholder={endDatePlaceholderText}
           displayValue={endDate}
           inputValue={endDateValue}
+          screenReaderMessage={screenReaderMessage}
           focused={isEndDateFocused}
           disabled={disabled}
           required={required}

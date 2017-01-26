@@ -25,6 +25,7 @@ const propTypes = {
   endDatePlaceholderText: PropTypes.string,
   isEndDateFocused: PropTypes.bool,
 
+  screenReaderMessage: PropTypes.string,
   showClearDates: PropTypes.bool,
   showCaret: PropTypes.bool,
   showDefaultInputIcon: PropTypes.bool,
@@ -41,6 +42,7 @@ const propTypes = {
   onDatesChange: PropTypes.func,
 
   customInputIcon: PropTypes.node,
+  customArrowIcon: PropTypes.node,
 
   // i18n
   phrases: PropTypes.shape({
@@ -59,6 +61,7 @@ const defaultProps = {
   endDatePlaceholderText: 'End Date',
   isEndDateFocused: false,
 
+  screenReaderMessage: '',
   showClearDates: false,
   showCaret: false,
   showDefaultInputIcon: false,
@@ -75,6 +78,7 @@ const defaultProps = {
   onDatesChange() {},
 
   customInputIcon: null,
+  customArrowIcon: null,
 
   // i18n
   phrases: {
@@ -193,10 +197,12 @@ export default class DateRangePickerInputWithHandlers extends React.Component {
       endDateId,
       endDatePlaceholderText,
       isEndDateFocused,
+      screenReaderMessage,
       showClearDates,
       showCaret,
       showDefaultInputIcon,
       customInputIcon,
+      customArrowIcon,
       disabled,
       required,
       phrases,
@@ -224,6 +230,7 @@ export default class DateRangePickerInputWithHandlers extends React.Component {
         showCaret={showCaret}
         showDefaultInputIcon={showDefaultInputIcon}
         customInputIcon={customInputIcon}
+        customArrowIcon={customArrowIcon}
         phrases={phrases}
         onStartDateChange={this.onStartDateChange}
         onStartDateFocus={this.onStartDateFocus}
@@ -233,6 +240,7 @@ export default class DateRangePickerInputWithHandlers extends React.Component {
         onEndDateTab={this.onClearFocus}
         showClearDates={showClearDates}
         onClearDates={this.clearDates}
+        screenReaderMessage={screenReaderMessage}
       />
     );
   }
