@@ -9,7 +9,7 @@ import isNextDay from '../utils/isNextDay';
 import isSameDay from '../utils/isSameDay';
 
 import FocusedInputShape from '../shapes/FocusedInputShape';
-import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
+import OrientationShape from '../shapes/OrientationShape';
 
 import {
   START_DATE,
@@ -36,7 +36,7 @@ const propTypes = {
   // DayPicker props
   enableOutsideDays: PropTypes.bool,
   numberOfMonths: PropTypes.number,
-  orientation: ScrollableOrientationShape,
+  orientation: OrientationShape,
   withPortal: PropTypes.bool,
   hidden: PropTypes.bool,
   initialVisibleMonth: PropTypes.func,

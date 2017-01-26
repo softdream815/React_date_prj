@@ -10,13 +10,9 @@ import DayPickerNavigation from './DayPickerNavigation';
 
 import getTransformStyles from '../utils/getTransformStyles';
 
-import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
+import OrientationShape from '../shapes/OrientationShape';
 
-import {
-  HORIZONTAL_ORIENTATION,
-  VERTICAL_ORIENTATION,
-  VERTICAL_SCROLLABLE,
-} from '../../constants';
+import { HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION } from '../../constants';
 
 const CALENDAR_MONTH_WIDTH = 300;
 const DAY_PICKER_PADDING = 9;
@@ -28,7 +24,7 @@ const propTypes = {
   enableOutsideDays: PropTypes.bool,
   numberOfMonths: PropTypes.number,
   modifiers: PropTypes.object,
-  orientation: ScrollableOrientationShape,
+  orientation: OrientationShape,
   withPortal: PropTypes.bool,
   hidden: PropTypes.bool,
   initialVisibleMonth: PropTypes.func,
@@ -146,12 +142,10 @@ export default class DayPicker extends React.Component {
       currentMonth: props.hidden ? moment() : props.initialVisibleMonth(),
       monthTransition: null,
       translationValue: 0,
-      scrollableMonthMultiple: 1,
     };
 
     this.onPrevMonthClick = this.onPrevMonthClick.bind(this);
     this.onNextMonthClick = this.onNextMonthClick.bind(this);
-    this.multiplyScrollableMonths = this.multiplyScrollableMonths.bind(this);
     this.updateStateAfterMonthTransition = this.updateStateAfterMonthTransition.bind(this);
   }
 
@@ -235,21 +229,12 @@ export default class DayPicker extends React.Component {
     );
   }
 
-  multiplyScrollableMonths(e) {
-    if (e) e.preventDefault();
-
-    this.setState({
-      scrollableMonthMultiple: this.state.scrollableMonthMultiple + 1,
-    });
-  }
-
   isHorizontal() {
     return this.props.orientation === HORIZONTAL_ORIENTATION;
   }
 
   isVertical() {
-    return this.props.orientation === VERTICAL_ORIENTATION ||
-      this.props.orientation === VERTICAL_SCROLLABLE;
+    return this.props.orientation === VERTICAL_ORIENTATION;
   }
 
   initializeDayPickerWidth() {
@@ -316,23 +301,15 @@ export default class DayPicker extends React.Component {
     const {
       navPrev,
       navNext,
-      orientation,
     } = this.props;
-
-    let onNextMonthClick;
-    if (orientation === VERTICAL_SCROLLABLE) {
-      onNextMonthClick = this.multiplyScrollableMonths;
-    } else {
-      onNextMonthClick = this.onNextMonthClick;
-    }
 
     return (
       <DayPickerNavigation
         onPrevMonthClick={this.onPrevMonthClick}
-        onNextMonthClick={onNextMonthClick}
+        onNextMonthClick={this.onNextMonthClick}
         navPrev={navPrev}
         navNext={navNext}
-        orientation={orientation}j
+        isVertical={this.isVertical()}
       />
     );
   }
@@ -367,12 +344,7 @@ export default class DayPicker extends React.Component {
   }
 
   render() {
-    const {
-      currentMonth,
-      monthTransition,
-      translationValue,
-      scrollableMonthMultiple,
-    } = this.state;
+    const { currentMonth, monthTransition, translationValue } = this.state;
     const {
       enableOutsideDays,
       numberOfMonths,
@@ -404,12 +376,9 @@ export default class DayPicker extends React.Component {
       firstVisibleMonthIndex += 1;
     }
 
-    const verticalScrollable = this.props.orientation === VERTICAL_SCROLLABLE;
-
     const dayPickerClassNames = cx('DayPicker', {
       'DayPicker--horizontal': this.isHorizontal(),
       'DayPicker--vertical': this.isVertical(),
-      'DayPicker--vertical-scrollable': verticalScrollable,
       'DayPicker--portal': withPortal,
     });
 
@@ -434,7 +403,7 @@ export default class DayPicker extends React.Component {
 
     const transitionContainerStyle = {
       width: this.isHorizontal() && horizontalWidth,
-      height: this.isVertical() && !verticalScrollable && !withPortal && verticalHeight,
+      height: this.isVertical() && !withPortal && verticalHeight,
     };
 
     const isCalendarMonthGridAnimating = monthTransition !== null;
@@ -444,7 +413,7 @@ export default class DayPicker extends React.Component {
     return (
       <div className={dayPickerClassNames} style={dayPickerStyle} >
         <OutsideClickHandler onOutsideClick={onOutsideClick}>
-          {!verticalScrollable && this.renderNavigation()}
+          {this.renderNavigation()}
 
           <div className="DayPicker__week-headers">
             {weekHeaders}
@@ -465,7 +434,7 @@ export default class DayPicker extends React.Component {
               modifiers={modifiers}
               orientation={orientation}
               withPortal={withPortal}
-              numberOfMonths={numberOfMonths * scrollableMonthMultiple}
+              numberOfMonths={numberOfMonths}
               onDayClick={onDayClick}
               onDayMouseDown={onDayMouseDown}
               onDayMouseUp={onDayMouseUp}
@@ -477,7 +446,6 @@ export default class DayPicker extends React.Component {
               onMonthTransitionEnd={this.updateStateAfterMonthTransition}
               monthFormat={monthFormat}
             />
-            {verticalScrollable && this.renderNavigation()}
           </div>
         </OutsideClickHandler>
       </div>

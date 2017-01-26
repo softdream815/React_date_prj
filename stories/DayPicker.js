@@ -2,10 +2,7 @@ import React from 'react';
 import { storiesOf } from '@kadira/storybook';
 import DayPicker from '../src/components/DayPicker';
 
-import {
-  VERTICAL_ORIENTATION,
-  VERTICAL_SCROLLABLE,
-} from '../constants';
+import { VERTICAL_ORIENTATION } from '../constants';
 
 const TestPrevIcon = props => (
   <span style={{
@@ -42,17 +39,6 @@ storiesOf('DayPicker', module)
       numberOfMonths={2}
       orientation={VERTICAL_ORIENTATION}
     />
-  ))
-  .addWithInfo('vertically scrollable with 12 months', () => (
-    <div style={{
-      height: '568px',
-      width: '320px',
-    }}>
-      <DayPicker
-        numberOfMonths={12}
-        orientation={VERTICAL_SCROLLABLE}
-      />
-    </div>
   ))
   .addWithInfo('with custom arrows', () => (
     <DayPicker

@@ -10,20 +10,16 @@ import CalendarDay from './CalendarDay';
 
 import getCalendarMonthWeeks from '../utils/getCalendarMonthWeeks';
 
-import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
+import OrientationShape from '../shapes/OrientationShape';
 
-import {
-  HORIZONTAL_ORIENTATION,
-  VERTICAL_ORIENTATION,
-  VERTICAL_SCROLLABLE,
-} from '../../constants';
+import { HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION } from '../../constants';
 
 const propTypes = {
   month: momentPropTypes.momentObj,
   isVisible: PropTypes.bool,
   enableOutsideDays: PropTypes.bool,
   modifiers: PropTypes.object,
-  orientation: ScrollableOrientationShape,
+  orientation: OrientationShape,
   onDayClick: PropTypes.func,
   onDayMouseDown: PropTypes.func,
   onDayMouseUp: PropTypes.func,
@@ -104,7 +100,6 @@ export default class CalendarMonth extends React.Component {
     const calendarMonthClasses = cx('CalendarMonth', {
       'CalendarMonth--horizontal': orientation === HORIZONTAL_ORIENTATION,
       'CalendarMonth--vertical': orientation === VERTICAL_ORIENTATION,
-      'CalendarMonth--vertical-scrollable': orientation === VERTICAL_SCROLLABLE,
     });
 
     return (
