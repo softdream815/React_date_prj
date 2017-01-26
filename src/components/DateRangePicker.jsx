@@ -6,7 +6,6 @@ import cx from 'classnames';
 import Portal from 'react-portal';
 
 import OutsideClickHandler from './OutsideClickHandler';
-import isTouchDevice from '../utils/isTouchDevice';
 import getResponsiveContainerStyles from '../utils/getResponsiveContainerStyles';
 
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
@@ -42,7 +41,6 @@ const defaultProps = {
   showClearDates: false,
   showDefaultInputIcon: false,
   customInputIcon: null,
-  customArrowIcon: null,
   disabled: false,
   required: false,
   reopenPickerOnClearDates: false,
@@ -77,8 +75,6 @@ export default class DateRangePicker extends React.Component {
     this.state = {
       dayPickerContainerStyles: {},
     };
-
-    this.isTouchDevice = isTouchDevice();
 
     this.onOutsideClick = this.onOutsideClick.bind(this);
 
@@ -257,7 +253,6 @@ export default class DateRangePicker extends React.Component {
       showClearDates,
       showDefaultInputIcon,
       customInputIcon,
-      customArrowIcon,
       disabled,
       required,
       phrases,
@@ -290,7 +285,6 @@ export default class DateRangePicker extends React.Component {
             showCaret={!withPortal && !withFullScreenPortal}
             showDefaultInputIcon={showDefaultInputIcon}
             customInputIcon={customInputIcon}
-            customArrowIcon={customArrowIcon}
             disabled={disabled}
             required={required}
             reopenPickerOnClearDates={reopenPickerOnClearDates}

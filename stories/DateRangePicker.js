@@ -75,19 +75,6 @@ const TestCustomInputIcon = () => (
   </span>
 );
 
-const TestCustomArrowIcon = () => (
-  <span
-    style={{
-      border: '1px solid #dce0e0',
-      backgroundColor: '#fff',
-      color: '#484848',
-      padding: '3px',
-    }}
-  >
-    ->
-  </span>
-);
-
 class TestWrapper extends React.Component {
   constructor(props) {
     super(props);
@@ -270,10 +257,5 @@ storiesOf('DateRangePicker', module)
   .addWithInfo('with custom show calendar icon', () => (
     <DateRangePickerWrapper
       customInputIcon={<TestCustomInputIcon />}
-    />
-  ))
-  .addWithInfo('with custom arrow icon', () => (
-    <DateRangePickerWrapper
-      customArrowIcon={<TestCustomArrowIcon />}
     />
   ));
