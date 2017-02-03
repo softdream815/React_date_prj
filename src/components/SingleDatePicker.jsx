@@ -101,12 +101,6 @@ export default class SingleDatePicker extends React.Component {
     this.today = moment();
   }
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps.focused && this.props.focused) {
-      this.responsivizePickerPosition();
-    }
-  }
-
   /* istanbul ignore next */
   componentWillUnmount() {
     window.removeEventListener('resize', this.responsivizePickerPosition);
@@ -167,10 +161,12 @@ export default class SingleDatePicker extends React.Component {
   }
 
   getDayPickerContainerClasses() {
-    const { orientation, withPortal, withFullScreenPortal, anchorDirection } = this.props;
+    const { orientation, withPortal, withFullScreenPortal, anchorDirection, focused } = this.props;
     const { hoverDate } = this.state;
 
     const dayPickerClassName = cx('SingleDatePicker__picker', {
+      'SingleDatePicker__picker--show': focused,
+      'SingleDatePicker__picker--invisible': !focused,
       'SingleDatePicker__picker--direction-left': anchorDirection === ANCHOR_LEFT,
       'SingleDatePicker__picker--direction-right': anchorDirection === ANCHOR_RIGHT,
       'SingleDatePicker__picker--horizontal': orientation === HORIZONTAL_ORIENTATION,
@@ -198,18 +194,8 @@ export default class SingleDatePicker extends React.Component {
 
   /* istanbul ignore next */
   responsivizePickerPosition() {
-    const {
-      anchorDirection,
-      horizontalMargin,
-      withPortal,
-      withFullScreenPortal,
-      focused,
-    } = this.props;
+    const { anchorDirection, horizontalMargin, withPortal, withFullScreenPortal } = this.props;
     const { dayPickerContainerStyles } = this.state;
-
-    if (!focused) {
-      return;
-    }
 
     const isAnchoredLeft = anchorDirection === ANCHOR_LEFT;
 
@@ -250,13 +236,9 @@ export default class SingleDatePicker extends React.Component {
   maybeRenderDayPickerWithPortal() {
     const { focused, withPortal, withFullScreenPortal } = this.props;
 
-    if (!focused) {
-      return null;
-    }
-
     if (withPortal || withFullScreenPortal) {
       return (
-        <Portal isOpened>
+        <Portal isOpened={focused}>
           {this.renderDayPicker()}
         </Portal>
       );
@@ -296,9 +278,7 @@ export default class SingleDatePicker extends React.Component {
       selected: day => this.isSelected(day),
     };
 
-    const onOutsideClick = (!withFullScreenPortal && withPortal)
-      ? this.onClearFocus
-      : undefined;
+    const onOutsideClick = (!withFullScreenPortal && withPortal) ? this.onClearFocus : undefined;
 
     return (
       <div

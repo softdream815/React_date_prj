@@ -92,32 +92,30 @@ export default class DateRangePicker extends React.Component {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps.focusedInput && this.props.focusedInput && this.isOpened()) {
-      // The date picker just changed from being closed to being open.
-      this.responsivizePickerPosition();
-    }
-  }
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.responsivizePickerPosition);
   }
 
   onOutsideClick() {
-    const { onFocusChange } = this.props;
-    if (!this.isOpened()) return;
+    const { focusedInput, onFocusChange } = this.props;
+    if (!focusedInput) return;
 
     onFocusChange(null);
   }
 
   getDayPickerContainerClasses() {
     const {
+      focusedInput,
       orientation,
       withPortal,
       withFullScreenPortal,
       anchorDirection,
     } = this.props;
+    const showDatepicker = focusedInput === START_DATE || focusedInput === END_DATE;
+
     const dayPickerClassName = cx('DateRangePicker__picker', {
+      'DateRangePicker__picker--show': showDatepicker,
+      'DateRangePicker__picker--invisible': !showDatepicker,
       'DateRangePicker__picker--direction-left': anchorDirection === ANCHOR_LEFT,
       'DateRangePicker__picker--direction-right': anchorDirection === ANCHOR_RIGHT,
       'DateRangePicker__picker--horizontal': orientation === HORIZONTAL_ORIENTATION,
@@ -133,16 +131,7 @@ export default class DateRangePicker extends React.Component {
     return ReactDOM.findDOMNode(this.dayPicker);
   }
 
-  isOpened() {
-    const { focusedInput } = this.props;
-    return focusedInput === START_DATE || focusedInput === END_DATE;
-  }
-
   responsivizePickerPosition() {
-    if (!this.isOpened()) {
-      return;
-    }
-
     const { anchorDirection, horizontalMargin, withPortal, withFullScreenPortal } = this.props;
     const { dayPickerContainerStyles } = this.state;
 
@@ -165,15 +154,11 @@ export default class DateRangePicker extends React.Component {
   }
 
   maybeRenderDayPickerWithPortal() {
-    const { withPortal, withFullScreenPortal } = this.props;
-
-    if (!this.isOpened()) {
-      return null;
-    }
+    const { focusedInput, withPortal, withFullScreenPortal } = this.props;
 
     if (withPortal || withFullScreenPortal) {
       return (
-        <Portal isOpened>
+        <Portal isOpened={focusedInput !== null}>
           {this.renderDayPicker()}
         </Portal>
       );
@@ -208,9 +193,7 @@ export default class DateRangePicker extends React.Component {
     } = this.props;
     const { dayPickerContainerStyles } = this.state;
 
-    const onOutsideClick = (!withFullScreenPortal && withPortal)
-      ? this.onOutsideClick
-      : undefined;
+    const onOutsideClick = (!withFullScreenPortal && withPortal) ? this.onOutsideClick : undefined;
 
     return (
       <div
@@ -232,7 +215,7 @@ export default class DateRangePicker extends React.Component {
           endDate={endDate}
           monthFormat={monthFormat}
           withPortal={withPortal || withFullScreenPortal}
-          hidden={!this.isOpened()}
+          hidden={!focusedInput}
           initialVisibleMonth={initialVisibleMonth}
           onOutsideClick={onOutsideClick}
           navPrev={navPrev}

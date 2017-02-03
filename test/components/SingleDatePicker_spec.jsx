@@ -33,29 +33,34 @@ describe('SingleDatePicker', () => {
     });
 
     describe('DayPicker', () => {
-      describe('props.focused === true', () => {
-        it('renders a <DayPicker>', () => {
-          const wrapper = shallow(<SingleDatePicker id="date" focused />);
-          expect(wrapper.find(DayPicker)).to.have.lengthOf(1);
-        });
+      it('renders a DayPicker', () => {
+        const wrapper = shallow(<SingleDatePicker id="date" />);
+        expect(wrapper.find(DayPicker)).to.have.lengthOf(1);
       });
 
       it('has .SingleDatePicker__picker class', () => {
-        const wrapper = shallow(<SingleDatePicker focused id="date" />);
+        const wrapper = shallow(<SingleDatePicker id="date" />);
         expect(wrapper.find('.SingleDatePicker__picker')).to.have.lengthOf(1);
       });
 
+      describe('props.focused === true', () => {
+        it('has .SingleDatePicker__picker--show class', () => {
+          const wrapper = shallow(<SingleDatePicker id="date" focused />);
+          expect(wrapper.find('.SingleDatePicker__picker--show')).to.have.lengthOf(1);
+        });
+      });
+
       describe('props.focused === false', () => {
-        it('does not render a <DayPicker>', () => {
+        it('has .SingleDatePicker__picker--invisible class', () => {
           const wrapper = shallow(<SingleDatePicker id="date" focused={false} />);
-          expect(wrapper.find(DayPicker)).to.have.lengthOf(0);
+          expect(wrapper.find('.SingleDatePicker__picker--invisible')).to.have.lengthOf(1);
         });
       });
 
       describe('props.orientation === HORIZONTAL_ORIENTATION', () => {
         it('has .SingleDatePicker__picker--horizontal class', () => {
           const wrapper =
-            shallow(<SingleDatePicker id="date" focused orientation={HORIZONTAL_ORIENTATION} />);
+            shallow(<SingleDatePicker id="date" orientation={HORIZONTAL_ORIENTATION} />);
           expect(wrapper.find('.SingleDatePicker__picker--horizontal')).to.have.lengthOf(1);
         });
       });
@@ -63,21 +68,21 @@ describe('SingleDatePicker', () => {
       describe('props.orientation === VERTICAL_ORIENTATION', () => {
         it('has .SingleDatePicker__picker--vertical class', () => {
           const wrapper =
-            shallow(<SingleDatePicker id="date" focused orientation={VERTICAL_ORIENTATION} />);
+            shallow(<SingleDatePicker id="date" orientation={VERTICAL_ORIENTATION} />);
           expect(wrapper.find('.SingleDatePicker__picker--vertical')).to.have.lengthOf(1);
         });
       });
 
       describe('props.anchorDirection === ANCHOR_LEFT', () => {
         it('renders .SingleDatePicker__picker--direction-left class', () => {
-          const wrapper = shallow(<SingleDatePicker focused anchorDirection={ANCHOR_LEFT} />);
+          const wrapper = shallow(<SingleDatePicker anchorDirection={ANCHOR_LEFT} />);
           expect(wrapper.find('.SingleDatePicker__picker--direction-left')).to.have.length(1);
         });
       });
 
       describe('props.orientation === ANCHOR_RIGHT', () => {
         it('renders .SingleDatePicker__picker--direction-right class', () => {
-          const wrapper = shallow(<SingleDatePicker focused anchorDirection={ANCHOR_RIGHT} />);
+          const wrapper = shallow(<SingleDatePicker anchorDirection={ANCHOR_RIGHT} />);
           expect(wrapper.find('.SingleDatePicker__picker--direction-right')).to.have.length(1);
         });
       });
@@ -85,7 +90,7 @@ describe('SingleDatePicker', () => {
       describe('a valid date is hovered', () => {
         it('has .SingleDatePicker__picker--valid-date-hovered class', () => {
           const wrapper =
-            shallow(<SingleDatePicker focused id="date" orientation={VERTICAL_ORIENTATION} />);
+            shallow(<SingleDatePicker id="date" orientation={VERTICAL_ORIENTATION} />);
           wrapper.setState({
             hoverDate: moment(),
           });
@@ -96,24 +101,24 @@ describe('SingleDatePicker', () => {
 
     describe('props.withPortal is truthy', () => {
       it('renders .SingleDatePicker__picker--portal class', () => {
-        const wrapper = shallow(<SingleDatePicker focused withPortal />);
+        const wrapper = shallow(<SingleDatePicker withPortal />);
         expect(wrapper.find('.SingleDatePicker__picker--portal')).to.have.length(1);
       });
 
       describe('<Portal />', () => {
         it('is rendered', () => {
-          const wrapper = shallow(<SingleDatePicker focused withPortal />);
+          const wrapper = shallow(<SingleDatePicker withPortal />);
           expect(wrapper.find(Portal)).to.have.length(1);
         });
 
-        it('is not rendered if props.focused is falsey', () => {
+        it('isOpened prop is false if props.focused is falsey', () => {
           const wrapper =
-            shallow(<SingleDatePicker withPortal />);
-          expect(wrapper.find(Portal)).to.have.length(0);
+            shallow(<SingleDatePicker focusedInput={null} withPortal />);
+          expect(wrapper.find(Portal).props().isOpened).to.equal(false);
         });
 
         it('isOpened prop is true if props.focused is true', () => {
-          const wrapper = shallow(<SingleDatePicker focused withPortal />);
+          const wrapper = shallow(<SingleDatePicker withPortal focused />);
           expect(wrapper.find(Portal).props().isOpened).to.equal(true);
         });
       });
@@ -121,35 +126,35 @@ describe('SingleDatePicker', () => {
 
     describe('props.withFullScreenPortal is truthy', () => {
       it('renders .SingleDatePicker__picker--portal class', () => {
-        const wrapper = shallow(<SingleDatePicker focused withFullScreenPortal />);
+        const wrapper = shallow(<SingleDatePicker withFullScreenPortal />);
         expect(wrapper.find('.SingleDatePicker__picker--portal')).to.have.length(1);
       });
 
       it('renders .SingleDatePicker__picker--full-screen-portal class', () => {
-        const wrapper = shallow(<SingleDatePicker focused withFullScreenPortal />);
+        const wrapper = shallow(<SingleDatePicker withFullScreenPortal />);
         expect(wrapper.find('.SingleDatePicker__picker--full-screen-portal')).to.have.length(1);
       });
 
       it('renders .SingleDatePicker__close class', () => {
-        const wrapper = shallow(<SingleDatePicker focused withFullScreenPortal />);
+        const wrapper = shallow(<SingleDatePicker withFullScreenPortal />);
         expect(wrapper.find('.SingleDatePicker__close')).to.have.length(1);
       });
 
       describe('<Portal />', () => {
         it('is rendered', () => {
-          const wrapper = shallow(<SingleDatePicker focused withFullScreenPortal />);
+          const wrapper = shallow(<SingleDatePicker withFullScreenPortal />);
           expect(wrapper.find(Portal)).to.have.length(1);
         });
 
-        it('is not rendered when props.focused is falsey', () => {
+        it('isOpened prop is false if props.focused is falsey', () => {
           const wrapper =
-            shallow(<SingleDatePicker withFullScreenPortal />);
-          expect(wrapper.find(Portal)).to.have.length(0);
+            shallow(<SingleDatePicker focusedInput={null} withFullScreenPortal />);
+          expect(wrapper.find(Portal).props().isOpened).to.equal(false);
         });
 
         it('isOpened prop is true if props.focused is truthy', () => {
           const wrapper =
-            shallow(<SingleDatePicker focused withFullScreenPortal />);
+            shallow(<SingleDatePicker withFullScreenPortal focused />);
           expect(wrapper.find(Portal).props().isOpened).to.equal(true);
         });
       });
