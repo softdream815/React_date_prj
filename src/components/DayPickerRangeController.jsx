@@ -38,7 +38,6 @@ const propTypes = {
   numberOfMonths: PropTypes.number,
   orientation: ScrollableOrientationShape,
   withPortal: PropTypes.bool,
-  hidden: PropTypes.bool,
   initialVisibleMonth: PropTypes.func,
 
   navPrev: PropTypes.node,
@@ -72,7 +71,6 @@ const defaultProps = {
   numberOfMonths: 1,
   orientation: HORIZONTAL_ORIENTATION,
   withPortal: false,
-  hidden: false,
 
   initialVisibleMonth: () => moment(),
 
@@ -163,7 +161,7 @@ export default class DayPickerRangeController extends React.Component {
     if (focusedInput !== END_DATE) return false;
 
     if (startDate) {
-      const dayDiff = day.diff(startDate.clone().startOf('day').hour(12), 'days');
+      const dayDiff = day.diff(startDate, 'days');
       return dayDiff < minimumNights && dayDiff >= 0;
     }
     return isOutsideRange(moment(day).subtract(minimumNights, 'days'));

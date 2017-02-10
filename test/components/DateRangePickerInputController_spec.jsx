@@ -17,8 +17,7 @@ import {
   END_DATE,
 } from '../../constants';
 
-// Set to noon to mimic how days in the picker are configured internally
-const today = moment().startOf('day').hours(12);
+const today = moment().startOf('day');
 
 describe('DateRangePickerInputController', () => {
   describe('#render', () => {
