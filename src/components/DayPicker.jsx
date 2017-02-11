@@ -223,7 +223,9 @@ export default class DayPicker extends React.Component {
   }
 
   getMonthHeightByIndex(i) {
-    return getMonthHeight(this.transitionContainer.querySelectorAll('.CalendarMonth')[i]);
+    return getMonthHeight(
+      ReactDOM.findDOMNode(this.refs.transitionContainer).querySelectorAll('.CalendarMonth')[i],
+    );
   }
 
   multiplyScrollableMonths(e) {
@@ -245,8 +247,7 @@ export default class DayPicker extends React.Component {
 
   initializeDayPickerWidth() {
     this.dayPickerWidth = calculateDimension(
-      // eslint-disable-next-line react/no-find-dom-node
-      ReactDOM.findDOMNode(this.calendarMonthGrid).querySelector('.CalendarMonth'),
+      ReactDOM.findDOMNode(this.refs.calendarMonthGrid).querySelector('.CalendarMonth'),
       'width',
       true,
     );
@@ -264,8 +265,7 @@ export default class DayPicker extends React.Component {
 
     // clear the previous transforms
     applyTransformStyles(
-      // eslint-disable-next-line react/no-find-dom-node
-      ReactDOM.findDOMNode(this.calendarMonthGrid).querySelector('.CalendarMonth'),
+      ReactDOM.findDOMNode(this.refs.calendarMonthGrid).querySelector('.CalendarMonth'),
       'none',
     );
 
@@ -277,21 +277,20 @@ export default class DayPicker extends React.Component {
   }
 
   adjustDayPickerHeight() {
+    const transitionContainer = ReactDOM.findDOMNode(this.refs.transitionContainer);
     const heights = [];
 
-    Array.prototype.forEach.call(this.transitionContainer.querySelectorAll('.CalendarMonth'),
-      (el) => {
-        if (el.getAttribute('data-visible') === 'true') {
-          heights.push(getMonthHeight(el));
-        }
-      },
-    );
+    Array.prototype.forEach.call(transitionContainer.querySelectorAll('.CalendarMonth'), (el) => {
+      if (el.getAttribute('data-visible') === 'true') {
+        heights.push(getMonthHeight(el));
+      }
+    });
 
     const newMonthHeight = Math.max(...heights) + MONTH_PADDING;
 
-    if (newMonthHeight !== calculateDimension(this.transitionContainer, 'height')) {
+    if (newMonthHeight !== calculateDimension(transitionContainer, 'height')) {
       this.monthHeight = newMonthHeight;
-      this.transitionContainer.style.height = `${newMonthHeight}px`;
+      transitionContainer.style.height = `${newMonthHeight}px`;
     }
   }
 
@@ -300,7 +299,7 @@ export default class DayPicker extends React.Component {
     const transformValue = `${transformType}(-${translationValue}px)`;
 
     applyTransformStyles(
-      this.transitionContainer.querySelector('.CalendarMonth'),
+      ReactDOM.findDOMNode(this.refs.transitionContainer).querySelector('.CalendarMonth'),
       transformValue,
       1,
     );
@@ -339,7 +338,7 @@ export default class DayPicker extends React.Component {
     const style = this.isHorizontal() ? horizontalStyle : {};
 
     const header = [];
-    for (let i = 0; i < 7; i += 1) {
+    for (let i = 0; i < 7; i++) {
       header.push(
         <li key={i}>
           <small>{moment().weekday(i).format('dd')}</small>
@@ -383,7 +382,7 @@ export default class DayPicker extends React.Component {
 
     const numOfWeekHeaders = this.isVertical() ? 1 : numberOfMonths;
     const weekHeaders = [];
-    for (let i = 0; i < numOfWeekHeaders; i += 1) {
+    for (let i = 0; i < numOfWeekHeaders; i++) {
       weekHeaders.push(this.renderWeekHeader(i));
     }
 
@@ -442,11 +441,11 @@ export default class DayPicker extends React.Component {
 
           <div
             className={transitionContainerClasses}
-            ref={(ref) => { this.transitionContainer = ref; }}
+            ref="transitionContainer"
             style={transitionContainerStyle}
           >
             <CalendarMonthGrid
-              ref={(ref) => { this.calendarMonthGrid = ref; }}
+              ref="calendarMonthGrid"
               transformValue={transformValue}
               enableOutsideDays={enableOutsideDays}
               firstVisibleMonthIndex={firstVisibleMonthIndex}

@@ -1,12 +1,19 @@
 import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
-import { mount } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import wrap from 'mocha-wrap';
 
 import OutsideClickHandler from '../../src/components/OutsideClickHandler';
 
 describe('OutsideClickHandler', () => {
+  describe('#render', () => {
+    it('has `childNode` ref', () => {
+      const wrapper = shallow(<OutsideClickHandler />);
+      expect(wrapper.node.ref).to.equal('childNode');
+    });
+  });
+
   describe.skip('lifecycle methods', () => {
     wrap()
     .withOverride(() => document, 'attachEvent', () => sinon.stub())
