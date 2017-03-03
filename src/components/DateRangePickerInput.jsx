@@ -2,9 +2,6 @@ import React, { PropTypes } from 'react';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import cx from 'classnames';
 
-import { DateRangePickerInputPhrases } from '../defaultPhrases';
-import getPhrasePropTypes from '../utils/getPhrasePropTypes';
-
 import DateInput from './DateInput';
 import RightArrow from '../svg/arrow-right.svg';
 import CloseButton from '../svg/close.svg';
@@ -44,7 +41,9 @@ const propTypes = forbidExtraProps({
   customArrowIcon: PropTypes.node,
 
   // i18n
-  phrases: PropTypes.shape(getPhrasePropTypes(DateRangePickerInputPhrases)),
+  phrases: PropTypes.shape({
+    clearDates: PropTypes.node,
+  }),
 });
 
 const defaultProps = {
@@ -77,7 +76,9 @@ const defaultProps = {
   customArrowIcon: null,
 
   // i18n
-  phrases: DateRangePickerInputPhrases,
+  phrases: {
+    clearDates: 'Clear Dates',
+  },
 };
 
 export default class DateRangePickerInput extends React.Component {
@@ -144,16 +145,13 @@ export default class DateRangePickerInput extends React.Component {
         })}
       >
         {(showDefaultInputIcon || customInputIcon !== null) &&
-          <button
-            type="button"
-            aria-label={phrases.focusStartDate}
+          <span
             className="DateRangePickerInput__calendar-icon"
             onClick={onStartDateFocus}
           >
             {inputIcon}
-          </button>
+          </span>
         }
-
         <DateInput
           id={startDateId}
           placeholder={startDatePlaceholderText}

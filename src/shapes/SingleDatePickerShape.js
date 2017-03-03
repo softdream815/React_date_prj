@@ -1,9 +1,6 @@
 import { PropTypes } from 'react';
 import momentPropTypes from 'react-moment-proptypes';
 
-import { SingleDatePickerPhrases } from '../defaultPhrases';
-import getPhrasePropTypes from '../utils/getPhrasePropTypes';
-
 import OrientationShape from '../shapes/OrientationShape';
 import anchorDirectionShape from '../shapes/AnchorDirectionShape';
 
@@ -50,5 +47,7 @@ export default {
   // internationalization props
   displayFormat: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   monthFormat: PropTypes.string,
-  phrases: PropTypes.shape(getPhrasePropTypes(SingleDatePickerPhrases)),
+  phrases: PropTypes.shape({
+    closeDatePicker: PropTypes.node,
+  }),
 };

@@ -5,8 +5,6 @@ import Portal from 'react-portal';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import { addEventListener, removeEventListener } from 'consolidated-events';
 
-import { SingleDatePickerPhrases } from '../defaultPhrases';
-
 import OutsideClickHandler from './OutsideClickHandler';
 import toMomentObject from '../utils/toMomentObject';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
@@ -72,7 +70,10 @@ const defaultProps = {
   // internationalization props
   displayFormat: () => moment.localeData().longDateFormat('L'),
   monthFormat: 'MMMM YYYY',
-  phrases: SingleDatePickerPhrases,
+  phrases: {
+    closeDatePicker: 'Close',
+    clearDate: 'Clear Date',
+  },
 };
 
 export default class SingleDatePicker extends React.Component {

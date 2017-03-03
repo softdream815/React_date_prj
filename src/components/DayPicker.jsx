@@ -5,9 +5,6 @@ import { forbidExtraProps } from 'airbnb-prop-types';
 import moment from 'moment';
 import cx from 'classnames';
 
-import { DayPickerPhrases } from '../defaultPhrases';
-import getPhrasePropTypes from '../utils/getPhrasePropTypes';
-
 import OutsideClickHandler from './OutsideClickHandler';
 import CalendarMonthGrid from './CalendarMonthGrid';
 import DayPickerNavigation from './DayPickerNavigation';
@@ -53,7 +50,6 @@ const propTypes = forbidExtraProps({
 
   // internationalization
   monthFormat: PropTypes.string,
-  phrases: PropTypes.shape(getPhrasePropTypes(DayPickerPhrases)),
 });
 
 const defaultProps = {
@@ -81,7 +77,6 @@ const defaultProps = {
 
   // internationalization
   monthFormat: 'MMMM YYYY',
-  phrases: DayPickerPhrases,
 };
 
 function applyTransformStyles(el, transform, opacity = '') {

@@ -7,7 +7,6 @@ instrumentation:
     "public/**",
     "test/**",
     "coverage/**",
-    "src/defaultPhrases.js"
   ]
 check:
   global:

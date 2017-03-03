@@ -4,9 +4,6 @@ import moment from 'moment';
 import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps } from 'airbnb-prop-types';
 
-import { DateRangePickerInputPhrases } from '../defaultPhrases';
-import getPhrasePropTypes from '../utils/getPhrasePropTypes';
-
 import DateRangePickerInput from './DateRangePickerInput';
 
 import toMomentObject from '../utils/toMomentObject';
@@ -49,7 +46,9 @@ const propTypes = forbidExtraProps({
   customArrowIcon: PropTypes.node,
 
   // i18n
-  phrases: PropTypes.shape(getPhrasePropTypes(DateRangePickerInputPhrases)),
+  phrases: PropTypes.shape({
+    clearDates: PropTypes.node,
+  }),
 });
 
 const defaultProps = {
@@ -83,7 +82,9 @@ const defaultProps = {
   customArrowIcon: null,
 
   // i18n
-  phrases: DateRangePickerInputPhrases,
+  phrases: {
+    clearDates: 'Clear Dates',
+  },
 };
 
 export default class DateRangePickerInputWithHandlers extends React.Component {
