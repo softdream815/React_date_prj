@@ -2,6 +2,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import sinon from 'sinon-sandbox';
+import wrap from 'mocha-wrap';
 
 import DateInput from '../../src/components/DateInput';
 
@@ -225,15 +226,12 @@ describe('DateInput', () => {
       expect(!!wrapper.find('input').prop('readOnly')).to.equal(true);
     });
 
-    /*
-      // Skip this test until we can figure out how to use `withTouchSupport` with karma
-      wrap()
-      .withTouchSupport()
-      .it('sets isTouchDevice state when is a touch device', () => {
-        const wrapper = shallow(<DateInput id="date" />);
-        wrapper.instance().componentDidMount();
-        expect(wrapper.state()).to.contain.keys({ isTouchDevice: true });
-      });
-    */
+    wrap()
+    .withTouchSupport()
+    .it('sets isTouchDevice state when is a touch device', () => {
+      const wrapper = shallow(<DateInput id="date" />);
+      wrapper.instance().componentDidMount();
+      expect(wrapper.state()).to.contain.keys({ isTouchDevice: true });
+    });
   });
 });
