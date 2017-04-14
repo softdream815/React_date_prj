@@ -44,8 +44,6 @@ const propTypes = forbidExtraProps({
 
   // i18n
   monthFormat: PropTypes.string,
-
-  isRTL: PropTypes.bool,
 });
 
 const defaultProps = {
@@ -70,7 +68,6 @@ const defaultProps = {
   onOutsideClick() {},
   keepOpenOnDateSelect: false,
   renderCalendarInfo: null,
-  isRTL: false,
 
   // navigation related props
   navPrev: null,

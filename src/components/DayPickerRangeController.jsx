@@ -66,8 +66,6 @@ const propTypes = forbidExtraProps({
   // i18n
   monthFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(DayPickerPhrases)),
-
-  isRTL: PropTypes.bool,
 });
 
 const defaultProps = {
@@ -112,8 +110,6 @@ const defaultProps = {
   // i18n
   monthFormat: 'MMMM YYYY',
   phrases: DayPickerPhrases,
-
-  isRTL: false,
 };
 
 export default class DayPickerRangeController extends React.Component {
@@ -330,7 +326,6 @@ export default class DayPickerRangeController extends React.Component {
       onBlur,
       isFocused,
       showKeyboardShortcuts,
-      isRTL,
     } = this.props;
 
     const { phrases } = this.state;
@@ -394,7 +389,6 @@ export default class DayPickerRangeController extends React.Component {
         onBlur={onBlur}
         showKeyboardShortcuts={showKeyboardShortcuts}
         phrases={phrases}
-        isRTL={isRTL}
       />
     );
   }

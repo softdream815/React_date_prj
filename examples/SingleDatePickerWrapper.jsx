@@ -47,13 +47,15 @@ const defaultProps = {
   numberOfMonths: 2,
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDate: false,
-  isRTL: false,
 
   // navigation related props
   navPrev: null,
   navNext: null,
   onPrevMonthClick() {},
   onNextMonthClick() {},
+
+  // month presentation and interaction related props
+  renderMonth: null,
 
   // day presentation and interaction related props
   renderDay: null,

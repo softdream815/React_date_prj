@@ -105,7 +105,6 @@ numberOfMonths: PropTypes.number,
 keepOpenOnDateSelect: PropTypes.bool,
 reopenPickerOnClearDates: PropTypes.bool,
 renderCalendarInfo: PropTypes.func,
-isRTL: PropTypes.bool,
 
 // navigation related props
 navPrev: PropTypes.node,
@@ -167,7 +166,6 @@ numberOfMonths: PropTypes.number,
 keepOpenOnDateSelect: PropTypes.bool,
 reopenPickerOnClearDate: PropTypes.bool,
 renderCalendarInfo: PropTypes.func,
-isRTL: PropTypes.bool,
 
 // navigation related props
 navPrev: PropTypes.node,

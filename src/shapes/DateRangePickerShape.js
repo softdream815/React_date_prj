@@ -41,7 +41,6 @@ export default {
   withPortal: PropTypes.bool,
   withFullScreenPortal: PropTypes.bool,
   daySize: nonNegativeInteger,
-  isRTL: PropTypes.bool,
 
   initialVisibleMonth: PropTypes.func,
   numberOfMonths: PropTypes.number,

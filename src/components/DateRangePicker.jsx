@@ -67,7 +67,6 @@ const defaultProps = {
   renderCalendarInfo: null,
   hideKeyboardShortcutsPanel: false,
   daySize: DAY_SIZE,
-  isRTL: false,
 
   // navigation related props
   navPrev: null,
@@ -200,9 +199,7 @@ export default class DateRangePicker extends React.Component {
       withPortal,
       withFullScreenPortal,
       anchorDirection,
-      isRTL,
     } = this.props;
-
     const dayPickerClassName = cx('DateRangePicker__picker', {
       'DateRangePicker__picker--direction-left': anchorDirection === ANCHOR_LEFT,
       'DateRangePicker__picker--direction-right': anchorDirection === ANCHOR_RIGHT,
@@ -210,7 +207,6 @@ export default class DateRangePicker extends React.Component {
       'DateRangePicker__picker--vertical': orientation === VERTICAL_ORIENTATION,
       'DateRangePicker__picker--portal': withPortal || withFullScreenPortal,
       'DateRangePicker__picker--full-screen-portal': withFullScreenPortal,
-      'DateRangePicker__picker--rtl': isRTL,
     });
 
     return dayPickerClassName;
@@ -307,7 +303,6 @@ export default class DateRangePicker extends React.Component {
       customCloseIcon,
       onClose,
       phrases,
-      isRTL,
     } = this.props;
     const { dayPickerContainerStyles, isDayPickerFocused, showKeyboardShortcuts } = this.state;
 
@@ -357,7 +352,6 @@ export default class DateRangePicker extends React.Component {
           showKeyboardShortcuts={showKeyboardShortcuts}
           onBlur={this.onDayPickerBlur}
           phrases={phrases}
-          isRTL={isRTL}
         />
 
         {withFullScreenPortal && (
@@ -402,7 +396,6 @@ export default class DateRangePicker extends React.Component {
       keepOpenOnDateSelect,
       onDatesChange,
       onClose,
-      isRTL,
     } = this.props;
 
     const { isDateRangePickerInputFocused } = this.state;
@@ -442,7 +435,6 @@ export default class DateRangePicker extends React.Component {
             phrases={phrases}
             screenReaderMessage={screenReaderInputMessage}
             isFocused={isDateRangePickerInputFocused}
-            isRTL={isRTL}
           />
 
           {this.maybeRenderDayPickerWithPortal()}

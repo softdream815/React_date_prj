@@ -38,7 +38,6 @@ export default {
   renderCalendarInfo: PropTypes.func,
   hideKeyboardShortcutsPanel: PropTypes.bool,
   daySize: nonNegativeInteger,
-  isRTL: PropTypes.bool,
 
   // navigation related props
   navPrev: PropTypes.node,
@@ -47,6 +46,9 @@ export default {
   onPrevMonthClick: PropTypes.func,
   onNextMonthClick: PropTypes.func,
   onClose: PropTypes.func,
+
+  // month presentation and interaction related props
+  renderMonth: PropTypes.func,
 
   // day presentation and interaction related props
   renderDay: PropTypes.func,
