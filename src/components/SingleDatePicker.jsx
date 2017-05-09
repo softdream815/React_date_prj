@@ -4,7 +4,6 @@ import cx from 'classnames';
 import Portal from 'react-portal';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import { addEventListener, removeEventListener } from 'consolidated-events';
-import values from 'object.values';
 
 import SingleDatePickerShape from '../shapes/SingleDatePickerShape';
 import { SingleDatePickerPhrases } from '../defaultPhrases';
@@ -212,7 +211,7 @@ export default class SingleDatePicker extends React.Component {
     }
 
     if (didFocusChange) {
-      values(visibleDays).forEach((days) => {
+      Object.values(visibleDays).forEach((days) => {
         Object.keys(days).forEach((day) => {
           const momentObj = moment(day);
           if (isDayBlocked(momentObj)) {
