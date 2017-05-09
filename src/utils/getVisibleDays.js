@@ -1,17 +1,12 @@
 import moment from 'moment';
 import toISOMonthString from './toISOMonthString';
 
-export default function getVisibleDays(
-  month,
-  numberOfMonths,
-  enableOutsideDays,
-  withoutTransitionMonths,
-) {
+export default function getVisibleDays(month, numberOfMonths, enableOutsideDays) {
   if (!moment.isMoment(month)) return {};
 
   const visibleDaysByMonth = {};
-  let currentMonth = withoutTransitionMonths ? month.clone() : month.clone().subtract(1, 'month');
-  for (let i = 0; i < (withoutTransitionMonths ? numberOfMonths : numberOfMonths + 2); i += 1) {
+  let currentMonth = month.clone().subtract(1, 'month');
+  for (let i = 0; i < numberOfMonths + 2; i += 1) { // account for transition months
     const visibleDays = [];
 
     // set utc offset to get correct dates in future (when timezone changes)

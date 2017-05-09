@@ -4,6 +4,7 @@ import cx from 'classnames';
 import Portal from 'react-portal';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import { addEventListener, removeEventListener } from 'consolidated-events';
+import values from 'object.values';
 
 import SingleDatePickerShape from '../shapes/SingleDatePickerShape';
 import { SingleDatePickerPhrases } from '../defaultPhrases';
@@ -50,6 +51,7 @@ const defaultProps = {
   placeholder: 'Date',
   disabled: false,
   required: false,
+  readOnly: false,
   screenReaderInputMessage: '',
   showClearDate: false,
   customCloseIcon: null,
@@ -211,7 +213,7 @@ export default class SingleDatePicker extends React.Component {
     }
 
     if (didFocusChange) {
-      Object.values(visibleDays).forEach((days) => {
+      values(visibleDays).forEach((days) => {
         Object.keys(days).forEach((day) => {
           const momentObj = moment(day);
           if (isDayBlocked(momentObj)) {
@@ -734,6 +736,7 @@ export default class SingleDatePicker extends React.Component {
       disabled,
       focused,
       required,
+      readOnly,
       showClearDate,
       date,
       phrases,
@@ -760,6 +763,7 @@ export default class SingleDatePicker extends React.Component {
             isFocused={isInputFocused}
             disabled={disabled}
             required={required}
+            readOnly={readOnly}
             showCaret={!withPortal && !withFullScreenPortal}
             onClearDate={this.clearDate}
             showClearDate={showClearDate}
