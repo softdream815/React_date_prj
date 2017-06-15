@@ -32,7 +32,7 @@ import {
   DAY_SIZE,
 } from '../../constants';
 
-import DayPicker, { defaultProps as DayPickerDefaultProps } from './DayPicker';
+import DayPicker from './DayPicker';
 
 const propTypes = forbidExtraProps({
   startDate: momentPropTypes.momentObj,
@@ -102,7 +102,7 @@ const defaultProps = {
   orientation: HORIZONTAL_ORIENTATION,
   withPortal: false,
   hideKeyboardShortcutsPanel: false,
-  initialVisibleMonth: DayPickerDefaultProps.initialVisibleMonth,
+  initialVisibleMonth: null,
   daySize: DAY_SIZE,
 
   navPrev: null,
@@ -584,8 +584,16 @@ export default class DayPickerRangeController extends React.Component {
   }
 
   getStateForNewMonth(nextProps) {
-    const { initialVisibleMonth, numberOfMonths, enableOutsideDays, orientation } = nextProps;
-    const currentMonth = initialVisibleMonth();
+    const {
+      initialVisibleMonth,
+      numberOfMonths,
+      enableOutsideDays,
+      orientation,
+      startDate,
+    } = nextProps;
+    const initialVisibleMonthThunk =
+      initialVisibleMonth || (startDate ? () => startDate : () => this.today);
+    const currentMonth = initialVisibleMonthThunk();
     const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
     const visibleDays = this.getModifiers(
       getVisibleDays(currentMonth, numberOfMonths, enableOutsideDays, withoutTransitionMonths),
@@ -594,39 +602,55 @@ export default class DayPickerRangeController extends React.Component {
   }
 
   addModifier(updatedDays, day, modifier) {
-    const { numberOfMonths, enableOutsideDays } = this.props;
-    const { currentMonth, visibleDays } = this.state;
+    const { numberOfMonths: numberOfVisibleMonths, enableOutsideDays, orientation } = this.props;
+    const { currentMonth: firstVisibleMonth, visibleDays } = this.state;
+
+    let currentMonth = firstVisibleMonth;
+    let numberOfMonths = numberOfVisibleMonths;
+    if (orientation !== VERTICAL_SCROLLABLE) {
+      currentMonth = currentMonth.clone().subtract(1, 'month');
+      numberOfMonths += 2;
+    }
     if (!day || !isDayVisible(day, currentMonth, numberOfMonths, enableOutsideDays)) {
       return updatedDays;
     }
-    let monthIso = toISOMonthString(day);
-    let month = updatedDays[monthIso] || visibleDays[monthIso];
+
     const iso = toISODateString(day);
 
+    let updatedDaysAfterAddition = { ...updatedDays };
     if (enableOutsideDays) {
-      const startOfMonth = day.clone().startOf('month');
-      const endOfMonth = day.clone().endOf('month');
-      if (
-        isBeforeDay(startOfMonth, currentMonth.clone().startOf('month')) ||
-        isAfterDay(endOfMonth, currentMonth.clone().endOf('month'))
-      ) {
-        monthIso = Object.keys(visibleDays).filter(monthKey => (
-          monthKey !== monthIso && Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
-        ))[0];
-        month = updatedDays[monthIso] || visibleDays[monthIso];
-      }
+      const monthsToUpdate = Object.keys(visibleDays).filter(monthKey => (
+        Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
+      ));
+
+      updatedDaysAfterAddition = monthsToUpdate.reduce((days, monthIso) => {
+        const month = updatedDays[monthIso] || visibleDays[monthIso];
+        const modifiers = new Set(month[iso]);
+        modifiers.add(modifier);
+        return {
+          ...days,
+          [monthIso]: {
+            ...month,
+            [iso]: modifiers,
+          },
+        };
+      }, updatedDaysAfterAddition);
+    } else {
+      const monthIso = toISOMonthString(day);
+      const month = updatedDays[monthIso] || visibleDays[monthIso];
+
+      const modifiers = new Set(month[iso]);
+      modifiers.add(modifier);
+      updatedDaysAfterAddition = {
+        ...updatedDaysAfterAddition,
+        [monthIso]: {
+          ...month,
+          [iso]: modifiers,
+        },
+      };
     }
 
-
-    const modifiers = new Set(month[iso]);
-    modifiers.add(modifier);
-    return {
-      ...updatedDays,
-      [monthIso]: {
-        ...month,
-        [iso]: modifiers,
-      },
-    };
+    return updatedDaysAfterAddition;
   }
 
   addModifierToRange(updatedDays, start, end, modifier) {
@@ -642,38 +666,55 @@ export default class DayPickerRangeController extends React.Component {
   }
 
   deleteModifier(updatedDays, day, modifier) {
-    const { numberOfMonths, enableOutsideDays } = this.props;
-    const { currentMonth, visibleDays } = this.state;
+    const { numberOfMonths: numberOfVisibleMonths, enableOutsideDays, orientation } = this.props;
+    const { currentMonth: firstVisibleMonth, visibleDays } = this.state;
+
+    let currentMonth = firstVisibleMonth;
+    let numberOfMonths = numberOfVisibleMonths;
+    if (orientation !== VERTICAL_SCROLLABLE) {
+      currentMonth = currentMonth.clone().subtract(1, 'month');
+      numberOfMonths += 2;
+    }
     if (!day || !isDayVisible(day, currentMonth, numberOfMonths, enableOutsideDays)) {
       return updatedDays;
     }
 
-    let monthIso = toISOMonthString(day);
-    let month = updatedDays[monthIso] || visibleDays[monthIso];
     const iso = toISODateString(day);
+
+    let updatedDaysAfterDeletion = { ...updatedDays };
     if (enableOutsideDays) {
-      const startOfMonth = day.clone().startOf('month');
-      const endOfMonth = day.clone().endOf('month');
-      if (
-        isBeforeDay(startOfMonth, currentMonth.clone().startOf('month')) ||
-        isAfterDay(endOfMonth, currentMonth.clone().endOf('month'))
-      ) {
-        monthIso = Object.keys(visibleDays).filter(monthKey => (
-          monthKey !== monthIso && Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
-        ))[0];
-        month = updatedDays[monthIso] || visibleDays[monthIso];
-      }
+      const monthsToUpdate = Object.keys(visibleDays).filter(monthKey => (
+        Object.keys(visibleDays[monthKey]).indexOf(iso) > -1
+      ));
+
+      updatedDaysAfterDeletion = monthsToUpdate.reduce((days, monthIso) => {
+        const month = updatedDays[monthIso] || visibleDays[monthIso];
+        const modifiers = new Set(month[iso]);
+        modifiers.delete(modifier);
+        return {
+          ...days,
+          [monthIso]: {
+            ...month,
+            [iso]: modifiers,
+          },
+        };
+      }, updatedDaysAfterDeletion);
+    } else {
+      const monthIso = toISOMonthString(day);
+      const month = updatedDays[monthIso] || visibleDays[monthIso];
+
+      const modifiers = new Set(month[iso]);
+      modifiers.delete(modifier);
+      updatedDaysAfterDeletion = {
+        ...updatedDaysAfterDeletion,
+        [monthIso]: {
+          ...month,
+          [iso]: modifiers,
+        },
+      };
     }
 
-    const modifiers = new Set(month[iso]);
-    modifiers.delete(modifier);
-    return {
-      ...updatedDays,
-      [monthIso]: {
-        ...month,
-        [iso]: modifiers,
-      },
-    };
+    return updatedDaysAfterDeletion;
   }
 
   deleteModifierFromRange(updatedDays, start, end, modifier) {
