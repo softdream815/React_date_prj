@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import momentPropTypes from 'react-moment-proptypes';
-import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
+import { forbidExtraProps } from 'airbnb-prop-types';
 
 import { DateRangePickerInputPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
@@ -16,7 +16,6 @@ import toISODateString from '../utils/toISODateString';
 
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import isInclusivelyBeforeDay from '../utils/isInclusivelyBeforeDay';
-import isSameDay from '../utils/isSameDay';
 
 import { START_DATE, END_DATE } from '../../constants';
 
@@ -42,7 +41,6 @@ const propTypes = forbidExtraProps({
   keepOpenOnDateSelect: PropTypes.bool,
   reopenPickerOnClearDates: PropTypes.bool,
   withFullScreenPortal: PropTypes.bool,
-  minimumNights: nonNegativeInteger,
   isOutsideRange: PropTypes.func,
   displayFormat: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
@@ -87,7 +85,6 @@ const defaultProps = {
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDates: false,
   withFullScreenPortal: false,
-  minimumNights: 1,
   isOutsideRange: day => !isInclusivelyAfterDay(day, moment()),
   displayFormat: () => moment.localeData().longDateFormat('L'),
 
@@ -133,7 +130,6 @@ export default class DateRangePickerInputController extends React.Component {
     const {
       startDate,
       isOutsideRange,
-      minimumNights,
       keepOpenOnDateSelect,
       onDatesChange,
     } = this.props;
@@ -141,8 +137,7 @@ export default class DateRangePickerInputController extends React.Component {
     const endDate = toMomentObject(endDateString, this.getDisplayFormat());
 
     const isEndDateValid = endDate && !isOutsideRange(endDate) &&
-      (!isInclusivelyBeforeDay(endDate, startDate) ||
-      (minimumNights === 0 && isSameDay(endDate, startDate)));
+      !isInclusivelyBeforeDay(endDate, startDate);
     if (isEndDateValid) {
       onDatesChange({ startDate, endDate });
       if (!keepOpenOnDateSelect) this.onClearFocus();
@@ -171,11 +166,10 @@ export default class DateRangePickerInputController extends React.Component {
     const startDate = toMomentObject(startDateString, this.getDisplayFormat());
 
     let { endDate } = this.props;
-    const { isOutsideRange, minimumNights, onDatesChange, onFocusChange } = this.props;
+    const { isOutsideRange, onDatesChange, onFocusChange } = this.props;
     const isStartDateValid = startDate && !isOutsideRange(startDate);
     if (isStartDateValid) {
-      if (isInclusivelyBeforeDay(endDate, startDate) &&
-        !(minimumNights === 0 && isSameDay(endDate, startDate))) {
+      if (isInclusivelyBeforeDay(endDate, startDate)) {
         endDate = null;
       }
 
