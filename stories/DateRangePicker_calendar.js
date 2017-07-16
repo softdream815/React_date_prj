@@ -151,10 +151,4 @@ storiesOf('DRP - Calendar Props', module)
       isRTL
       autoFocus
     />
-  ))
-  .addWithInfo('with custom first day of week', () => (
-    <DateRangePickerWrapper
-      firstDayOfWeek={3}
-      autoFocus
-    />
   ));

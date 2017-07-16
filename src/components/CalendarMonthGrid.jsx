@@ -19,7 +19,6 @@ import toISOMonthString from '../utils/toISOMonthString';
 import isAfterDay from '../utils/isAfterDay';
 
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
-import DayOfWeekShape from '../shapes/DayOfWeekShape';
 
 import {
   HORIZONTAL_ORIENTATION,
@@ -46,7 +45,6 @@ const propTypes = forbidExtraProps({
   daySize: nonNegativeInteger,
   focusedDate: momentPropTypes.momentObj, // indicates focusable day
   isFocused: PropTypes.bool, // indicates whether or not to move focus to focusable day
-  firstDayOfWeek: DayOfWeekShape,
 
   // i18n
   monthFormat: PropTypes.string,
@@ -71,7 +69,6 @@ const defaultProps = {
   daySize: DAY_SIZE,
   focusedDate: null,
   isFocused: false,
-  firstDayOfWeek: null,
 
   // i18n
   monthFormat: 'MMMM YYYY', // english locale
@@ -178,7 +175,6 @@ export default class CalendarMonthGrid extends React.Component {
       renderMonth,
       renderDay,
       onMonthTransitionEnd,
-      firstDayOfWeek,
       focusedDate,
       isFocused,
       phrases,
@@ -232,7 +228,6 @@ export default class CalendarMonthGrid extends React.Component {
               onDayClick={onDayClick}
               renderMonth={renderMonth}
               renderDay={renderDay}
-              firstDayOfWeek={firstDayOfWeek}
               daySize={daySize}
               focusedDate={isVisible ? focusedDate : null}
               isFocused={isFocused}

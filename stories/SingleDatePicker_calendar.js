@@ -132,11 +132,4 @@ storiesOf('SDP - Calendar Props', module)
       isRTL
       autoFocus
     />
-  ))
-  .addWithInfo('with custom first day of week', () => (
-    <SingleDatePickerWrapper
-      firstDayOfWeek={3}
-      autoFocus
-    />
   ));
-

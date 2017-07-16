@@ -18,7 +18,6 @@ import isSameDay from '../utils/isSameDay';
 import toISODateString from '../utils/toISODateString';
 
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
-import DayOfWeekShape from '../shapes/DayOfWeekShape';
 
 import {
   HORIZONTAL_ORIENTATION,
@@ -39,7 +38,6 @@ const propTypes = forbidExtraProps({
   onDayMouseLeave: PropTypes.func,
   renderMonth: PropTypes.func,
   renderDay: PropTypes.func,
-  firstDayOfWeek: DayOfWeekShape,
 
   focusedDate: momentPropTypes.momentObj, // indicates focusable day
   isFocused: PropTypes.bool, // indicates whether or not to move focus to focusable day
@@ -61,7 +59,6 @@ const defaultProps = {
   onDayMouseLeave() {},
   renderMonth: null,
   renderDay: null,
-  firstDayOfWeek: null,
 
   focusedDate: null,
   isFocused: false,
@@ -74,27 +71,16 @@ const defaultProps = {
 export default class CalendarMonth extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      weeks: getCalendarMonthWeeks(
-        props.month,
-        props.enableOutsideDays,
-        props.firstDayOfWeek == null ? moment.localeData().firstDayOfWeek() : props.firstDayOfWeek,
-      ),
+      weeks: getCalendarMonthWeeks(props.month, props.enableOutsideDays),
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    const { month, enableOutsideDays, firstDayOfWeek } = nextProps;
-    if (!month.isSame(this.props.month)
-        || enableOutsideDays !== this.props.enableOutsideDays
-        || firstDayOfWeek !== this.props.firstDayOfWeek) {
+    const { month, enableOutsideDays } = nextProps;
+    if (!month.isSame(this.props.month)) {
       this.setState({
-        weeks: getCalendarMonthWeeks(
-          month,
-          enableOutsideDays,
-          firstDayOfWeek == null ? moment.localeData().firstDayOfWeek() : firstDayOfWeek,
-        ),
+        weeks: getCalendarMonthWeeks(month, enableOutsideDays),
       });
     }
   }

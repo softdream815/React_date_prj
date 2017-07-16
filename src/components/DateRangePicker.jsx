@@ -70,7 +70,6 @@ const defaultProps = {
   hideKeyboardShortcutsPanel: false,
   daySize: DAY_SIZE,
   isRTL: false,
-  firstDayOfWeek: null,
 
   // navigation related props
   navPrev: null,
@@ -306,7 +305,6 @@ export default class DateRangePicker extends React.Component {
       keepOpenOnDateSelect,
       renderDay,
       renderCalendarInfo,
-      firstDayOfWeek,
       initialVisibleMonth,
       hideKeyboardShortcutsPanel,
       customCloseIcon,
@@ -364,7 +362,6 @@ export default class DateRangePicker extends React.Component {
           onBlur={this.onDayPickerBlur}
           phrases={phrases}
           isRTL={isRTL}
-          firstDayOfWeek={firstDayOfWeek}
         />
 
         {withFullScreenPortal && (
@@ -403,7 +400,6 @@ export default class DateRangePicker extends React.Component {
       readOnly,
       phrases,
       isOutsideRange,
-      minimumNights,
       withPortal,
       withFullScreenPortal,
       displayFormat,
@@ -443,7 +439,6 @@ export default class DateRangePicker extends React.Component {
             reopenPickerOnClearDates={reopenPickerOnClearDates}
             keepOpenOnDateSelect={keepOpenOnDateSelect}
             isOutsideRange={isOutsideRange}
-            minimumNights={minimumNights}
             withFullScreenPortal={withFullScreenPortal}
             onDatesChange={onDatesChange}
             onFocusChange={this.onDateRangePickerInputFocus}

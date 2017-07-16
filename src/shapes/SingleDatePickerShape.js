@@ -7,7 +7,6 @@ import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
 import OrientationShape from '../shapes/OrientationShape';
 import anchorDirectionShape from '../shapes/AnchorDirectionShape';
-import DayOfWeekShape from '../shapes/DayOfWeekShape';
 
 export default {
   // required props for a functional interactive SingleDatePicker
@@ -37,7 +36,6 @@ export default {
   withPortal: PropTypes.bool,
   withFullScreenPortal: PropTypes.bool,
   initialVisibleMonth: PropTypes.func,
-  firstDayOfWeek: DayOfWeekShape,
   numberOfMonths: PropTypes.number,
   keepOpenOnDateSelect: PropTypes.bool,
   reopenPickerOnClearDate: PropTypes.bool,

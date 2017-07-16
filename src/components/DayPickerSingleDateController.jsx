@@ -19,7 +19,6 @@ import toISODateString from '../utils/toISODateString';
 import toISOMonthString from '../utils/toISOMonthString';
 
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
-import DayOfWeekShape from '../shapes/DayOfWeekShape';
 
 import {
   HORIZONTAL_ORIENTATION,
@@ -50,7 +49,6 @@ const propTypes = forbidExtraProps({
   orientation: ScrollableOrientationShape,
   withPortal: PropTypes.bool,
   initialVisibleMonth: PropTypes.func,
-  firstDayOfWeek: DayOfWeekShape,
   hideKeyboardShortcutsPanel: PropTypes.bool,
   daySize: nonNegativeInteger,
 
@@ -97,7 +95,6 @@ const defaultProps = {
   withPortal: false,
   hideKeyboardShortcutsPanel: false,
   initialVisibleMonth: null,
-  firstDayOfWeek: null,
   daySize: DAY_SIZE,
 
   navPrev: null,
@@ -542,14 +539,14 @@ export default class DayPickerSingleDateController extends React.Component {
       enableOutsideDays,
       hideKeyboardShortcutsPanel,
       daySize,
-      firstDayOfWeek,
       renderDay,
       renderCalendarInfo,
       isFocused,
       isRTL,
+      phrases,
     } = this.props;
 
-    const { phrases, currentMonth, visibleDays } = this.state;
+    const { currentMonth, visibleDays } = this.state;
 
     return (
       <DayPicker
@@ -567,7 +564,6 @@ export default class DayPickerSingleDateController extends React.Component {
         hidden={!focused}
         hideKeyboardShortcutsPanel={hideKeyboardShortcutsPanel}
         initialVisibleMonth={() => currentMonth}
-        firstDayOfWeek={firstDayOfWeek}
         navPrev={navPrev}
         navNext={navNext}
         renderMonth={renderMonth}
