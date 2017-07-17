@@ -8,6 +8,7 @@ import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 import FocusedInputShape from '../shapes/FocusedInputShape';
 import OrientationShape from '../shapes/OrientationShape';
 import anchorDirectionShape from '../shapes/AnchorDirectionShape';
+import DayOfWeekShape from '../shapes/DayOfWeekShape';
 
 export default {
   // required props for a functional interactive DateRangePicker
@@ -31,6 +32,7 @@ export default {
   screenReaderInputMessage: PropTypes.string,
   showClearDates: PropTypes.bool,
   showDefaultInputIcon: PropTypes.bool,
+  showInputIconRight: PropTypes.bool,
   customInputIcon: PropTypes.node,
   customArrowIcon: PropTypes.node,
   customCloseIcon: PropTypes.node,
@@ -44,7 +46,7 @@ export default {
   withFullScreenPortal: PropTypes.bool,
   daySize: nonNegativeInteger,
   isRTL: PropTypes.bool,
-
+  firstDayOfWeek: DayOfWeekShape,
   initialVisibleMonth: PropTypes.func,
   numberOfMonths: PropTypes.number,
   keepOpenOnDateSelect: PropTypes.bool,
