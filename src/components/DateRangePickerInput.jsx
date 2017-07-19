@@ -45,7 +45,6 @@ const propTypes = forbidExtraProps({
   readOnly: PropTypes.bool,
   showCaret: PropTypes.bool,
   showDefaultInputIcon: PropTypes.bool,
-  inputIconPosition: PropTypes.oneOf(['before', 'after']),
   customInputIcon: PropTypes.node,
   customArrowIcon: PropTypes.node,
   customCloseIcon: PropTypes.node,
@@ -88,7 +87,6 @@ const defaultProps = {
   readOnly: false,
   showCaret: false,
   showDefaultInputIcon: false,
-  inputIconPosition: 'before',
   customInputIcon: null,
   customArrowIcon: null,
   customCloseIcon: null,
@@ -111,7 +109,6 @@ export default class DateRangePickerInput extends React.Component {
 
     this.onClearDatesMouseEnter = this.onClearDatesMouseEnter.bind(this);
     this.onClearDatesMouseLeave = this.onClearDatesMouseLeave.bind(this);
-    this.renderInputIcon = this.renderInputIcon.bind(this);
   }
 
   onClearDatesMouseEnter() {
@@ -124,22 +121,6 @@ export default class DateRangePickerInput extends React.Component {
     this.setState({
       isClearDatesHovered: false,
     });
-  }
-
-  renderInputIcon(inputIcon) {
-    const { disabled, phrases, onArrowDown } = this.props;
-
-    return (
-      <button
-        type="button"
-        className="DateRangePickerInput__calendar-icon"
-        disabled={disabled}
-        aria-label={phrases.focusStartDate}
-        onClick={onArrowDown}
-      >
-        {inputIcon}
-      </button>
-    );
   }
 
   render() {
@@ -171,7 +152,6 @@ export default class DateRangePickerInput extends React.Component {
       readOnly,
       showCaret,
       showDefaultInputIcon,
-      inputIconPosition,
       customInputIcon,
       customArrowIcon,
       customCloseIcon,
@@ -192,9 +172,16 @@ export default class DateRangePickerInput extends React.Component {
           'DateRangePickerInput--rtl': isRTL,
         })}
       >
-
-        {(inputIconPosition === 'before' && (showDefaultInputIcon || customInputIcon !== null)) && (
-          this.renderInputIcon(inputIcon)
+        {(showDefaultInputIcon || customInputIcon !== null) && (
+          <button
+            type="button"
+            className="DateRangePickerInput__calendar-icon"
+            disabled={disabled}
+            aria-label={phrases.focusStartDate}
+            onClick={onArrowDown}
+          >
+            {inputIcon}
+          </button>
         )}
 
         <DateInput
@@ -262,11 +249,6 @@ export default class DateRangePickerInput extends React.Component {
             </div>
           </button>
         )}
-
-        {(inputIconPosition === 'after' && (showDefaultInputIcon || customInputIcon !== null)) && (
-          this.renderInputIcon(inputIcon)
-        )}
-
       </div>
     );
   }

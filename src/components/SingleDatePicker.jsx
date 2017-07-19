@@ -47,7 +47,6 @@ const defaultProps = {
   screenReaderInputMessage: '',
   showClearDate: false,
   showDefaultInputIcon: false,
-  inputIconPosition: 'before',
   customInputIcon: null,
   customCloseIcon: null,
 
@@ -392,7 +391,6 @@ export default class SingleDatePicker extends React.Component {
       readOnly,
       showClearDate,
       showDefaultInputIcon,
-      inputIconPosition,
       customInputIcon,
       date,
       phrases,
@@ -424,7 +422,6 @@ export default class SingleDatePicker extends React.Component {
             onClearDate={this.clearDate}
             showClearDate={showClearDate}
             showDefaultInputIcon={showDefaultInputIcon}
-            inputIconPosition={inputIconPosition}
             customInputIcon={customInputIcon}
             displayValue={displayValue}
             inputValue={inputValue}
