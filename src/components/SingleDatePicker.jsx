@@ -308,8 +308,6 @@ export default class SingleDatePicker extends React.Component {
       monthFormat,
       navPrev,
       navNext,
-      onPrevMonthClick,
-      onNextMonthClick,
       withPortal,
       withFullScreenPortal,
       keepOpenOnDateSelect,
@@ -354,8 +352,6 @@ export default class SingleDatePicker extends React.Component {
           initialVisibleMonth={initialVisibleMonth}
           navPrev={navPrev}
           navNext={navNext}
-          onPrevMonthClick={onPrevMonthClick}
-          onNextMonthClick={onNextMonthClick}
           renderMonth={renderMonth}
           renderDay={renderDay}
           renderCalendarInfo={renderCalendarInfo}
