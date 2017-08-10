@@ -10,8 +10,6 @@ import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
 import DateRangePickerInput from './DateRangePickerInput';
 
-import IconPositionShape from '../shapes/IconPositionShape';
-
 import toMomentObject from '../utils/toMomentObject';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
 import toISODateString from '../utils/toISODateString';
@@ -19,7 +17,7 @@ import toISODateString from '../utils/toISODateString';
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import isBeforeDay from '../utils/isBeforeDay';
 
-import { START_DATE, END_DATE, ICON_BEFORE_POSITION } from '../../constants';
+import { START_DATE, END_DATE } from '../../constants';
 
 const propTypes = forbidExtraProps({
   startDate: momentPropTypes.momentObj,
@@ -36,7 +34,6 @@ const propTypes = forbidExtraProps({
   showClearDates: PropTypes.bool,
   showCaret: PropTypes.bool,
   showDefaultInputIcon: PropTypes.bool,
-  inputIconPosition: IconPositionShape,
   disabled: PropTypes.bool,
   required: PropTypes.bool,
   readOnly: PropTypes.bool,
@@ -82,7 +79,6 @@ const defaultProps = {
   showClearDates: false,
   showCaret: false,
   showDefaultInputIcon: false,
-  inputIconPosition: ICON_BEFORE_POSITION,
   disabled: false,
   required: false,
   readOnly: false,
@@ -231,7 +227,6 @@ export default class DateRangePickerInputController extends React.Component {
       showClearDates,
       showCaret,
       showDefaultInputIcon,
-      inputIconPosition,
       customInputIcon,
       customArrowIcon,
       customCloseIcon,
@@ -268,7 +263,6 @@ export default class DateRangePickerInputController extends React.Component {
         readOnly={readOnly}
         showCaret={showCaret}
         showDefaultInputIcon={showDefaultInputIcon}
-        inputIconPosition={inputIconPosition}
         customInputIcon={customInputIcon}
         customArrowIcon={customArrowIcon}
         customCloseIcon={customCloseIcon}

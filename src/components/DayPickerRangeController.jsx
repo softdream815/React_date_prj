@@ -187,17 +187,27 @@ export default class DayPickerRangeController extends React.Component {
     } = nextProps;
     let { visibleDays } = this.state;
 
+    let recomputeOutsideRange = false;
+    let recomputeDayBlocked = false;
+    let recomputeDayHighlighted = false;
+
     if (isOutsideRange !== this.props.isOutsideRange) {
       this.modifiers['blocked-out-of-range'] = day => isOutsideRange(day);
+      recomputeOutsideRange = true;
     }
 
     if (isDayBlocked !== this.props.isDayBlocked) {
       this.modifiers['blocked-calendar'] = day => isDayBlocked(day);
+      recomputeDayBlocked = true;
     }
 
     if (isDayHighlighted !== this.props.isDayHighlighted) {
       this.modifiers['highlighted-calendar'] = day => isDayHighlighted(day);
+      recomputeDayHighlighted = true;
     }
+
+    const recomputePropModifiers =
+      recomputeOutsideRange || recomputeDayBlocked || recomputeDayHighlighted;
 
     const didStartDateChange = startDate !== this.props.startDate;
     const didEndDateChange = endDate !== this.props.endDate;
@@ -288,7 +298,7 @@ export default class DayPickerRangeController extends React.Component {
       }
     }
 
-    if (didFocusChange) {
+    if (didFocusChange || recomputePropModifiers) {
       values(visibleDays).forEach((days) => {
         Object.keys(days).forEach((day) => {
           const momentObj = moment(day);
@@ -299,22 +309,28 @@ export default class DayPickerRangeController extends React.Component {
             modifiers = this.deleteModifier(modifiers, momentObj, 'blocked');
           }
 
-          if (isOutsideRange(momentObj)) {
-            modifiers = this.addModifier(modifiers, momentObj, 'blocked-out-of-range');
-          } else {
-            modifiers = this.deleteModifier(modifiers, momentObj, 'blocked-out-of-range');
+          if (didFocusChange || recomputeOutsideRange) {
+            if (isOutsideRange(momentObj)) {
+              modifiers = this.addModifier(modifiers, momentObj, 'blocked-out-of-range');
+            } else {
+              modifiers = this.deleteModifier(modifiers, momentObj, 'blocked-out-of-range');
+            }
           }
 
-          if (isDayBlocked(momentObj)) {
-            modifiers = this.addModifier(modifiers, momentObj, 'blocked-calendar');
-          } else {
-            modifiers = this.deleteModifier(modifiers, momentObj, 'blocked-calendar');
+          if (didFocusChange || recomputeDayBlocked) {
+            if (isDayBlocked(momentObj)) {
+              modifiers = this.addModifier(modifiers, momentObj, 'blocked-calendar');
+            } else {
+              modifiers = this.deleteModifier(modifiers, momentObj, 'blocked-calendar');
+            }
           }
 
-          if (isDayHighlighted(momentObj)) {
-            modifiers = this.addModifier(modifiers, momentObj, 'highlighted-calendar');
-          } else {
-            modifiers = this.deleteModifier(modifiers, momentObj, 'highlighted-calendar');
+          if (didFocusChange || recomputeDayHighlighted) {
+            if (isDayHighlighted(momentObj)) {
+              modifiers = this.addModifier(modifiers, momentObj, 'highlighted-calendar');
+            } else {
+              modifiers = this.deleteModifier(modifiers, momentObj, 'highlighted-calendar');
+            }
           }
         });
       });
@@ -491,15 +507,16 @@ export default class DayPickerRangeController extends React.Component {
     const prevMonth = currentMonth.clone().subtract(2, 'months');
     const prevMonthVisibleDays = getVisibleDays(prevMonth, 1, enableOutsideDays, true);
 
+    const newCurrentMonth = currentMonth.clone().subtract(1, 'month');
     this.setState({
-      currentMonth: currentMonth.clone().subtract(1, 'month'),
+      currentMonth: newCurrentMonth,
       visibleDays: {
         ...newVisibleDays,
         ...this.getModifiers(prevMonthVisibleDays),
       },
     });
 
-    onPrevMonthClick();
+    onPrevMonthClick(newCurrentMonth.clone());
   }
 
   onNextMonthClick() {
@@ -514,15 +531,16 @@ export default class DayPickerRangeController extends React.Component {
     const nextMonth = currentMonth.clone().add(numberOfMonths + 1, 'month');
     const nextMonthVisibleDays = getVisibleDays(nextMonth, 1, enableOutsideDays, true);
 
+    const newCurrentMonth = currentMonth.clone().add(1, 'month');
     this.setState({
-      currentMonth: currentMonth.clone().add(1, 'month'),
+      currentMonth: newCurrentMonth,
       visibleDays: {
         ...newVisibleDays,
         ...this.getModifiers(nextMonthVisibleDays),
       },
     });
 
-    onNextMonthClick();
+    onNextMonthClick(newCurrentMonth.clone());
   }
 
   onMultiplyScrollableMonths() {

@@ -30,7 +30,6 @@ import {
   ANCHOR_LEFT,
   ANCHOR_RIGHT,
   DAY_SIZE,
-  ICON_BEFORE_POSITION,
 } from '../../constants';
 
 const propTypes = forbidExtraProps(DateRangePickerShape);
@@ -52,7 +51,6 @@ const defaultProps = {
   screenReaderInputMessage: '',
   showClearDates: false,
   showDefaultInputIcon: false,
-  inputIconPosition: ICON_BEFORE_POSITION,
   customInputIcon: null,
   customArrowIcon: null,
   customCloseIcon: null,
@@ -397,7 +395,6 @@ export default class DateRangePicker extends React.Component {
       screenReaderInputMessage,
       showClearDates,
       showDefaultInputIcon,
-      inputIconPosition,
       customInputIcon,
       customArrowIcon,
       customCloseIcon,
@@ -437,7 +434,6 @@ export default class DateRangePicker extends React.Component {
             showClearDates={showClearDates}
             showCaret={!withPortal && !withFullScreenPortal}
             showDefaultInputIcon={showDefaultInputIcon}
-            inputIconPosition={inputIconPosition}
             customInputIcon={customInputIcon}
             customArrowIcon={customArrowIcon}
             customCloseIcon={customCloseIcon}

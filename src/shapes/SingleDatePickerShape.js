@@ -5,7 +5,6 @@ import { nonNegativeInteger } from 'airbnb-prop-types';
 import { SingleDatePickerPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
-import IconPositionShape from '../shapes/IconPositionShape';
 import OrientationShape from '../shapes/OrientationShape';
 import anchorDirectionShape from '../shapes/AnchorDirectionShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
@@ -28,7 +27,6 @@ export default {
   showClearDate: PropTypes.bool,
   customCloseIcon: PropTypes.node,
   showDefaultInputIcon: PropTypes.bool,
-  inputIconPosition: IconPositionShape,
   customInputIcon: PropTypes.node,
 
   // calendar presentation and interaction related props
