@@ -157,30 +157,14 @@ describe('DayPickerSingleDateController', () => {
 
       describe('blocked-out-of-range', () => {
         describe('props.focused did not change', () => {
-          it('does not call isOutsideRange if unchanged', () => {
-            const isOutsideRangeStub = sinon.stub();
-            const wrapper = shallow(
-              <DayPickerSingleDateController
-                {...props}
-                isOutsideRange={isOutsideRangeStub}
-              />,
-            );
-            const prevCallCount = isOutsideRangeStub.callCount;
-            wrapper.instance().componentWillReceiveProps({
-              ...props,
-              isOutsideRange: isOutsideRangeStub,
-            });
-            expect(isOutsideRangeStub.callCount).to.equal(prevCallCount);
-          });
-
-          it('calls isOutsideRange if changed', () => {
+          it('does not call isOutsideRange', () => {
             const isOutsideRangeStub = sinon.stub();
             const wrapper = shallow(<DayPickerSingleDateController {...props} />);
             wrapper.instance().componentWillReceiveProps({
               ...props,
               isOutsideRange: isOutsideRangeStub,
             });
-            expect(isOutsideRangeStub.callCount).to.not.equal(0);
+            expect(isOutsideRangeStub.callCount).to.equal(0);
           });
         });
 
@@ -254,28 +238,14 @@ describe('DayPickerSingleDateController', () => {
 
       describe('blocked-calendar', () => {
         describe('props.focused did not change', () => {
-          it('does not call isDayBlocked if unchanged', () => {
-            const isDayBlockedStub = sinon.stub();
-            const wrapper = shallow(<DayPickerSingleDateController
-              {...props}
-              isDayBlocked={isDayBlockedStub}
-            />);
-            const prevCallCount = isDayBlockedStub.callCount;
-            wrapper.instance().componentWillReceiveProps({
-              ...props,
-              isDayBlocked: isDayBlockedStub,
-            });
-            expect(isDayBlockedStub.callCount).to.equal(prevCallCount);
-          });
-
-          it('calls isDayBlocked if changed', () => {
+          it('does not call isDayBlocked', () => {
             const isDayBlockedStub = sinon.stub();
             const wrapper = shallow(<DayPickerSingleDateController {...props} />);
             wrapper.instance().componentWillReceiveProps({
               ...props,
               isDayBlocked: isDayBlockedStub,
             });
-            expect(isDayBlockedStub.callCount).to.not.equal(0);
+            expect(isDayBlockedStub.callCount).to.equal(0);
           });
         });
 
@@ -338,28 +308,14 @@ describe('DayPickerSingleDateController', () => {
 
       describe('highlighted-calendar', () => {
         describe('focusedInput did not change', () => {
-          it('does not call isDayHighlighted if unchanged', () => {
-            const isDayHighlightedStub = sinon.stub();
-            const wrapper = shallow(<DayPickerSingleDateController
-              {...props}
-              isDayHighlighted={isDayHighlightedStub}
-            />);
-            const prevCallCount = isDayHighlightedStub.callCount;
-            wrapper.instance().componentWillReceiveProps({
-              ...props,
-              isDayHighlighted: isDayHighlightedStub,
-            });
-            expect(isDayHighlightedStub.callCount).to.equal(prevCallCount);
-          });
-
-          it('calls isDayHighlighted if changed', () => {
+          it('does not call isDayHighlighted', () => {
             const isDayHighlightedStub = sinon.stub();
             const wrapper = shallow(<DayPickerSingleDateController {...props} />);
             wrapper.instance().componentWillReceiveProps({
               ...props,
               isDayHighlighted: isDayHighlightedStub,
             });
-            expect(isDayHighlightedStub.callCount).to.not.equal(0);
+            expect(isDayHighlightedStub.callCount).to.equal(0);
           });
         });
 
@@ -749,7 +705,7 @@ describe('DayPickerSingleDateController', () => {
       expect(getModifiersSpy.callCount).to.equal(1);
     });
 
-    it('calls props.onPrevMonthClick with new month', () => {
+    it('calls props.onPrevMonthClick', () => {
       const onPrevMonthClickStub = sinon.stub();
       const wrapper = shallow(
         <DayPickerSingleDateController
@@ -758,14 +714,8 @@ describe('DayPickerSingleDateController', () => {
           onPrevMonthClick={onPrevMonthClickStub}
         />,
       );
-      wrapper.setState({
-        currentMonth: today,
-      });
-      const newMonth = moment().subtract(1, 'month');
       wrapper.instance().onPrevMonthClick();
       expect(onPrevMonthClickStub.callCount).to.equal(1);
-      expect(onPrevMonthClickStub.firstCall.args[0].year()).to.equal(newMonth.year());
-      expect(onPrevMonthClickStub.firstCall.args[0].month()).to.equal(newMonth.month());
     });
   });
 
@@ -831,7 +781,7 @@ describe('DayPickerSingleDateController', () => {
       expect(getModifiersSpy.callCount).to.equal(1);
     });
 
-    it('calls props.onNextMonthClick with new month', () => {
+    it('calls props.onNextMonthClick', () => {
       const onNextMonthClickStub = sinon.stub();
       const wrapper = shallow(
         <DayPickerSingleDateController
@@ -840,14 +790,8 @@ describe('DayPickerSingleDateController', () => {
           onNextMonthClick={onNextMonthClickStub}
         />,
       );
-      wrapper.setState({
-        currentMonth: today,
-      });
-      const newMonth = moment().add(1, 'month');
       wrapper.instance().onNextMonthClick();
       expect(onNextMonthClickStub.callCount).to.equal(1);
-      expect(onNextMonthClickStub.firstCall.args[0].year()).to.equal(newMonth.year());
-      expect(onNextMonthClickStub.firstCall.args[0].month()).to.equal(newMonth.month());
     });
   });
 

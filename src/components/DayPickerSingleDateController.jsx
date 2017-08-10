@@ -28,7 +28,6 @@ import {
 } from '../../constants';
 
 import DayPicker from './DayPicker';
-import OutsideClickHandler from './OutsideClickHandler';
 
 const propTypes = forbidExtraProps({
   date: momentPropTypes.momentObj,
@@ -106,7 +105,7 @@ const defaultProps = {
 
   onPrevMonthClick() {},
   onNextMonthClick() {},
-  onOutsideClick: null,
+  onOutsideClick() {},
 
   renderDay: null,
   renderCalendarInfo: null,
@@ -176,27 +175,17 @@ export default class DayPickerSingleDateController extends React.Component {
     } = nextProps;
     let { visibleDays } = this.state;
 
-    let recomputeOutsideRange = false;
-    let recomputeDayBlocked = false;
-    let recomputeDayHighlighted = false;
-
     if (isOutsideRange !== this.props.isOutsideRange) {
       this.modifiers['blocked-out-of-range'] = day => isOutsideRange(day);
-      recomputeOutsideRange = true;
     }
 
     if (isDayBlocked !== this.props.isDayBlocked) {
       this.modifiers['blocked-calendar'] = day => isDayBlocked(day);
-      recomputeDayBlocked = true;
     }
 
     if (isDayHighlighted !== this.props.isDayHighlighted) {
       this.modifiers['highlighted-calendar'] = day => isDayHighlighted(day);
-      recomputeDayHighlighted = true;
     }
-
-    const recomputePropModifiers =
-      recomputeOutsideRange || recomputeDayBlocked || recomputeDayHighlighted;
 
     if (
       initialVisibleMonth !== this.props.initialVisibleMonth ||
@@ -222,7 +211,7 @@ export default class DayPickerSingleDateController extends React.Component {
       modifiers = this.addModifier(modifiers, date, 'selected');
     }
 
-    if (didFocusChange || recomputePropModifiers) {
+    if (didFocusChange) {
       values(visibleDays).forEach((days) => {
         Object.keys(days).forEach((day) => {
           const momentObj = moment(day);
@@ -232,28 +221,22 @@ export default class DayPickerSingleDateController extends React.Component {
             modifiers = this.deleteModifier(modifiers, momentObj, 'blocked');
           }
 
-          if (didFocusChange || recomputeOutsideRange) {
-            if (isOutsideRange(momentObj)) {
-              modifiers = this.addModifier(modifiers, momentObj, 'blocked-out-of-range');
-            } else {
-              modifiers = this.deleteModifier(modifiers, momentObj, 'blocked-out-of-range');
-            }
+          if (isOutsideRange(momentObj)) {
+            modifiers = this.addModifier(modifiers, momentObj, 'blocked-out-of-range');
+          } else {
+            modifiers = this.deleteModifier(modifiers, momentObj, 'blocked-out-of-range');
           }
 
-          if (didFocusChange || recomputeDayBlocked) {
-            if (isDayBlocked(momentObj)) {
-              modifiers = this.addModifier(modifiers, momentObj, 'blocked-calendar');
-            } else {
-              modifiers = this.deleteModifier(modifiers, momentObj, 'blocked-calendar');
-            }
+          if (isDayBlocked(momentObj)) {
+            modifiers = this.addModifier(modifiers, momentObj, 'blocked-calendar');
+          } else {
+            modifiers = this.deleteModifier(modifiers, momentObj, 'blocked-calendar');
           }
 
-          if (didFocusChange || recomputeDayHighlighted) {
-            if (isDayHighlighted(momentObj)) {
-              modifiers = this.addModifier(modifiers, momentObj, 'highlighted-calendar');
-            } else {
-              modifiers = this.deleteModifier(modifiers, momentObj, 'highlighted-calendar');
-            }
+          if (isDayHighlighted(momentObj)) {
+            modifiers = this.addModifier(modifiers, momentObj, 'highlighted-calendar');
+          } else {
+            modifiers = this.deleteModifier(modifiers, momentObj, 'highlighted-calendar');
           }
         });
       });
@@ -348,7 +331,7 @@ export default class DayPickerSingleDateController extends React.Component {
       },
     });
 
-    onPrevMonthClick(prevMonth.clone());
+    onPrevMonthClick();
   }
 
   onNextMonthClick() {
@@ -363,16 +346,15 @@ export default class DayPickerSingleDateController extends React.Component {
     const nextMonth = currentMonth.clone().add(numberOfMonths, 'month');
     const nextMonthVisibleDays = getVisibleDays(nextMonth, 1, enableOutsideDays);
 
-    const newCurrentMonth = currentMonth.clone().add(1, 'month');
     this.setState({
-      currentMonth: newCurrentMonth,
+      currentMonth: currentMonth.clone().add(1, 'month'),
       visibleDays: {
         ...newVisibleDays,
         ...this.getModifiers(nextMonthVisibleDays),
       },
     });
 
-    onNextMonthClick(newCurrentMonth.clone());
+    onNextMonthClick();
   }
 
 
@@ -566,51 +548,40 @@ export default class DayPickerSingleDateController extends React.Component {
       isFocused,
       isRTL,
       phrases,
-      onOutsideClick,
     } = this.props;
 
     const { currentMonth, visibleDays } = this.state;
 
-    const dayPickerComponent = (<DayPicker
-      orientation={orientation}
-      enableOutsideDays={enableOutsideDays}
-      modifiers={visibleDays}
-      numberOfMonths={numberOfMonths}
-      onDayClick={this.onDayClick}
-      onDayMouseEnter={this.onDayMouseEnter}
-      onDayMouseLeave={this.onDayMouseLeave}
-      onPrevMonthClick={this.onPrevMonthClick}
-      onNextMonthClick={this.onNextMonthClick}
-      monthFormat={monthFormat}
-      withPortal={withPortal}
-      hidden={!focused}
-      hideKeyboardShortcutsPanel={hideKeyboardShortcutsPanel}
-      initialVisibleMonth={() => currentMonth}
-      firstDayOfWeek={firstDayOfWeek}
-      navPrev={navPrev}
-      navNext={navNext}
-      renderMonth={renderMonth}
-      renderDay={renderDay}
-      renderCalendarInfo={renderCalendarInfo}
-      isFocused={isFocused}
-      getFirstFocusableDay={this.getFirstFocusableDay}
-      onBlur={this.onDayPickerBlur}
-      phrases={phrases}
-      daySize={daySize}
-      isRTL={isRTL}
-    />);
-
-    if (onOutsideClick) {
-      return (
-        <OutsideClickHandler
-          onOutsideClick={onOutsideClick}
-        >
-          {dayPickerComponent}
-        </OutsideClickHandler>
-      );
-    }
-
-    return dayPickerComponent;
+    return (
+      <DayPicker
+        orientation={orientation}
+        enableOutsideDays={enableOutsideDays}
+        modifiers={visibleDays}
+        numberOfMonths={numberOfMonths}
+        onDayClick={this.onDayClick}
+        onDayMouseEnter={this.onDayMouseEnter}
+        onDayMouseLeave={this.onDayMouseLeave}
+        onPrevMonthClick={this.onPrevMonthClick}
+        onNextMonthClick={this.onNextMonthClick}
+        monthFormat={monthFormat}
+        withPortal={withPortal}
+        hidden={!focused}
+        hideKeyboardShortcutsPanel={hideKeyboardShortcutsPanel}
+        initialVisibleMonth={() => currentMonth}
+        firstDayOfWeek={firstDayOfWeek}
+        navPrev={navPrev}
+        navNext={navNext}
+        renderMonth={renderMonth}
+        renderDay={renderDay}
+        renderCalendarInfo={renderCalendarInfo}
+        isFocused={isFocused}
+        getFirstFocusableDay={this.getFirstFocusableDay}
+        onBlur={this.onDayPickerBlur}
+        phrases={phrases}
+        daySize={daySize}
+        isRTL={isRTL}
+      />
+    );
   }
 }
 

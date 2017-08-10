@@ -29,6 +29,7 @@ import {
   ANCHOR_LEFT,
   ANCHOR_RIGHT,
   DAY_SIZE,
+  ICON_BEFORE_POSITION,
 } from '../../constants';
 
 const propTypes = forbidExtraProps(SingleDatePickerShape);
@@ -47,6 +48,7 @@ const defaultProps = {
   screenReaderInputMessage: '',
   showClearDate: false,
   showDefaultInputIcon: false,
+  inputIconPosition: ICON_BEFORE_POSITION,
   customInputIcon: null,
   customCloseIcon: null,
 
@@ -308,8 +310,6 @@ export default class SingleDatePicker extends React.Component {
       monthFormat,
       navPrev,
       navNext,
-      onPrevMonthClick,
-      onNextMonthClick,
       withPortal,
       withFullScreenPortal,
       keepOpenOnDateSelect,
@@ -354,8 +354,6 @@ export default class SingleDatePicker extends React.Component {
           initialVisibleMonth={initialVisibleMonth}
           navPrev={navPrev}
           navNext={navNext}
-          onPrevMonthClick={onPrevMonthClick}
-          onNextMonthClick={onNextMonthClick}
           renderMonth={renderMonth}
           renderDay={renderDay}
           renderCalendarInfo={renderCalendarInfo}
@@ -395,6 +393,7 @@ export default class SingleDatePicker extends React.Component {
       readOnly,
       showClearDate,
       showDefaultInputIcon,
+      inputIconPosition,
       customInputIcon,
       date,
       phrases,
@@ -426,6 +425,7 @@ export default class SingleDatePicker extends React.Component {
             onClearDate={this.clearDate}
             showClearDate={showClearDate}
             showDefaultInputIcon={showDefaultInputIcon}
+            inputIconPosition={inputIconPosition}
             customInputIcon={customInputIcon}
             displayValue={displayValue}
             inputValue={inputValue}
