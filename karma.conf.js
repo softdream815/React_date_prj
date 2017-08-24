@@ -9,7 +9,6 @@ module.exports = (config) => {
     frameworks: ['mocha', 'sinon', 'chai'],
 
     files: [
-      'test/_helpers/registerReactWithStylesInterface.js',
       'test/_helpers/restoreSinonStubs.js',
       'test/utils/*',
       'test/components/*',
@@ -28,7 +27,7 @@ module.exports = (config) => {
         }),
       ],
       module: {
-        rules: [
+        loaders: [
           {
             test: /\.jsx?$/,
             loader: 'babel-loader',
@@ -41,14 +40,21 @@ module.exports = (config) => {
               presets: ['airbnb'],
             },
           },
+          {
+            test: /\.svg$/,
+            loader: 'babel!react-svg',
+            include: [
+              path.join(__dirname, 'src'),
+            ],
+          },
           { test: /\.json$/, loader: 'json-loader' },
 
           // Inject the Airbnb shims into the bundle
-          { test: /test\/_helpers/, loader: 'imports-loader?shims=airbnb-js-shims' },
+          { test: /test\/_helpers/, loader: 'imports?shims=airbnb-js-shims' },
         ],
       },
       resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['', '.js', '.jsx'],
       },
     },
 

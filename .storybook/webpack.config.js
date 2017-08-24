@@ -2,34 +2,19 @@ const path = require('path');
 
 module.exports = {
   module: {
-    rules: [
+    loaders: [
       {
-        test: /\.s?css$/,
-        use: ['style-loader', 'raw-loader', 'sass-loader'],
-        include: [
-          path.resolve(__dirname, '../css/'),
-        ],
+        test:   /\.scss$/,
+        loaders: ['style', 'raw', 'sass'],
+        include: path.resolve(__dirname, '../css/')
       },
       {
         test: /\.svg$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            query: {
-              presets: ['airbnb'],
-            },
-          },
-          {
-            loader: 'react-svg-loader',
-            query: {
-              jsx: true,
-            },
-          },
-        ],
-      },
-    ],
+        loader: 'babel!react-svg'
+      }
+    ]
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['', '.js', '.jsx'],
   },
 };

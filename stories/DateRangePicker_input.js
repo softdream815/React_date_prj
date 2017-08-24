@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from '@kadira/storybook';
 
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
 
@@ -44,22 +44,8 @@ const TestCustomCloseIcon = () => (
 storiesOf('DRP - Input Props', module)
   .addWithInfo('default', () => (
     <DateRangePickerWrapper
-      initialStartDate={moment().add(3, 'months')}
-      initialEndDate={moment().add(3, 'months').add(10, 'days')}
-    />
-  ))
-  .addWithInfo('disabled', () => (
-    <DateRangePickerWrapper
-      initialStartDate={moment().add(3, 'months')}
-      initialEndDate={moment().add(3, 'months').add(10, 'days')}
-      disabled
-    />
-  ))
-  .addWithInfo('readOnly', () => (
-    <DateRangePickerWrapper
-      initialStartDate={moment().add(3, 'months')}
-      initialEndDate={moment().add(3, 'months').add(10, 'days')}
-      readOnly
+      initialStartDate={moment().add(3, 'days')}
+      initialEndDate={moment().add(10, 'days')}
     />
   ))
   .addWithInfo('with clear dates button', () => (

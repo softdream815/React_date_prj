@@ -1,8 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from '@kadira/storybook';
 
-import { VERTICAL_ORIENTATION, ANCHOR_RIGHT, OPEN_UP } from '../constants';
+import { VERTICAL_ORIENTATION, ANCHOR_RIGHT } from '../constants';
 
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
 
@@ -47,14 +47,6 @@ const TestCustomInfoPanel = () => (
 storiesOf('DRP - Calendar Props', module)
   .addWithInfo('default', () => (
     <DateRangePickerWrapper autoFocus />
-  ))
-  .addWithInfo('open up', () => (
-    <div style={{ marginTop: '450px' }}>
-      <DateRangePickerWrapper
-        openDirection={OPEN_UP}
-        autoFocus
-      />
-    </div>
   ))
   .addWithInfo('single month', () => (
     <DateRangePickerWrapper numberOfMonths={1} autoFocus />
@@ -126,7 +118,7 @@ storiesOf('DRP - Calendar Props', module)
   ))
   .addWithInfo('with month specified on open', () => (
     <DateRangePickerWrapper
-      initialVisibleMonth={() => moment().add(10, 'months')}
+      initialVisibleMonth={() => moment('04 2017', 'MM YYYY')}
       autoFocus
     />
   ))
@@ -141,28 +133,6 @@ storiesOf('DRP - Calendar Props', module)
   .addWithInfo('with keyboard shorcuts panel hidden', () => (
     <DateRangePickerWrapper
       hideKeyboardShortcutsPanel
-      autoFocus
-    />
-  ))
-  .addWithInfo('with RTL support (and anchor right)', () => (
-    <div style={{ float: 'right' }}>
-      <DateRangePickerWrapper
-        anchorDirection={ANCHOR_RIGHT}
-        isRTL
-        autoFocus
-      />
-    </div>
-  ))
-  .addWithInfo('vertical with RTL support', () => (
-    <DateRangePickerWrapper
-      orientation={VERTICAL_ORIENTATION}
-      isRTL
-      autoFocus
-    />
-  ))
-  .addWithInfo('with custom first day of week', () => (
-    <DateRangePickerWrapper
-      firstDayOfWeek={3}
       autoFocus
     />
   ));

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import moment from 'moment';
-import omit from 'lodash/omit';
+import omit from 'lodash.omit';
 
 import DateRangePicker from '../src/components/DateRangePicker';
 
@@ -49,7 +49,6 @@ const defaultProps = {
   customCloseIcon: null,
 
   // calendar presentation and interaction related props
-  renderMonth: null,
   orientation: HORIZONTAL_ORIENTATION,
   anchorDirection: ANCHOR_LEFT,
   horizontalMargin: 0,
@@ -59,7 +58,6 @@ const defaultProps = {
   numberOfMonths: 2,
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDates: false,
-  isRTL: false,
 
   // navigation related props
   navPrev: null,

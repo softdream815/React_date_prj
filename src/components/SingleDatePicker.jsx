@@ -1,10 +1,9 @@
 import React from 'react';
 import moment from 'moment';
-import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
+import cx from 'classnames';
 import Portal from 'react-portal';
 import { forbidExtraProps } from 'airbnb-prop-types';
-import { addEventListener } from 'consolidated-events';
-import isTouchDevice from 'is-touch-device';
+import { addEventListener, removeEventListener } from 'consolidated-events';
 
 import SingleDatePickerShape from '../shapes/SingleDatePickerShape';
 import { SingleDatePickerPhrases } from '../defaultPhrases';
@@ -12,30 +11,27 @@ import { SingleDatePickerPhrases } from '../defaultPhrases';
 import OutsideClickHandler from './OutsideClickHandler';
 import toMomentObject from '../utils/toMomentObject';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
+import toISODateString from '../utils/toISODateString';
 import getResponsiveContainerStyles from '../utils/getResponsiveContainerStyles';
+import isTouchDevice from '../utils/isTouchDevice';
 
 import SingleDatePickerInput from './SingleDatePickerInput';
-import DayPickerSingleDateController from './DayPickerSingleDateController';
+import DayPicker from './DayPicker';
 
-import CloseButton from './CloseButton';
+import CloseButton from '../svg/close.svg';
 
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
+import isSameDay from '../utils/isSameDay';
 
 import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_ORIENTATION,
   ANCHOR_LEFT,
   ANCHOR_RIGHT,
-  OPEN_DOWN,
-  OPEN_UP,
   DAY_SIZE,
-  ICON_BEFORE_POSITION,
-} from '../constants';
+} from '../../constants';
 
-const propTypes = forbidExtraProps({
-  ...withStylesPropTypes,
-  ...SingleDatePickerShape,
-});
+const propTypes = forbidExtraProps(SingleDatePickerShape);
 
 const defaultProps = {
   // required props for a functional interactive SingleDatePicker
@@ -47,31 +43,23 @@ const defaultProps = {
   placeholder: 'Date',
   disabled: false,
   required: false,
-  readOnly: false,
   screenReaderInputMessage: '',
   showClearDate: false,
-  showDefaultInputIcon: false,
-  inputIconPosition: ICON_BEFORE_POSITION,
-  customInputIcon: null,
   customCloseIcon: null,
 
   // calendar presentation and interaction related props
   orientation: HORIZONTAL_ORIENTATION,
   anchorDirection: ANCHOR_LEFT,
-  openDirection: OPEN_DOWN,
   horizontalMargin: 0,
   withPortal: false,
   withFullScreenPortal: false,
   initialVisibleMonth: null,
-  firstDayOfWeek: null,
   numberOfMonths: 2,
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDate: false,
   renderCalendarInfo: null,
   hideKeyboardShortcutsPanel: false,
   daySize: DAY_SIZE,
-  isRTL: false,
-  verticalHeight: null,
 
   // navigation related props
   navPrev: null,
@@ -80,9 +68,6 @@ const defaultProps = {
   onPrevMonthClick() {},
   onNextMonthClick() {},
   onClose() {},
-
-  // month presentation and interaction related props
-  renderMonth: null,
 
   // day presentation and interaction related props
   renderDay: null,
@@ -94,21 +79,25 @@ const defaultProps = {
   // internationalization props
   displayFormat: () => moment.localeData().longDateFormat('L'),
   monthFormat: 'MMMM YYYY',
-  weekDayFormat: 'dd',
   phrases: SingleDatePickerPhrases,
 };
 
-class SingleDatePicker extends React.Component {
+export default class SingleDatePicker extends React.Component {
   constructor(props) {
     super(props);
-
-    this.isTouchDevice = false;
-
     this.state = {
       dayPickerContainerStyles: {},
+      hoverDate: null,
       isDayPickerFocused: false,
       isInputFocused: false,
     };
+
+    this.today = moment();
+    this.isTouchDevice = false;
+
+    this.onDayMouseEnter = this.onDayMouseEnter.bind(this);
+    this.onDayMouseLeave = this.onDayMouseLeave.bind(this);
+    this.onDayClick = this.onDayClick.bind(this);
 
     this.onDayPickerFocus = this.onDayPickerFocus.bind(this);
     this.onDayPickerBlur = this.onDayPickerBlur.bind(this);
@@ -118,14 +107,14 @@ class SingleDatePicker extends React.Component {
     this.onClearFocus = this.onClearFocus.bind(this);
     this.clearDate = this.clearDate.bind(this);
 
-    this.responsivizePickerPosition = this.responsivizePickerPosition.bind(this);
+    this.getFirstFocusableDay = this.getFirstFocusableDay.bind(this);
 
-    this.setDayPickerContainerRef = this.setDayPickerContainerRef.bind(this);
+    this.responsivizePickerPosition = this.responsivizePickerPosition.bind(this);
   }
 
   /* istanbul ignore next */
   componentDidMount() {
-    this.removeEventListener = addEventListener(
+    this.resizeHandle = addEventListener(
       window,
       'resize',
       this.responsivizePickerPosition,
@@ -142,6 +131,10 @@ class SingleDatePicker extends React.Component {
     this.isTouchDevice = isTouchDevice();
   }
 
+  componentWillUpdate() {
+    this.today = moment();
+  }
+
   componentDidUpdate(prevProps) {
     if (!prevProps.focused && this.props.focused) {
       this.responsivizePickerPosition();
@@ -150,38 +143,65 @@ class SingleDatePicker extends React.Component {
 
   /* istanbul ignore next */
   componentWillUnmount() {
-    if (this.removeEventListener) this.removeEventListener();
+    removeEventListener(this.resizeHandle);
   }
 
   onChange(dateString) {
     const {
+      startDate,
       isOutsideRange,
       keepOpenOnDateSelect,
       onDateChange,
       onFocusChange,
       onClose,
     } = this.props;
-    const newDate = toMomentObject(dateString, this.getDisplayFormat());
+    const endDate = toMomentObject(dateString, this.getDisplayFormat());
 
-    const isValid = newDate && !isOutsideRange(newDate);
+    const isValid = endDate && !isOutsideRange(endDate);
     if (isValid) {
-      onDateChange(newDate);
+      onDateChange(endDate);
       if (!keepOpenOnDateSelect) {
         onFocusChange({ focused: false });
-        onClose({ date: newDate });
+        onClose({ startDate, endDate });
       }
     } else {
       onDateChange(null);
     }
   }
 
-  onFocus() {
+  onDayClick(day, e) {
+    if (e) e.preventDefault();
+    if (this.isBlocked(day)) return;
     const {
-      disabled,
+      onDateChange,
+      keepOpenOnDateSelect,
       onFocusChange,
-      withPortal,
-      withFullScreenPortal,
+      onClose,
+      startDate,
+      endDate,
     } = this.props;
+
+    onDateChange(day);
+    if (!keepOpenOnDateSelect) {
+      onFocusChange({ focused: null });
+      onClose({ startDate, endDate });
+    }
+  }
+
+  onDayMouseEnter(day) {
+    this.setState({
+      hoverDate: day,
+    });
+  }
+
+  onDayMouseLeave() {
+    this.setState({
+      hoverDate: null,
+    });
+  }
+
+  onFocus() {
+    const { disabled, onFocusChange, withPortal, withFullScreenPortal } = this.props;
 
     const moveFocusToDayPicker = withPortal || withFullScreenPortal || this.isTouchDevice;
     if (moveFocusToDayPicker) {
@@ -196,13 +216,7 @@ class SingleDatePicker extends React.Component {
   }
 
   onClearFocus() {
-    const {
-      startDate,
-      endDate,
-      focused,
-      onFocusChange,
-      onClose,
-    } = this.props;
+    const { startDate, endDate, focused, onFocusChange, onClose } = this.props;
     if (!focused) return;
 
     this.setState({
@@ -236,13 +250,50 @@ class SingleDatePicker extends React.Component {
     return toLocalizedDateString(date);
   }
 
+  getDayPickerContainerClasses() {
+    const { orientation, withPortal, withFullScreenPortal, anchorDirection } = this.props;
+    const { hoverDate } = this.state;
+
+    const dayPickerClassName = cx('SingleDatePicker__picker', {
+      'SingleDatePicker__picker--direction-left': anchorDirection === ANCHOR_LEFT,
+      'SingleDatePicker__picker--direction-right': anchorDirection === ANCHOR_RIGHT,
+      'SingleDatePicker__picker--horizontal': orientation === HORIZONTAL_ORIENTATION,
+      'SingleDatePicker__picker--vertical': orientation === VERTICAL_ORIENTATION,
+      'SingleDatePicker__picker--portal': withPortal || withFullScreenPortal,
+      'SingleDatePicker__picker--full-screen-portal': withFullScreenPortal,
+      'SingleDatePicker__picker--valid-date-hovered': hoverDate && !this.isBlocked(hoverDate),
+    });
+
+    return dayPickerClassName;
+  }
+
   getDisplayFormat() {
     const { displayFormat } = this.props;
     return typeof displayFormat === 'string' ? displayFormat : displayFormat();
   }
 
-  setDayPickerContainerRef(ref) {
-    this.dayPickerContainer = ref;
+  getFirstFocusableDay(newMonth) {
+    const { date, numberOfMonths } = this.props;
+
+    let focusedDate = newMonth.clone().startOf('month');
+    if (date) {
+      focusedDate = date.clone();
+    }
+
+    if (this.isBlocked(focusedDate)) {
+      const days = [];
+      const lastVisibleDay = newMonth.clone().add(numberOfMonths - 1, 'months').endOf('month');
+      let currentDay = focusedDate.clone();
+      while (!currentDay.isAfter(lastVisibleDay)) {
+        currentDay = currentDay.clone().add(1, 'day');
+        days.push(currentDay);
+      }
+
+      const viableDays = days.filter(day => !this.isBlocked(day) && day.isAfter(focusedDate));
+      if (viableDays.length > 0) focusedDate = viableDays[0];
+    }
+
+    return focusedDate;
   }
 
   clearDate() {
@@ -255,10 +306,6 @@ class SingleDatePicker extends React.Component {
 
   /* istanbul ignore next */
   responsivizePickerPosition() {
-    // It's possible the portal props have been changed in response to window resizes
-    // So let's ensure we reset this back to the base state each time
-    this.setState({ dayPickerContainerStyles: {} });
-
     const {
       anchorDirection,
       horizontalMargin,
@@ -277,9 +324,8 @@ class SingleDatePicker extends React.Component {
     if (!withPortal && !withFullScreenPortal) {
       const containerRect = this.dayPickerContainer.getBoundingClientRect();
       const currentOffset = dayPickerContainerStyles[anchorDirection] || 0;
-      const containerEdge = isAnchoredLeft
-        ? containerRect[ANCHOR_RIGHT]
-        : containerRect[ANCHOR_LEFT];
+      const containerEdge =
+        isAnchoredLeft ? containerRect[ANCHOR_RIGHT] : containerRect[ANCHOR_LEFT];
 
       this.setState({
         dayPickerContainerStyles: getResponsiveContainerStyles(
@@ -290,6 +336,23 @@ class SingleDatePicker extends React.Component {
         ),
       });
     }
+  }
+
+  isBlocked(day) {
+    const { isDayBlocked, isOutsideRange } = this.props;
+    return isDayBlocked(day) || isOutsideRange(day);
+  }
+
+  isHovered(day) {
+    return isSameDay(day, this.state.hoverDate);
+  }
+
+  isSelected(day) {
+    return isSameDay(day, this.props.date);
+  }
+
+  isToday(day) {
+    return isSameDay(day, this.today);
   }
 
   maybeRenderDayPickerWithPortal() {
@@ -312,12 +375,9 @@ class SingleDatePicker extends React.Component {
 
   renderDayPicker() {
     const {
-      anchorDirection,
-      openDirection,
-      onDateChange,
-      date,
-      onFocusChange,
-      focused,
+      isDayBlocked,
+      isDayHighlighted,
+      isOutsideRange,
       enableOutsideDays,
       numberOfMonths,
       orientation,
@@ -328,77 +388,64 @@ class SingleDatePicker extends React.Component {
       onNextMonthClick,
       withPortal,
       withFullScreenPortal,
-      keepOpenOnDateSelect,
-      initialVisibleMonth,
-      renderMonth,
+      focused,
       renderDay,
       renderCalendarInfo,
+      date,
+      initialVisibleMonth,
       hideKeyboardShortcutsPanel,
-      firstDayOfWeek,
       customCloseIcon,
       phrases,
       daySize,
-      isRTL,
-      isOutsideRange,
-      isDayBlocked,
-      isDayHighlighted,
-      weekDayFormat,
-      styles,
-      verticalHeight,
     } = this.props;
     const { dayPickerContainerStyles, isDayPickerFocused } = this.state;
 
+    const modifiers = {
+      today: day => this.isToday(day),
+      blocked: day => this.isBlocked(day),
+      'blocked-calendar': day => isDayBlocked(day),
+      'blocked-out-of-range': day => isOutsideRange(day),
+      'highlighted-calendar': day => isDayHighlighted(day),
+      valid: day => !this.isBlocked(day),
+      hovered: day => this.isHovered(day),
+      selected: day => this.isSelected(day),
+    };
+
     const onOutsideClick = (!withFullScreenPortal && withPortal) ? this.onClearFocus : undefined;
+    const initialVisibleMonthThunk = initialVisibleMonth || (() => (date || moment()));
     const closeIcon = customCloseIcon || (<CloseButton />);
 
     return (
       <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-        ref={this.setDayPickerContainerRef}
-        {...css(
-          styles.SingleDatePicker_picker,
-          anchorDirection === ANCHOR_LEFT && styles.SingleDatePicker_picker__directionLeft,
-          anchorDirection === ANCHOR_RIGHT && styles.SingleDatePicker_picker__directionRight,
-          openDirection === OPEN_DOWN && styles.SingleDatePicker_picker__openDown,
-          openDirection === OPEN_UP && styles.SingleDatePicker_picker__openUp,
-          orientation === HORIZONTAL_ORIENTATION && styles.SingleDatePicker_picker__horizontal,
-          orientation === VERTICAL_ORIENTATION && styles.SingleDatePicker_picker__vertical,
-          (withPortal || withFullScreenPortal) && styles.SingleDatePicker_picker__portal,
-          withFullScreenPortal && styles.SingleDatePicker_picker__fullScreenPortal,
-          isRTL && styles.SingleDatePicker_picker__rtl,
-        )}
+        ref={(ref) => { this.dayPickerContainer = ref; }}
+        className={this.getDayPickerContainerClasses()}
         style={dayPickerContainerStyles}
         onClick={onOutsideClick}
       >
-        <DayPickerSingleDateController
-          date={date}
-          onDateChange={onDateChange}
-          onFocusChange={onFocusChange}
+        <DayPicker
           orientation={orientation}
           enableOutsideDays={enableOutsideDays}
+          modifiers={modifiers}
           numberOfMonths={numberOfMonths}
-          monthFormat={monthFormat}
-          withPortal={withPortal || withFullScreenPortal}
-          focused={focused}
-          keepOpenOnDateSelect={keepOpenOnDateSelect}
-          hideKeyboardShortcutsPanel={hideKeyboardShortcutsPanel}
-          initialVisibleMonth={initialVisibleMonth}
-          navPrev={navPrev}
-          navNext={navNext}
+          onDayClick={this.onDayClick}
+          onDayMouseEnter={this.onDayMouseEnter}
+          onDayMouseLeave={this.onDayMouseLeave}
           onPrevMonthClick={onPrevMonthClick}
           onNextMonthClick={onNextMonthClick}
-          renderMonth={renderMonth}
+          monthFormat={monthFormat}
+          withPortal={withPortal || withFullScreenPortal}
+          hidden={!focused}
+          initialVisibleMonth={initialVisibleMonthThunk}
+          hideKeyboardShortcutsPanel={hideKeyboardShortcutsPanel}
+          navPrev={navPrev}
+          navNext={navNext}
           renderDay={renderDay}
           renderCalendarInfo={renderCalendarInfo}
           isFocused={isDayPickerFocused}
+          getFirstFocusableDay={this.getFirstFocusableDay}
+          onBlur={this.onDayPickerBlur}
           phrases={phrases}
           daySize={daySize}
-          isRTL={isRTL}
-          isOutsideRange={isOutsideRange}
-          isDayBlocked={isDayBlocked}
-          isDayHighlighted={isDayHighlighted}
-          firstDayOfWeek={firstDayOfWeek}
-          weekDayFormat={weekDayFormat}
-          verticalHeight={verticalHeight}
         />
 
         {withFullScreenPortal && (
@@ -424,30 +471,23 @@ class SingleDatePicker extends React.Component {
       disabled,
       focused,
       required,
-      readOnly,
-      openDirection,
       showClearDate,
-      showDefaultInputIcon,
-      inputIconPosition,
-      customCloseIcon,
-      customInputIcon,
       date,
       phrases,
       withPortal,
       withFullScreenPortal,
       screenReaderInputMessage,
-      isRTL,
-      styles,
     } = this.props;
 
     const { isInputFocused } = this.state;
 
     const displayValue = this.getDateString(date);
+    const inputValue = toISODateString(date);
 
     const onOutsideClick = (!withPortal && !withFullScreenPortal) ? this.onClearFocus : undefined;
 
     return (
-      <div {...css(styles.SingleDatePicker)}>
+      <div className="SingleDatePicker">
         <OutsideClickHandler onOutsideClick={onOutsideClick}>
           <SingleDatePickerInput
             id={id}
@@ -456,16 +496,11 @@ class SingleDatePicker extends React.Component {
             isFocused={isInputFocused}
             disabled={disabled}
             required={required}
-            readOnly={readOnly}
-            openDirection={openDirection}
             showCaret={!withPortal && !withFullScreenPortal}
             onClearDate={this.clearDate}
             showClearDate={showClearDate}
-            showDefaultInputIcon={showDefaultInputIcon}
-            inputIconPosition={inputIconPosition}
-            customCloseIcon={customCloseIcon}
-            customInputIcon={customInputIcon}
             displayValue={displayValue}
+            inputValue={inputValue}
             onChange={this.onChange}
             onFocus={this.onFocus}
             onKeyDownShiftTab={this.onClearFocus}
@@ -473,7 +508,6 @@ class SingleDatePicker extends React.Component {
             onKeyDownArrowDown={this.onDayPickerFocus}
             screenReaderMessage={screenReaderInputMessage}
             phrases={phrases}
-            isRTL={isRTL}
           />
 
           {this.maybeRenderDayPickerWithPortal()}
@@ -485,82 +519,3 @@ class SingleDatePicker extends React.Component {
 
 SingleDatePicker.propTypes = propTypes;
 SingleDatePicker.defaultProps = defaultProps;
-
-export { SingleDatePicker as PureSingleDatePicker };
-export default withStyles(({ reactDates: { color, spacing, zIndex } }) => ({
-  SingleDatePicker: {
-    position: 'relative',
-    display: 'inline-block',
-  },
-
-  SingleDatePicker_picker: {
-    zIndex: zIndex + 1,
-    backgroundColor: color.background,
-    position: 'absolute',
-  },
-
-  SingleDatePicker_picker__rtl: {
-    direction: 'rtl',
-  },
-
-  SingleDatePicker_picker__directionLeft: {
-    left: 0,
-  },
-
-  SingleDatePicker_picker__directionRight: {
-    right: 0,
-  },
-
-  SingleDatePicker_picker__openDown: {
-    top: spacing.inputMarginBottom,
-  },
-
-  SingleDatePicker_picker__openUp: {
-    bottom: spacing.inputMarginBottom,
-  },
-
-  SingleDatePicker_picker__portal: {
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    height: '100%',
-    width: '100%',
-  },
-
-  SingleDatePicker_picker__fullScreenPortal: {
-    backgroundColor: color.background,
-  },
-
-  SingleDatePicker_closeButton: {
-    background: 'none',
-    border: 0,
-    color: 'inherit',
-    font: 'inherit',
-    lineHeight: 'normal',
-    overflow: 'visible',
-    cursor: 'pointer',
-
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    padding: 15,
-    zIndex: zIndex + 2,
-
-    ':hover': {
-      color: `darken(${color.core.grayLighter}, 10%)`,
-      textDecoration: 'none',
-    },
-
-    ':focus': {
-      color: `darken(${color.core.grayLighter}, 10%)`,
-      textDecoration: 'none',
-    },
-  },
-
-  SingleDatePicker_closeButton_svg: {
-    height: 15,
-    width: 15,
-    fill: color.core.grayLighter,
-  },
-}))(SingleDatePicker);

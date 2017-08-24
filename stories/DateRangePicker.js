@@ -1,10 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import momentJalaali from 'moment-jalaali';
-import { storiesOf } from '@storybook/react';
-import {
-  VERTICAL_ORIENTATION,
-} from '../constants';
+import { storiesOf } from '@kadira/storybook';
 
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
 
@@ -81,19 +77,4 @@ storiesOf('DateRangePicker (DRP)', module)
         }}
       />
     );
-  })
-  .addWithInfo('non-english locale (Persian)', () => {
-    moment.locale('fa');
-    return (
-      <DateRangePickerWrapper
-        renderMonth={month => momentJalaali(month).format('jMMMM jYYYY')}
-        renderDay={day => momentJalaali(day).format('jD')}
-      />
-    );
-  })
-  .addWithInfo('vertical with custom height', () => (
-    <DateRangePickerWrapper
-      orientation={VERTICAL_ORIENTATION}
-      verticalHeight={568}
-    />
-  ));
+  });

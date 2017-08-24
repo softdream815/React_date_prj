@@ -1,5 +1,5 @@
 import React from 'react';
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from '@kadira/storybook';
 import DayPicker from '../src/components/DayPicker';
 
 import {
@@ -84,13 +84,6 @@ storiesOf('DayPicker', module)
       daySize={50}
     />
   ))
-  .addWithInfo('vertical with custom height', () => (
-    <DayPicker
-      numberOfMonths={2}
-      orientation={VERTICAL_ORIENTATION}
-      verticalHeight={568}
-    />
-  ))
   .addWithInfo('with custom arrows', () => (
     <DayPicker
       navPrev={<TestPrevIcon />}
@@ -115,10 +108,5 @@ storiesOf('DayPicker', module)
       renderCalendarInfo={() => (
         <TestCustomInfoPanel />
       )}
-    />
-  ))
-  .addWithInfo('with custom week day format', () => (
-    <DayPicker
-      weekDayFormat='ddd'
     />
   ));

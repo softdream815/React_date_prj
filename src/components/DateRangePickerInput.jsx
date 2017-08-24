@@ -1,30 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
-import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
+import cx from 'classnames';
 
 import { DateRangePickerInputPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
-import openDirectionShape from '../shapes/OpenDirectionShape';
 
 import DateInput from './DateInput';
-import IconPositionShape from '../shapes/IconPositionShape';
+import RightArrow from '../svg/arrow-right.svg';
+import CloseButton from '../svg/close.svg';
+import CalendarIcon from '../svg/calendar.svg';
 
-import RightArrow from './RightArrow';
-import LeftArrow from './LeftArrow';
-import CloseButton from './CloseButton';
-import CalendarIcon from './CalendarIcon';
-
-import {
-  START_DATE,
-  END_DATE,
-  ICON_BEFORE_POSITION,
-  ICON_AFTER_POSITION,
-  OPEN_DOWN,
-} from '../constants';
+import { START_DATE, END_DATE } from '../../constants';
 
 const propTypes = forbidExtraProps({
-  ...withStylesPropTypes,
   startDateId: PropTypes.string,
   startDatePlaceholderText: PropTypes.string,
   screenReaderMessage: PropTypes.string,
@@ -39,22 +28,21 @@ const propTypes = forbidExtraProps({
   onStartDateShiftTab: PropTypes.func,
   onEndDateTab: PropTypes.func,
   onClearDates: PropTypes.func,
-  onKeyDownArrowDown: PropTypes.func,
-  onKeyDownQuestionMark: PropTypes.func,
+  onArrowDown: PropTypes.func,
+  onQuestionMark: PropTypes.func,
 
   startDate: PropTypes.string,
+  startDateValue: PropTypes.string,
   endDate: PropTypes.string,
+  endDateValue: PropTypes.string,
 
   isStartDateFocused: PropTypes.bool,
   isEndDateFocused: PropTypes.bool,
   showClearDates: PropTypes.bool,
   disabled: PropTypes.bool,
   required: PropTypes.bool,
-  readOnly: PropTypes.bool,
-  openDirection: openDirectionShape,
   showCaret: PropTypes.bool,
   showDefaultInputIcon: PropTypes.bool,
-  inputIconPosition: IconPositionShape,
   customInputIcon: PropTypes.node,
   customArrowIcon: PropTypes.node,
   customCloseIcon: PropTypes.node,
@@ -64,8 +52,6 @@ const propTypes = forbidExtraProps({
 
   // i18n
   phrases: PropTypes.shape(getPhrasePropTypes(DateRangePickerInputPhrases)),
-
-  isRTL: PropTypes.bool,
 });
 
 const defaultProps = {
@@ -81,22 +67,21 @@ const defaultProps = {
   onStartDateShiftTab() {},
   onEndDateTab() {},
   onClearDates() {},
-  onKeyDownArrowDown() {},
-  onKeyDownQuestionMark() {},
+  onArrowDown() {},
+  onQuestionMark() {},
 
   startDate: '',
+  startDateValue: '',
   endDate: '',
+  endDateValue: '',
 
   isStartDateFocused: false,
   isEndDateFocused: false,
   showClearDates: false,
   disabled: false,
   required: false,
-  readOnly: false,
-  openDirection: OPEN_DOWN,
   showCaret: false,
   showDefaultInputIcon: false,
-  inputIconPosition: ICON_BEFORE_POSITION,
   customInputIcon: null,
   customArrowIcon: null,
   customCloseIcon: null,
@@ -106,230 +91,156 @@ const defaultProps = {
 
   // i18n
   phrases: DateRangePickerInputPhrases,
-
-  isRTL: false,
 };
 
-function DateRangePickerInput({
-  startDate,
-  startDateId,
-  startDatePlaceholderText,
-  screenReaderMessage,
-  isStartDateFocused,
-  onStartDateChange,
-  onStartDateFocus,
-  onStartDateShiftTab,
-  endDate,
-  endDateId,
-  endDatePlaceholderText,
-  isEndDateFocused,
-  onEndDateChange,
-  onEndDateFocus,
-  onEndDateTab,
-  onKeyDownArrowDown,
-  onKeyDownQuestionMark,
-  onClearDates,
-  showClearDates,
-  disabled,
-  required,
-  readOnly,
-  showCaret,
-  openDirection,
-  showDefaultInputIcon,
-  inputIconPosition,
-  customInputIcon,
-  customArrowIcon,
-  customCloseIcon,
-  isFocused,
-  phrases,
-  isRTL,
-  styles,
-}) {
-  const calendarIcon = customInputIcon || (
-    <CalendarIcon {...css(styles.DateRangePickerInput_calendarIcon_svg)} />
-  );
-  const arrowIcon = customArrowIcon || (isRTL
-    ? <LeftArrow {...css(styles.DateRangePickerInput_arrow_svg)} />
-    : <RightArrow {...css(styles.DateRangePickerInput_arrow_svg)} />
-  );
-  const closeIcon = customCloseIcon || (
-    <CloseButton {...css(styles.DateRangePickerInput_clearDates_svg)} />
-  );
-  const screenReaderText = screenReaderMessage || phrases.keyboardNavigationInstructions;
-  const inputIcon = (showDefaultInputIcon || customInputIcon !== null) && (
-    <button
-      {...css(styles.DateRangePickerInput_calendarIcon)}
-      type="button"
-      disabled={disabled}
-      aria-label={phrases.focusStartDate}
-      onClick={onKeyDownArrowDown}
-    >
-      {calendarIcon}
-    </button>
-  );
+export default class DateRangePickerInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isClearDatesHovered: false,
+    };
 
-  return (
-    <div
-      {...css(
-        styles.DateRangePickerInput,
-        disabled && styles.DateRangePickerInput__disabled,
-        isRTL && styles.DateRangePickerInput__rtl,
-      )}
-    >
-      {inputIconPosition === ICON_BEFORE_POSITION && inputIcon}
+    this.onClearDatesMouseEnter = this.onClearDatesMouseEnter.bind(this);
+    this.onClearDatesMouseLeave = this.onClearDatesMouseLeave.bind(this);
+  }
 
-      <DateInput
-        id={startDateId}
-        placeholder={startDatePlaceholderText}
-        displayValue={startDate}
-        screenReaderMessage={screenReaderText}
-        focused={isStartDateFocused}
-        isFocused={isFocused}
-        disabled={disabled}
-        required={required}
-        readOnly={readOnly}
-        showCaret={showCaret}
-        openDirection={openDirection}
-        onChange={onStartDateChange}
-        onFocus={onStartDateFocus}
-        onKeyDownShiftTab={onStartDateShiftTab}
-        onKeyDownArrowDown={onKeyDownArrowDown}
-        onKeyDownQuestionMark={onKeyDownQuestionMark}
-      />
+  onClearDatesMouseEnter() {
+    this.setState({
+      isClearDatesHovered: true,
+    });
+  }
 
+  onClearDatesMouseLeave() {
+    this.setState({
+      isClearDatesHovered: false,
+    });
+  }
+
+  render() {
+    const { isClearDatesHovered } = this.state;
+    const {
+      startDate,
+      startDateValue,
+      startDateId,
+      startDatePlaceholderText,
+      screenReaderMessage,
+      isStartDateFocused,
+      onStartDateChange,
+      onStartDateFocus,
+      onStartDateShiftTab,
+      endDate,
+      endDateValue,
+      endDateId,
+      endDatePlaceholderText,
+      isEndDateFocused,
+      onEndDateChange,
+      onEndDateFocus,
+      onEndDateTab,
+      onArrowDown,
+      onQuestionMark,
+      onClearDates,
+      showClearDates,
+      disabled,
+      required,
+      showCaret,
+      showDefaultInputIcon,
+      customInputIcon,
+      customArrowIcon,
+      customCloseIcon,
+      isFocused,
+      phrases,
+    } = this.props;
+
+    const inputIcon = customInputIcon || (<CalendarIcon />);
+    const arrowIcon = customArrowIcon || (<RightArrow />);
+    const closeIcon = customCloseIcon || (<CloseButton />);
+
+    const screenReaderText = screenReaderMessage || phrases.keyboardNavigationInstructions;
+
+    return (
       <div
-        {...css(styles.DateRangePickerInput_arrow)}
-        aria-hidden="true"
-        role="presentation"
+        className={cx('DateRangePickerInput', {
+          'DateRangePickerInput--disabled': disabled,
+        })}
       >
-        {arrowIcon}
-      </div>
+        {(showDefaultInputIcon || customInputIcon !== null) && (
+          <button
+            type="button"
+            className="DateRangePickerInput__calendar-icon"
+            aria-label={phrases.focusStartDate}
+            onClick={onArrowDown}
+          >
+            {inputIcon}
+          </button>
+        )}
 
-      <DateInput
-        id={endDateId}
-        placeholder={endDatePlaceholderText}
-        displayValue={endDate}
-        screenReaderMessage={screenReaderText}
-        focused={isEndDateFocused}
-        isFocused={isFocused}
-        disabled={disabled}
-        required={required}
-        readOnly={readOnly}
-        showCaret={showCaret}
-        openDirection={openDirection}
-        onChange={onEndDateChange}
-        onFocus={onEndDateFocus}
-        onKeyDownTab={onEndDateTab}
-        onKeyDownArrowDown={onKeyDownArrowDown}
-        onKeyDownQuestionMark={onKeyDownQuestionMark}
-      />
-
-      {showClearDates && (
-        <button
-          type="button"
-          aria-label={phrases.clearDates}
-          {...css(
-            styles.DateRangePickerInput_clearDates,
-            !(startDate || endDate) && styles.DateRangePickerInput_clearDates__hide,
-          )}
-          onClick={onClearDates}
+        <DateInput
+          id={startDateId}
+          placeholder={startDatePlaceholderText}
+          displayValue={startDate}
+          inputValue={startDateValue}
+          screenReaderMessage={screenReaderText}
+          focused={isStartDateFocused}
+          isFocused={isFocused}
           disabled={disabled}
+          required={required}
+          showCaret={showCaret}
+
+          onChange={onStartDateChange}
+          onFocus={onStartDateFocus}
+          onKeyDownShiftTab={onStartDateShiftTab}
+          onKeyDownArrowDown={onArrowDown}
+          onKeyDownQuestionMark={onQuestionMark}
+        />
+
+        <div
+          className="DateRangePickerInput__arrow"
+          aria-hidden="true"
+          role="presentation"
         >
-          {closeIcon}
-        </button>
-      )}
+          {arrowIcon}
+        </div>
 
-      {inputIconPosition === ICON_AFTER_POSITION && inputIcon}
+        <DateInput
+          id={endDateId}
+          placeholder={endDatePlaceholderText}
+          displayValue={endDate}
+          inputValue={endDateValue}
+          screenReaderMessage={screenReaderText}
+          focused={isEndDateFocused}
+          isFocused={isFocused}
+          disabled={disabled}
+          required={required}
+          showCaret={showCaret}
 
-    </div>
-  );
+          onChange={onEndDateChange}
+          onFocus={onEndDateFocus}
+          onKeyDownTab={onEndDateTab}
+          onKeyDownArrowDown={onArrowDown}
+          onKeyDownQuestionMark={onQuestionMark}
+        />
+
+        {showClearDates && (
+          <button
+            type="button"
+            aria-label={phrases.clearDates}
+            className={cx('DateRangePickerInput__clear-dates', {
+              'DateRangePickerInput__clear-dates--hide': !(startDate || endDate),
+              'DateRangePickerInput__clear-dates--hover': isClearDatesHovered,
+            })}
+            onMouseEnter={this.onClearDatesMouseEnter}
+            onMouseLeave={this.onClearDatesMouseLeave}
+            onClick={onClearDates}
+          >
+            <div className="DateRangePickerInput__close-icon">
+              {closeIcon}
+            </div>
+          </button>
+        )}
+      </div>
+    );
+  }
 }
 
 DateRangePickerInput.propTypes = propTypes;
 DateRangePickerInput.defaultProps = defaultProps;
-
-export default withStyles(({ reactDates: { color, sizing } }) => ({
-  DateRangePickerInput: {
-    backgroundColor: color.background,
-    border: `1px solid ${color.core.grayLighter}`,
-    display: 'inline-block',
-  },
-
-  DateRangePickerInput__disabled: {
-    background: color.disabled,
-  },
-
-  DateRangePickerInput__rtl: {
-    direction: 'rtl',
-  },
-
-  DateRangePickerInput_arrow: {
-    display: 'inline-block',
-    verticalAlign: 'middle',
-  },
-
-  DateRangePickerInput_arrow_svg: {
-    verticalAlign: 'middle',
-    fill: color.text,
-    height: sizing.arrowWidth,
-    width: sizing.arrowWidth,
-  },
-
-  DateRangePickerInput_clearDates: {
-    background: 'none',
-    border: 0,
-    color: 'inherit',
-    font: 'inherit',
-    lineHeight: 'normal',
-    overflow: 'visible',
-
-    cursor: 'pointer',
-    display: 'inline-block',
-    verticalAlign: 'middle',
-    padding: 10,
-    margin: '0 10px 0 5px',
-
-    ':focus': {
-      background: color.core.border,
-      borderRadius: '50%',
-    },
-
-    ':hover': {
-      background: color.core.border,
-      borderRadius: '50%',
-    },
-  },
-
-  DateRangePickerInput_clearDates__hide: {
-    visibility: 'hidden',
-  },
-
-  DateRangePickerInput_clearDates_svg: {
-    fill: color.core.grayLight,
-    height: 12,
-    width: 15,
-    verticalAlign: 'middle',
-  },
-
-  DateRangePickerInput_calendarIcon: {
-    background: 'none',
-    border: 0,
-    color: 'inherit',
-    font: 'inherit',
-    lineHeight: 'normal',
-    overflow: 'visible',
-
-    cursor: 'pointer',
-    display: 'inline-block',
-    verticalAlign: 'middle',
-    padding: 10,
-    margin: '0 5px 0 10px',
-  },
-
-  DateRangePickerInput_calendarIcon_svg: {
-    fill: color.core.grayLight,
-    height: 15,
-    width: 14,
-    verticalAlign: 'middle',
-  },
-}))(DateRangePickerInput);
