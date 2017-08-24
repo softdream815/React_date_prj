@@ -1,5 +1,13 @@
 # Change Log
 
+## 16.0.1
+- [fix] Add back missing onKeyDown method to `CalendarDay` ([#901](https://github.com/airbnb/react-dates/pull/901))
+
+## 16.0.0
+- [breaking] Simplify `CalendarDay` component ([#894](https://github.com/airbnb/react-dates/pull/894))
+- [breaking] rename `renderDay` prop to `renderDayContents` ([#894](https://github.com/airbnb/react-dates/pull/894))
+- [new] Add `renderCalendarDay` component to allow for easy one-off customization of `CalendarDay` ([#894](https://github.com/airbnb/react-dates/pull/894))
+
 ## 15.5.2
 - revert [#866](https://github.com/airbnb/react-dates/pull/866); it turned out to be semver-major
 
