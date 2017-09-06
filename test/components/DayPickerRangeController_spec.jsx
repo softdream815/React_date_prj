@@ -143,88 +143,198 @@ describe('DayPickerRangeController', () => {
       });
 
       describe('numberOfMonths changed', () => {
-        it('calls getStateForNewMonth with nextProps', () => {
-          const getStateForNewMonthSpy =
-            sinon.spy(DayPickerRangeController.prototype, 'getStateForNewMonth');
-          const wrapper = shallow(<DayPickerRangeController {...props} />);
-          getStateForNewMonthSpy.reset();
-          wrapper.instance().componentWillReceiveProps({
-            ...props,
-            numberOfMonths: 5,
+        describe('focusedInput has changed and is truthy', () => {
+          it('calls getStateForNewMonth with nextProps', () => {
+            const getStateForNewMonthSpy =
+              sinon.spy(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            getStateForNewMonthSpy.reset();
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: START_DATE,
+              numberOfMonths: 5,
+            });
+            expect(getStateForNewMonthSpy.callCount).to.equal(1);
           });
-          expect(getStateForNewMonthSpy.callCount).to.equal(1);
+
+          it('sets state.currentMonth to getStateForNewMonth.currentMonth', () => {
+            const currentMonth = moment().add(10, 'months');
+            const getStateForNewMonthStub =
+              sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            getStateForNewMonthStub.returns({ currentMonth, visibleDays: {} });
+
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: START_DATE,
+              numberOfMonths: 5,
+            });
+            expect(wrapper.instance().state.currentMonth).to.equal(currentMonth);
+          });
+
+          it('sets state.visibleDays to getStateForNewMonth.visibleDays', () => {
+            const currentMonth = moment().add(10, 'months');
+            const visibleDays = getVisibleDays(currentMonth, 1);
+            const getStateForNewMonthStub =
+              sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            getStateForNewMonthStub.returns({ currentMonth, visibleDays });
+
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: START_DATE,
+              numberOfMonths: 5,
+            });
+            expect(wrapper.instance().state.visibleDays).to.equal(visibleDays);
+          });
         });
 
-        it('sets state.currentMonth to getStateForNewMonth.currentMonth', () => {
-          const currentMonth = moment().add(10, 'months');
-          const getStateForNewMonthStub =
-            sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
-          getStateForNewMonthStub.returns({ currentMonth, visibleDays: {} });
-
-          const wrapper = shallow(<DayPickerRangeController {...props} />);
-          wrapper.instance().componentWillReceiveProps({
-            ...props,
-            numberOfMonths: 5,
+        describe('focusedInput has not changed', () => {
+          it('does not call getStateForNewMonth', () => {
+            const getStateForNewMonthSpy =
+              sinon.spy(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            getStateForNewMonthSpy.reset();
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: null,
+              numberOfMonths: 5,
+            });
+            expect(getStateForNewMonthSpy.callCount).to.equal(0);
           });
-          expect(wrapper.instance().state.currentMonth).to.equal(currentMonth);
-        });
 
-        it('sets state.visibleDays to getStateForNewMonth.visibleDays', () => {
-          const currentMonth = moment().add(10, 'months');
-          const visibleDays = getVisibleDays(currentMonth, 1);
-          const getStateForNewMonthStub =
-            sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
-          getStateForNewMonthStub.returns({ currentMonth, visibleDays });
+          it('does not change state.currentMonth', () => {
+            const currentMonth = moment().add(10, 'months');
+            const getStateForNewMonthStub =
+              sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            getStateForNewMonthStub.returns({ currentMonth: moment(), visibleDays: {} });
 
-          const wrapper = shallow(<DayPickerRangeController {...props} />);
-          wrapper.instance().componentWillReceiveProps({
-            ...props,
-            numberOfMonths: 5,
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            wrapper.setState({ currentMonth });
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: null,
+              numberOfMonths: 5,
+            });
+            expect(wrapper.instance().state.currentMonth).to.equal(currentMonth);
           });
-          expect(wrapper.instance().state.visibleDays).to.equal(visibleDays);
+
+          it('does not change state.visibleDays', () => {
+            const visibleDays = {};
+            const getStateForNewMonthStub =
+              sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            getStateForNewMonthStub.returns({
+              currentMonth: moment(),
+              visibleDays: getVisibleDays(moment(), 1),
+            });
+
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            wrapper.setState({ visibleDays });
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: null,
+              numberOfMonths: 5,
+            });
+            expect(wrapper.instance().state.visibleDays).to.equal(visibleDays);
+          });
         });
       });
 
       describe('enableOutsideDays changed', () => {
-        it('calls getStateForNewMonth with nextProps', () => {
-          const getStateForNewMonthSpy =
-            sinon.spy(DayPickerRangeController.prototype, 'getStateForNewMonth');
-          const wrapper = shallow(<DayPickerRangeController {...props} />);
-          getStateForNewMonthSpy.reset();
-          wrapper.instance().componentWillReceiveProps({
-            ...props,
-            enableOutsideDays: true,
+        describe('focusedInput has changed and is truthy', () => {
+          it('calls getStateForNewMonth with nextProps', () => {
+            const getStateForNewMonthSpy =
+              sinon.spy(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            getStateForNewMonthSpy.reset();
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: START_DATE,
+              enableOutsideDays: true,
+            });
+            expect(getStateForNewMonthSpy.callCount).to.equal(1);
           });
-          expect(getStateForNewMonthSpy.callCount).to.equal(1);
+
+          it('sets state.currentMonth to getStateForNewMonth.currentMonth', () => {
+            const currentMonth = moment().add(10, 'months');
+            const getStateForNewMonthStub =
+              sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            getStateForNewMonthStub.returns({ currentMonth, visibleDays: {} });
+
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: START_DATE,
+              enableOutsideDays: true,
+            });
+            expect(wrapper.instance().state.currentMonth).to.equal(currentMonth);
+          });
+
+          it('sets state.visibleDays to getStateForNewMonth.visibleDays', () => {
+            const currentMonth = moment().add(10, 'months');
+            const visibleDays = getVisibleDays(currentMonth, 1);
+            const getStateForNewMonthStub =
+              sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            getStateForNewMonthStub.returns({ currentMonth, visibleDays });
+
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: START_DATE,
+              enableOutsideDays: true,
+            });
+            expect(wrapper.instance().state.visibleDays).to.equal(visibleDays);
+          });
         });
 
-        it('sets state.currentMonth to getStateForNewMonth.currentMonth', () => {
-          const currentMonth = moment().add(10, 'months');
-          const getStateForNewMonthStub =
-            sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
-          getStateForNewMonthStub.returns({ currentMonth, visibleDays: {} });
-
-          const wrapper = shallow(<DayPickerRangeController {...props} />);
-          wrapper.instance().componentWillReceiveProps({
-            ...props,
-            enableOutsideDays: true,
+        describe('focusedInput has not changed', () => {
+          it('does not call getStateForNewMonth', () => {
+            const getStateForNewMonthSpy =
+              sinon.spy(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            getStateForNewMonthSpy.reset();
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: null,
+              enableOutsideDays: true,
+            });
+            expect(getStateForNewMonthSpy.callCount).to.equal(0);
           });
-          expect(wrapper.instance().state.currentMonth).to.equal(currentMonth);
-        });
 
-        it('sets state.visibleDays to getStateForNewMonth.visibleDays', () => {
-          const currentMonth = moment().add(10, 'months');
-          const visibleDays = getVisibleDays(currentMonth, 1);
-          const getStateForNewMonthStub =
-            sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
-          getStateForNewMonthStub.returns({ currentMonth, visibleDays });
+          it('does not change state.currentMonth', () => {
+            const currentMonth = moment().add(10, 'months');
+            const getStateForNewMonthStub =
+              sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            getStateForNewMonthStub.returns({ currentMonth: moment(), visibleDays: {} });
 
-          const wrapper = shallow(<DayPickerRangeController {...props} />);
-          wrapper.instance().componentWillReceiveProps({
-            ...props,
-            enableOutsideDays: true,
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            wrapper.setState({ currentMonth });
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: null,
+              enableOutsideDays: true,
+            });
+            expect(wrapper.instance().state.currentMonth).to.equal(currentMonth);
           });
-          expect(wrapper.instance().state.visibleDays).to.equal(visibleDays);
+
+          it('does not change state.visibleDays', () => {
+            const visibleDays = {};
+            const getStateForNewMonthStub =
+              sinon.stub(DayPickerRangeController.prototype, 'getStateForNewMonth');
+            getStateForNewMonthStub.returns({
+              currentMonth: moment(),
+              visibleDays: getVisibleDays(moment(), 1),
+            });
+
+            const wrapper = shallow(<DayPickerRangeController {...props} focusedInput={null} />);
+            wrapper.setState({ visibleDays });
+            wrapper.instance().componentWillReceiveProps({
+              ...props,
+              focusedInput: null,
+              enableOutsideDays: true,
+            });
+            expect(wrapper.instance().state.visibleDays).to.equal(visibleDays);
+          });
         });
       });
     });

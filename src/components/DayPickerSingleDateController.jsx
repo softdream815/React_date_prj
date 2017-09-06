@@ -197,13 +197,9 @@ export default class DayPickerSingleDateController extends React.Component {
       recomputeOutsideRange || recomputeDayBlocked || recomputeDayHighlighted;
 
     if (
+      initialVisibleMonth !== this.props.initialVisibleMonth ||
       numberOfMonths !== this.props.numberOfMonths ||
-      enableOutsideDays !== this.props.enableOutsideDays ||
-      (
-        initialVisibleMonth !== this.props.initialVisibleMonth &&
-        !this.props.focused &&
-        focused
-      )
+      enableOutsideDays !== this.props.enableOutsideDays
     ) {
       const newMonthState = this.getStateForNewMonth(nextProps);
       const currentMonth = newMonthState.currentMonth;
