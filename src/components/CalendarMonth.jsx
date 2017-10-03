@@ -132,13 +132,10 @@ export default class CalendarMonth extends React.Component {
 
     return (
       <div className={calendarMonthClasses} data-visible={isVisible}>
-        <div
-          id="CalendarMonth__caption"
-          className="CalendarMonth__caption js-CalendarMonth__caption"
-        >
-          <strong>{monthTitle}</strong>
-        </div>
-        <table role="presentation">
+        <table>
+          <caption className="CalendarMonth__caption js-CalendarMonth__caption">
+            <strong>{monthTitle}</strong>
+          </caption>
 
           <tbody className="js-CalendarMonth__grid">
             {weeks.map((week, i) => (

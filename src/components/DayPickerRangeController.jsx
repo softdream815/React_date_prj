@@ -132,15 +132,6 @@ const defaultProps = {
   isRTL: false,
 };
 
-const getChooseAvailableDatePhrase = (phrases, focusedInput) => {
-  if (focusedInput === START_DATE) {
-    return phrases.chooseAvailableStartDate;
-  } else if (focusedInput === END_DATE) {
-    return phrases.chooseAvailableEndDate;
-  }
-  return phrases.chooseAvailableDate;
-};
-
 export default class DayPickerRangeController extends React.Component {
   constructor(props) {
     super(props);
@@ -181,22 +172,6 @@ export default class DayPickerRangeController extends React.Component {
     this.onMultiplyScrollableMonths = this.onMultiplyScrollableMonths.bind(this);
     this.getFirstFocusableDay = this.getFirstFocusableDay.bind(this);
     this.setDayPickerRef = this.setDayPickerRef.bind(this);
-  }
-
-  componentDidMount() {
-    const { focusedInput } = this.props;
-    const { phrases } = this.state;
-
-    // initialize phrases
-    // set the appropriate CalendarDay phrase based on focusedInput
-    const chooseAvailableDate = getChooseAvailableDatePhrase(phrases, focusedInput);
-
-    this.setState({
-      phrases: {
-        ...phrases,
-        chooseAvailableDate,
-      },
-    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -381,7 +356,12 @@ export default class DayPickerRangeController extends React.Component {
 
     if (didFocusChange || phrases !== this.props.phrases) {
       // set the appropriate CalendarDay phrase based on focusedInput
-      const chooseAvailableDate = getChooseAvailableDatePhrase(phrases, focusedInput);
+      let chooseAvailableDate = phrases.chooseAvailableDate;
+      if (focusedInput === START_DATE) {
+        chooseAvailableDate = phrases.chooseAvailableStartDate;
+      } else if (focusedInput === END_DATE) {
+        chooseAvailableDate = phrases.chooseAvailableEndDate;
+      }
 
       this.setState({
         phrases: {
