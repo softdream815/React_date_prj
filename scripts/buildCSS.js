@@ -13,7 +13,9 @@ const optimizeForProduction = args.includes('-o') || args.includes('--optimize')
 
 require('../test/_helpers/ignoreSVGStrings');
 
-registerMaxSpecificity(0);
+// This magic number of 11 is selected from the maximum number of arguments
+// passed into any css call in this package.
+registerMaxSpecificity(11);
 registerCSSInterfaceWithDefaultTheme();
 
 const DateRangePickerPath = './src/components/DateRangePicker.jsx';
