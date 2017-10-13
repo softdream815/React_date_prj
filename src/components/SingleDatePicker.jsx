@@ -177,12 +177,7 @@ class SingleDatePicker extends React.Component {
   }
 
   onFocus() {
-    const {
-      disabled,
-      onFocusChange,
-      withPortal,
-      withFullScreenPortal,
-    } = this.props;
+    const { disabled, onFocusChange, withPortal, withFullScreenPortal } = this.props;
 
     const moveFocusToDayPicker = withPortal || withFullScreenPortal || this.isTouchDevice;
     if (moveFocusToDayPicker) {
@@ -197,13 +192,7 @@ class SingleDatePicker extends React.Component {
   }
 
   onClearFocus() {
-    const {
-      startDate,
-      endDate,
-      focused,
-      onFocusChange,
-      onClose,
-    } = this.props;
+    const { startDate, endDate, focused, onFocusChange, onClose } = this.props;
     if (!focused) return;
 
     this.setState({
@@ -278,9 +267,8 @@ class SingleDatePicker extends React.Component {
     if (!withPortal && !withFullScreenPortal) {
       const containerRect = this.dayPickerContainer.getBoundingClientRect();
       const currentOffset = dayPickerContainerStyles[anchorDirection] || 0;
-      const containerEdge = isAnchoredLeft
-        ? containerRect[ANCHOR_RIGHT]
-        : containerRect[ANCHOR_LEFT];
+      const containerEdge =
+        isAnchoredLeft ? containerRect[ANCHOR_RIGHT] : containerRect[ANCHOR_LEFT];
 
       this.setState({
         dayPickerContainerStyles: getResponsiveContainerStyles(

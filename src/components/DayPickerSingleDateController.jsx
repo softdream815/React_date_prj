@@ -195,9 +195,8 @@ export default class DayPickerSingleDateController extends React.Component {
       recomputeDayHighlighted = true;
     }
 
-    const recomputePropModifiers = (
-      recomputeOutsideRange || recomputeDayBlocked || recomputeDayHighlighted
-    );
+    const recomputePropModifiers =
+      recomputeOutsideRange || recomputeDayBlocked || recomputeDayHighlighted;
 
     if (
       numberOfMonths !== this.props.numberOfMonths ||
@@ -209,8 +208,8 @@ export default class DayPickerSingleDateController extends React.Component {
       )
     ) {
       const newMonthState = this.getStateForNewMonth(nextProps);
-      const { currentMonth } = newMonthState;
-      ({ visibleDays } = newMonthState);
+      const currentMonth = newMonthState.currentMonth;
+      visibleDays = newMonthState.visibleDays;
       this.setState({
         currentMonth,
         visibleDays,
@@ -399,9 +398,7 @@ export default class DayPickerSingleDateController extends React.Component {
       }
 
       const viableDays = days.filter(day => !this.isBlocked(day) && isAfterDay(day, focusedDate));
-      if (viableDays.length > 0) {
-        ([focusedDate] = viableDays);
-      }
+      if (viableDays.length > 0) focusedDate = viableDays[0];
     }
 
     return focusedDate;
@@ -424,19 +421,11 @@ export default class DayPickerSingleDateController extends React.Component {
   }
 
   getStateForNewMonth(nextProps) {
-    const {
-      initialVisibleMonth,
-      date,
-      numberOfMonths,
-      enableOutsideDays,
-    } = nextProps;
+    const { initialVisibleMonth, date, numberOfMonths, enableOutsideDays } = nextProps;
     const initialVisibleMonthThunk = initialVisibleMonth || (date ? () => date : () => this.today);
     const currentMonth = initialVisibleMonthThunk();
-    const visibleDays = this.getModifiers(getVisibleDays(
-      currentMonth,
-      numberOfMonths,
-      enableOutsideDays,
-    ));
+    const visibleDays =
+      this.getModifiers(getVisibleDays(currentMonth, numberOfMonths, enableOutsideDays));
     return { currentMonth, visibleDays };
   }
 

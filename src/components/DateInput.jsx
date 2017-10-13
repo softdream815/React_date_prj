@@ -223,14 +223,11 @@ class DateInput extends React.Component {
 DateInput.propTypes = propTypes;
 DateInput.defaultProps = defaultProps;
 
-export default withStyles(({
-  reactDates: {
-    color, sizing, spacing, font, zIndex,
-  },
-}) => {
-  const inputHeight = parseInt(font.input.lineHeight, 10)
-    + (2 * spacing.inputPadding)
-    + (2 * spacing.displayTextPaddingVertical);
+export default withStyles(({ reactDates: { color, sizing, spacing, font, zIndex } }) => {
+  const inputHeight =
+    parseInt(font.input.lineHeight, 10) +
+    (2 * spacing.inputPadding) +
+    (2 * spacing.displayTextPaddingVertical);
 
   return {
     DateInput: {
