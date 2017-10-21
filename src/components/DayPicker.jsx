@@ -55,6 +55,7 @@ const propTypes = forbidExtraProps({
   hideKeyboardShortcutsPanel: PropTypes.bool,
   daySize: nonNegativeInteger,
   isRTL: PropTypes.bool,
+  verticalHeight: nonNegativeInteger,
 
   // navigation props
   navPrev: PropTypes.node,
@@ -99,6 +100,7 @@ export const defaultProps = {
   hideKeyboardShortcutsPanel: false,
   daySize: DAY_SIZE,
   isRTL: false,
+  verticalHeight: null,
 
   // navigation props
   navPrev: null,
@@ -248,7 +250,7 @@ class DayPicker extends React.Component {
 
     this.setState({ withMouseInteractions: false });
 
-    const { onBlur } = this.props;
+    const { onBlur, isRTL } = this.props;
     const { focusedDate, showKeyboardShortcuts } = this.state;
     if (!focusedDate) return;
 
@@ -271,7 +273,11 @@ class DayPicker extends React.Component {
         break;
       case 'ArrowLeft':
         e.preventDefault();
-        newFocusedDate.subtract(1, 'day');
+        if (isRTL) {
+          newFocusedDate.add(1, 'day');
+        } else {
+          newFocusedDate.subtract(1, 'day');
+        }
         didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
         break;
       case 'Home':
@@ -292,7 +298,11 @@ class DayPicker extends React.Component {
         break;
       case 'ArrowRight':
         e.preventDefault();
-        newFocusedDate.add(1, 'day');
+        if (isRTL) {
+          newFocusedDate.subtract(1, 'day');
+        } else {
+          newFocusedDate.add(1, 'day');
+        }
         didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
         break;
       case 'End':
@@ -678,6 +688,7 @@ class DayPicker extends React.Component {
       isRTL,
       styles,
       phrases,
+      verticalHeight,
     } = this.props;
 
     const numOfWeekHeaders = this.isVertical() ? 1 : numberOfMonths;
@@ -698,15 +709,13 @@ class DayPicker extends React.Component {
       marginTop: this.isHorizontal() && withPortal && -calendarMonthWidth / 2,
     };
 
-    // this is a kind of made-up value that generally looks good. we'll
-    // probably want to let the user set this explicitly.
-    const verticalHeight = 1.75 * calendarMonthWidth;
-
     let height;
     if (this.isHorizontal()) {
       height = this.calendarMonthGridHeight;
     } else if (this.isVertical() && !verticalScrollable && !withPortal) {
-      height = verticalHeight;
+      // If the user doesn't set a desired height,
+      // we default back to this kind of made-up value that generally looks good
+      height = verticalHeight || 1.75 * calendarMonthWidth;
     }
 
     const transitionContainerStyle = {
