@@ -1,2 +1,4 @@
 // eslint-disable-next-line import/no-unresolved
-require('./lib/initialize');
+const registerCSSInterfaceWithDefaultTheme = require('./lib/utils/registerCSSInterfaceWithDefaultTheme.js').default;
+
+registerCSSInterfaceWithDefaultTheme();

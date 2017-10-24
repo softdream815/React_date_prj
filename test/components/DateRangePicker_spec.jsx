@@ -13,7 +13,7 @@ import DayPickerRangeController from '../../src/components/DayPickerRangeControl
 import {
   HORIZONTAL_ORIENTATION,
   START_DATE,
-} from '../../src/constants';
+} from '../../constants';
 
 const requiredProps = {
   onDatesChange: () => {},
