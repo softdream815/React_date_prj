@@ -108,12 +108,10 @@ class SingleDatePicker extends React.Component {
       dayPickerContainerStyles: {},
       isDayPickerFocused: false,
       isInputFocused: false,
-      showKeyboardShortcuts: false,
     };
 
     this.onDayPickerFocus = this.onDayPickerFocus.bind(this);
     this.onDayPickerBlur = this.onDayPickerBlur.bind(this);
-    this.showKeyboardShortcutsPanel = this.showKeyboardShortcutsPanel.bind(this);
 
     this.onChange = this.onChange.bind(this);
     this.onFocus = this.onFocus.bind(this);
@@ -220,7 +218,6 @@ class SingleDatePicker extends React.Component {
     this.setState({
       isInputFocused: false,
       isDayPickerFocused: true,
-      showKeyboardShortcuts: false,
     });
   }
 
@@ -228,7 +225,6 @@ class SingleDatePicker extends React.Component {
     this.setState({
       isInputFocused: true,
       isDayPickerFocused: false,
-      showKeyboardShortcuts: false,
     });
   }
 
@@ -296,14 +292,6 @@ class SingleDatePicker extends React.Component {
     }
   }
 
-  showKeyboardShortcutsPanel() {
-    this.setState({
-      isInputFocused: false,
-      isDayPickerFocused: true,
-      showKeyboardShortcuts: true,
-    });
-  }
-
   maybeRenderDayPickerWithPortal() {
     const { focused, withPortal, withFullScreenPortal } = this.props;
 
@@ -358,7 +346,7 @@ class SingleDatePicker extends React.Component {
       styles,
       verticalHeight,
     } = this.props;
-    const { dayPickerContainerStyles, isDayPickerFocused, showKeyboardShortcuts } = this.state;
+    const { dayPickerContainerStyles, isDayPickerFocused } = this.state;
 
     const onOutsideClick = (!withFullScreenPortal && withPortal) ? this.onClearFocus : undefined;
     const closeIcon = customCloseIcon || (<CloseButton />);
@@ -402,7 +390,6 @@ class SingleDatePicker extends React.Component {
           renderDay={renderDay}
           renderCalendarInfo={renderCalendarInfo}
           isFocused={isDayPickerFocused}
-          showKeyboardShortcuts={showKeyboardShortcuts}
           phrases={phrases}
           daySize={daySize}
           isRTL={isRTL}
@@ -484,7 +471,6 @@ class SingleDatePicker extends React.Component {
             onKeyDownShiftTab={this.onClearFocus}
             onKeyDownTab={this.onClearFocus}
             onKeyDownArrowDown={this.onDayPickerFocus}
-            onKeyDownQuestionMark={this.showKeyboardShortcutsPanel}
             screenReaderMessage={screenReaderInputMessage}
             phrases={phrases}
             isRTL={isRTL}
