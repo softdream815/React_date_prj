@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import moment from 'moment';
-import omit from 'lodash.omit';
+import omit from 'lodash/omit';
 
 import DayPickerRangeController from '../src/components/DayPickerRangeController';
-import { defaultProps as DayPickerDefaultProps } from '../src/components/DayPicker';
 
 import ScrollableOrientationShape from '../src/shapes/ScrollableOrientationShape';
 
@@ -44,6 +43,8 @@ const propTypes = forbidExtraProps({
 
   // i18n
   monthFormat: PropTypes.string,
+
+  isRTL: PropTypes.bool,
 });
 
 const defaultProps = {
@@ -63,11 +64,12 @@ const defaultProps = {
   // calendar presentation and interaction related props
   orientation: HORIZONTAL_ORIENTATION,
   withPortal: false,
-  initialVisibleMonth: DayPickerDefaultProps.initialVisibleMonth,
+  initialVisibleMonth: null,
   numberOfMonths: 2,
   onOutsideClick() {},
   keepOpenOnDateSelect: false,
   renderCalendarInfo: null,
+  isRTL: false,
 
   // navigation related props
   navPrev: null,

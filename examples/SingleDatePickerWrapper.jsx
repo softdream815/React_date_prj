@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import moment from 'moment';
-import omit from 'lodash.omit';
+import omit from 'lodash/omit';
 
 import SingleDatePicker from '../src/components/SingleDatePicker';
 
@@ -36,8 +36,11 @@ const defaultProps = {
   required: false,
   screenReaderInputMessage: '',
   showClearDate: false,
+  showDefaultInputIcon: false,
+  customInputIcon: null,
 
   // calendar presentation and interaction related props
+  renderMonth: null,
   orientation: HORIZONTAL_ORIENTATION,
   anchorDirection: ANCHOR_LEFT,
   horizontalMargin: 0,
@@ -47,6 +50,7 @@ const defaultProps = {
   numberOfMonths: 2,
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDate: false,
+  isRTL: false,
 
   // navigation related props
   navPrev: null,

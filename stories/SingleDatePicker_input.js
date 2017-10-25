@@ -1,13 +1,38 @@
 import React from 'react';
 import moment from 'moment';
-import { storiesOf } from '@kadira/storybook';
+import { storiesOf } from '@storybook/react';
 
 import SingleDatePickerWrapper from '../examples/SingleDatePickerWrapper';
+
+const TestCustomInputIcon = () => (
+  <span
+    style={{
+      border: '1px solid #dce0e0',
+      backgroundColor: '#fff',
+      color: '#484848',
+      padding: '3px',
+    }}
+  >
+    C
+  </span>
+);
 
 storiesOf('SDP - Input Props', module)
   .addWithInfo('default', () => (
     <SingleDatePickerWrapper
       initialDate={moment().add(3, 'days')}
+    />
+  ))
+  .addWithInfo('disabled', () => (
+    <SingleDatePickerWrapper
+      initialDate={moment().add(3, 'days')}
+      disabled
+    />
+  ))
+  .addWithInfo('readOnly', () => (
+    <SingleDatePickerWrapper
+      initialDate={moment().add(3, 'days')}
+      readOnly
     />
   ))
   .addWithInfo('with clear dates button', () => (
@@ -27,6 +52,18 @@ storiesOf('SDP - Input Props', module)
     <SingleDatePickerWrapper
       initialDate={moment().add(3, 'days')}
       displayFormat="MMM D"
+    />
+  ))
+  .addWithInfo('with show calendar icon', () => (
+    <SingleDatePickerWrapper
+      initialDate={moment().add(3, 'days')}
+      showDefaultInputIcon
+    />
+  ))
+  .addWithInfo('with custom show calendar icon', () => (
+    <SingleDatePickerWrapper
+      initialDate={moment().add(3, 'days')}
+      customInputIcon={<TestCustomInputIcon />}
     />
   ))
   .addWithInfo('with screen reader message', () => (

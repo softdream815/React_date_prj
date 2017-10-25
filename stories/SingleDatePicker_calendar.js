@@ -1,10 +1,10 @@
 import React from 'react';
 import moment from 'moment';
-import { storiesOf } from '@kadira/storybook';
+import { storiesOf } from '@storybook/react';
 
 import SingleDatePickerWrapper from '../examples/SingleDatePickerWrapper';
 
-import { VERTICAL_ORIENTATION, ANCHOR_RIGHT } from '../constants';
+import { VERTICAL_ORIENTATION, ANCHOR_RIGHT, OPEN_UP } from '../constants';
 
 const TestPrevIcon = () => (
   <span
@@ -47,6 +47,14 @@ const TestCustomInfoPanel = () => (
 storiesOf('SDP - Calendar Props', module)
   .addWithInfo('default', () => (
     <SingleDatePickerWrapper autoFocus />
+  ))
+  .addWithInfo('open up', () => (
+    <div style={{ marginTop: '450px' }}>
+      <SingleDatePickerWrapper
+        openDirection={OPEN_UP}
+        autoFocus
+      />
+    </div>
   ))
   .addWithInfo('single month', () => (
     <SingleDatePickerWrapper
@@ -95,7 +103,7 @@ storiesOf('SDP - Calendar Props', module)
   ))
   .addWithInfo('with month specified on open', () => (
     <SingleDatePickerWrapper
-      initialVisibleMonth={() => moment('01 2017', 'MM YYYY')}
+      initialVisibleMonth={() => moment().add(10, 'months')}
       autoFocus
     />
   ))
@@ -126,4 +134,17 @@ storiesOf('SDP - Calendar Props', module)
       hideKeyboardShortcutsPanel
       autoFocus
     />
+  ))
+  .addWithInfo('with RTL support', () => (
+    <SingleDatePickerWrapper
+      isRTL
+      autoFocus
+    />
+  ))
+  .addWithInfo('with custom first day of week', () => (
+    <SingleDatePickerWrapper
+      firstDayOfWeek={3}
+      autoFocus
+    />
   ));
+

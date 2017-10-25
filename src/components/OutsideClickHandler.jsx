@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // import { forbidExtraProps } from 'airbnb-prop-types'; // TODO: add to propTypes; semver-major
-import { addEventListener, removeEventListener } from 'consolidated-events';
+import { addEventListener } from 'consolidated-events';
 
 const propTypes = {
   children: PropTypes.node,
@@ -15,15 +15,17 @@ const defaultProps = {
 };
 
 export default class OutsideClickHandler extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(...args) {
+    super(...args);
+
     this.onOutsideClick = this.onOutsideClick.bind(this);
+    this.setChildNodeRef = this.setChildNodeRef.bind(this);
   }
 
   componentDidMount() {
     // `capture` flag is set to true so that a `stopPropagation` in the children
     // will not prevent all outside click handlers from firing - maja
-    this.clickHandle = addEventListener(
+    this.removeEventListener = addEventListener(
       document,
       'click',
       this.onOutsideClick,
@@ -32,7 +34,7 @@ export default class OutsideClickHandler extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.clickHandle) removeEventListener(this.clickHandle);
+    if (this.removeEventListener) { this.removeEventListener(); }
   }
 
   onOutsideClick(e) {
@@ -44,9 +46,13 @@ export default class OutsideClickHandler extends React.Component {
     }
   }
 
+  setChildNodeRef(ref) {
+    this.childNode = ref;
+  }
+
   render() {
     return (
-      <div ref={(ref) => { this.childNode = ref; }}>
+      <div ref={this.setChildNodeRef}>
         {this.props.children}
       </div>
     );
