@@ -146,9 +146,6 @@ class CalendarMonthGrid extends React.Component {
       const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
       newMonths = getMonths(initialMonth, numberOfMonths, withoutTransitionMonths);
     }
-    
-    var momentLocale = moment.locale();
-    newMonths = newMonths.map(m => m.locale(momentLocale));
 
     this.setState({
       months: newMonths,
