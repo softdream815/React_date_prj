@@ -198,7 +198,6 @@ export default withStyles(({ reactDates: { color, zIndex } }) => ({
   DayPickerKeyboardShortcuts_buttonReset: {
     background: 'none',
     border: 0,
-    borderRadius: 0,
     color: 'inherit',
     font: 'inherit',
     lineHeight: 'normal',
