@@ -474,8 +474,8 @@ class DateRangePicker extends React.Component {
             withFullScreenPortal={withFullScreenPortal}
             onDatesChange={onDatesChange}
             onFocusChange={this.onDateRangePickerInputFocus}
-            onKeyDownArrowDown={this.onDayPickerFocus}
-            onKeyDownQuestionMark={this.showKeyboardShortcutsPanel}
+            onArrowDown={this.onDayPickerFocus}
+            onQuestionMark={this.showKeyboardShortcutsPanel}
             onClose={onClose}
             phrases={phrases}
             screenReaderMessage={screenReaderInputMessage}

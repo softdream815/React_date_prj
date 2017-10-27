@@ -91,11 +91,11 @@ describe('DateRangePickerInput', () => {
 
   describe('calendar icon interaction', () => {
     describe('onClick', () => {
-      it('props.onKeyDownArrowDown gets triggered', () => {
+      it('props.onArrowDown gets triggered', () => {
         const onArrowDownSpy = sinon.spy();
         const wrapper = shallow((
           <DateRangePickerInput
-            onKeyDownArrowDown={onArrowDownSpy}
+            onArrowDown={onArrowDownSpy}
             showDefaultInputIcon
           />
         )).dive();
