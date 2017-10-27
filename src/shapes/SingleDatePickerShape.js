@@ -49,7 +49,6 @@ export default {
   hideKeyboardShortcutsPanel: PropTypes.bool,
   daySize: nonNegativeInteger,
   isRTL: PropTypes.bool,
-  verticalHeight: nonNegativeInteger,
 
   // navigation related props
   navPrev: PropTypes.node,

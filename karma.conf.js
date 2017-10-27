@@ -9,7 +9,6 @@ module.exports = (config) => {
     frameworks: ['mocha', 'sinon', 'chai'],
 
     files: [
-      'test/_helpers/registerReactWithStylesInterface.js',
       'test/_helpers/restoreSinonStubs.js',
       'test/utils/*',
       'test/components/*',
@@ -40,6 +39,26 @@ module.exports = (config) => {
             query: {
               presets: ['airbnb'],
             },
+          },
+          {
+            test: /\.svg$/,
+            use: [
+              {
+                loader: 'babel-loader',
+                query: {
+                  presets: ['airbnb'],
+                },
+              },
+              {
+                loader: 'react-svg-loader',
+                query: {
+                  jsx: true,
+                },
+              },
+            ],
+            include: [
+              path.join(__dirname, 'src'),
+            ],
           },
           { test: /\.json$/, loader: 'json-loader' },
 

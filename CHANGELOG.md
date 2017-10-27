@@ -1,41 +1,5 @@
 # Change Log
 
-## 15.0.0
-- [breaking] Rename SDP keydown callback props so that they match the DRP ([#800](https://github.com/airbnb/react-dates/pull/800))
-- [fix] Explicitly set the border-radius on the keyboard shortcuts button ([#792](https://github.com/airbnb/react-dates/pull/792))
-
-## 14.1.0
-- [new] Add esm build ([#791](https://github.com/airbnb/react-dates/pull/791))
-- [new] Add back `selected-start`/`selected-end` modifiers to `CalendarDay` ([#796](https://github.com/airbnb/react-dates/pull/796))
-
-## 14.0.0
-- [fix] Flip arrow navigation in RTL context ([#775](https://github.com/airbnb/react-dates/pull/775))
-- [new] Add `verticalHeight` prop to SDP, DRP and DayPicker ([#773](https://github.com/airbnb/react-dates/pull/773))
-- [breaking] Modify default `DateInput` styling, convert inputs to actual inputs, and remove caption ids ([#780](https://github.com/airbnb/react-dates/pull/780))
-
-## 13.0.6
-- [fix] Update `react-with-styles-interface-css` dependency ([#777](https://github.com/airbnb/react-dates/pull/777))
-
-## 13.0.5
-- [fix] Add back missing built CSS file
-
-## 13.0.4
-- [fix] Pass through `customCloseIcon` prop from the SDP to the SDPInput ([#767](https://github.com/airbnb/react-dates/pull/767))
-- [fix] Fix incorrect available/unavailable phrase being read on `CalendarDay` components ([#771](https://github.com/airbnb/react-dates/pull/771))
-
-## 13.0.3
-- [fix] Change CSS style specificity to 0 for the default stylesheet ([#753](https://github.com/airbnb/react-dates/pull/753))
-- [fix] Remove unnecessary caption object from `CalendarMonth` styles ([#757](https://github.com/airbnb/react-dates/pull/757))
-
-## 13.0.2
-- [fix] Use default export of `registerCSSInterfaceWithDefaultTheme` in `initialize`
-
-## 13.0.1
-- [fix] Move caption div back outside of `CalendarMonth` table ([#748](https://github.com/airbnb/react-dates/pull/748))
-
-## 13.0.0
-- [breaking] Convert react-dates to rely on `react-with-styles` in place of CSS stylesheets ([#722](https://github.com/airbnb/react-dates/pull/722))
-
 ## 12.7.0
 - [new] Some accessibility improvements and patches ([#715](https://github.com/airbnb/react-dates/pull/715))
 
@@ -111,9 +75,6 @@
 ## v10.2.0
 - [new] Add RTL support to the DRP and the SDP with the `isRTL` prop ([#454](https://github.com/airbnb/react-dates/pull/454))
 - [new] Add `renderMonth` prop to DRP and SDP([#449](https://github.com/airbnb/react-dates/pull/449))
-
-## v10.1.3
-- [Fix] OutsideClickHandler: ensure this.childNode exists (#437)
 
 ## v10.1.2
 - [fix] Remove unused scss variables ([#475](https://github.com/airbnb/react-dates/pull/475))

@@ -4,9 +4,10 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.s?css$/,
+        test: /\.scss$/,
         use: ['style-loader', 'raw-loader', 'sass-loader'],
         include: [
+          path.resolve(__dirname, './'),
           path.resolve(__dirname, '../css/'),
         ],
       },

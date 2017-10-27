@@ -15,11 +15,12 @@ import IconPositionShape from '../shapes/IconPositionShape';
 
 import toMomentObject from '../utils/toMomentObject';
 import toLocalizedDateString from '../utils/toLocalizedDateString';
+import toISODateString from '../utils/toISODateString';
 
 import isInclusivelyAfterDay from '../utils/isInclusivelyAfterDay';
 import isBeforeDay from '../utils/isBeforeDay';
 
-import { START_DATE, END_DATE, ICON_BEFORE_POSITION, OPEN_DOWN } from '../constants';
+import { START_DATE, END_DATE, ICON_BEFORE_POSITION, OPEN_DOWN } from '../../constants';
 
 const propTypes = forbidExtraProps({
   startDate: momentPropTypes.momentObj,
@@ -52,8 +53,8 @@ const propTypes = forbidExtraProps({
   onFocusChange: PropTypes.func,
   onClose: PropTypes.func,
   onDatesChange: PropTypes.func,
-  onKeyDownArrowDown: PropTypes.func,
-  onKeyDownQuestionMark: PropTypes.func,
+  onArrowDown: PropTypes.func,
+  onQuestionMark: PropTypes.func,
 
   customInputIcon: PropTypes.node,
   customArrowIcon: PropTypes.node,
@@ -99,8 +100,8 @@ const defaultProps = {
   onFocusChange() {},
   onClose() {},
   onDatesChange() {},
-  onKeyDownArrowDown() {},
-  onKeyDownQuestionMark() {},
+  onArrowDown() {},
+  onQuestionMark() {},
 
   customInputIcon: null,
   customArrowIcon: null,
@@ -128,12 +129,7 @@ export default class DateRangePickerInputController extends React.Component {
   }
 
   onClearFocus() {
-    const {
-      onFocusChange,
-      onClose,
-      startDate,
-      endDate,
-    } = this.props;
+    const { onFocusChange, onClose, startDate, endDate } = this.props;
 
     onFocusChange(null);
     onClose({ startDate, endDate });
@@ -164,12 +160,7 @@ export default class DateRangePickerInputController extends React.Component {
   }
 
   onEndDateFocus() {
-    const {
-      startDate,
-      onFocusChange,
-      withFullScreenPortal,
-      disabled,
-    } = this.props;
+    const { startDate, onFocusChange, withFullScreenPortal, disabled } = this.props;
 
     if (!startDate && withFullScreenPortal && !disabled) {
       // When the datepicker is full screen, we never want to focus the end date first
@@ -185,12 +176,7 @@ export default class DateRangePickerInputController extends React.Component {
     const startDate = toMomentObject(startDateString, this.getDisplayFormat());
 
     let { endDate } = this.props;
-    const {
-      isOutsideRange,
-      minimumNights,
-      onDatesChange,
-      onFocusChange,
-    } = this.props;
+    const { isOutsideRange, minimumNights, onDatesChange, onFocusChange } = this.props;
     const isStartDateValid = startDate && !isOutsideRange(startDate);
     if (isStartDateValid) {
       if (startDate && isBeforeDay(endDate, startDate.clone().add(minimumNights, 'days'))) {
@@ -258,21 +244,25 @@ export default class DateRangePickerInputController extends React.Component {
       openDirection,
       isFocused,
       phrases,
-      onKeyDownArrowDown,
-      onKeyDownQuestionMark,
+      onArrowDown,
+      onQuestionMark,
       isRTL,
     } = this.props;
 
     const startDateString = this.getDateString(startDate);
+    const startDateValue = toISODateString(startDate);
     const endDateString = this.getDateString(endDate);
+    const endDateValue = toISODateString(endDate);
 
     return (
       <DateRangePickerInput
         startDate={startDateString}
+        startDateValue={startDateValue}
         startDateId={startDateId}
         startDatePlaceholderText={startDatePlaceholderText}
         isStartDateFocused={isStartDateFocused}
         endDate={endDateString}
+        endDateValue={endDateValue}
         endDateId={endDateId}
         endDatePlaceholderText={endDatePlaceholderText}
         isEndDateFocused={isEndDateFocused}
@@ -297,8 +287,8 @@ export default class DateRangePickerInputController extends React.Component {
         showClearDates={showClearDates}
         onClearDates={this.clearDates}
         screenReaderMessage={screenReaderMessage}
-        onKeyDownArrowDown={onKeyDownArrowDown}
-        onKeyDownQuestionMark={onKeyDownQuestionMark}
+        onArrowDown={onArrowDown}
+        onQuestionMark={onQuestionMark}
         isRTL={isRTL}
       />
     );
