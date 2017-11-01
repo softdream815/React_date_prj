@@ -1,14 +1,20 @@
 import React from 'react';
 import moment from 'moment';
+import aphroditeInterface from 'react-with-styles-interface-aphrodite';
+
 import { configure, addDecorator, setAddon } from '@storybook/react';
 import infoAddon from '@storybook/addon-info';
 import { setOptions } from '@storybook/addon-options';
-import './storybook.scss';
-import '../css/styles.scss';
+
+import registerInterfaceWithDefaultTheme from '../src/utils/registerInterfaceWithDefaultTheme';
+
+import '../css/storybook.scss';
+
+registerInterfaceWithDefaultTheme(aphroditeInterface);
 
 addDecorator((story) => {
   moment.locale('en');
-  return (story());
+  return story();
 });
 
 function getLink(href, text) {
@@ -35,9 +41,8 @@ addDecorator(story => (
         padding: '8px 40px 8px 8px',
         overflow: 'scroll',
       }}
-    >
-      <span dangerouslySetInnerHTML={{ __html: helperText }} />
-    </div>
+      dangerouslySetInnerHTML={{ __html: helperText }}
+    />
 
     <div style={{ marginTop: 7 * 8 }}>
       {story()}

@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
-import cx from 'classnames';
+import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 import throttle from 'lodash/throttle';
 import isTouchDevice from 'is-touch-device';
 
 import openDirectionShape from '../shapes/OpenDirectionShape';
-import { OPEN_DOWN, OPEN_UP } from '../../constants';
+import { OPEN_DOWN, OPEN_UP } from '../constants';
 
 const propTypes = forbidExtraProps({
+  ...withStylesPropTypes,
   id: PropTypes.string.isRequired,
   placeholder: PropTypes.string, // also used as label
   displayValue: PropTypes.string,
-  inputValue: PropTypes.string,
   screenReaderMessage: PropTypes.string,
   focused: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -36,7 +36,6 @@ const propTypes = forbidExtraProps({
 const defaultProps = {
   placeholder: 'Select Date',
   displayValue: '',
-  inputValue: '',
   screenReaderMessage: '',
   focused: false,
   disabled: false,
@@ -57,7 +56,7 @@ const defaultProps = {
   isFocused: false,
 };
 
-export default class DateInput extends React.Component {
+class DateInput extends React.Component {
   constructor(props) {
     super(props);
 
@@ -89,7 +88,6 @@ export default class DateInput extends React.Component {
 
     if (focused && isFocused) {
       this.inputRef.focus();
-      this.inputRef.select();
     } else {
       this.inputRef.blur();
     }
@@ -148,7 +146,6 @@ export default class DateInput extends React.Component {
       id,
       placeholder,
       displayValue,
-      inputValue,
       screenReaderMessage,
       focused,
       showCaret,
@@ -157,24 +154,32 @@ export default class DateInput extends React.Component {
       required,
       readOnly,
       openDirection,
+      styles,
     } = this.props;
 
-    const displayText = displayValue || inputValue || dateString || placeholder || '';
-    const value = inputValue || displayValue || dateString || '';
+    const value = displayValue || dateString || '';
     const screenReaderMessageId = `DateInput__screen-reader-message-${id}`;
+
+    const withCaret = showCaret && focused;
 
     return (
       <div
-        className={cx('DateInput', {
-          'DateInput--with-caret': showCaret && focused,
-          'DateInput--disabled': disabled,
-          'DateInput--open-down': openDirection === OPEN_DOWN,
-          'DateInput--open-up': openDirection === OPEN_UP,
-        })}
+        {...css(
+          styles.DateInput,
+          withCaret && styles.DateInput__withCaret,
+          disabled && styles.DateInput__disabled,
+          withCaret && openDirection === OPEN_DOWN && styles.DateInput__openDown,
+          withCaret && openDirection === OPEN_UP && styles.DateInput__openUp,
+        )}
       >
         <input
+          {...css(
+            styles.DateInput_input,
+            readOnly && styles.DateInput_input__readOnly,
+            focused && styles.DateInput_input__focused,
+            disabled && styles.DateInput_input__disabled,
+          )}
           aria-label={placeholder}
-          className="DateInput__input needsclick"
           type="text"
           id={id}
           name={id}
@@ -192,20 +197,10 @@ export default class DateInput extends React.Component {
         />
 
         {screenReaderMessage && (
-          <p id={screenReaderMessageId} className="screen-reader-only">
+          <p {...css(styles.DateInput_screenReaderMessage)} id={screenReaderMessageId}>
             {screenReaderMessage}
           </p>
         )}
-
-        <div
-          className={cx('DateInput__display-text', {
-            'DateInput__display-text--has-input': !!value,
-            'DateInput__display-text--focused': focused,
-            'DateInput__display-text--disabled': disabled,
-          })}
-        >
-          {displayText}
-        </div>
       </div>
     );
   }
@@ -213,3 +208,128 @@ export default class DateInput extends React.Component {
 
 DateInput.propTypes = propTypes;
 DateInput.defaultProps = defaultProps;
+
+export default withStyles(({
+  reactDates: {
+    border, color, sizing, spacing, font, zIndex,
+  },
+}) => {
+  const inputHeight = parseInt(font.input.lineHeight, 10)
+    + (2 * spacing.inputPadding)
+    + (2 * spacing.displayTextPaddingVertical);
+
+  return {
+    DateInput: {
+      fontWeight: 200,
+      fontSize: font.input.size,
+      lineHeight: font.input.lineHeight,
+      color: color.placeholderText,
+      margin: 0,
+      padding: spacing.inputPadding,
+
+      background: color.background,
+      position: 'relative',
+      display: 'inline-block',
+      width: sizing.inputWidth,
+      verticalAlign: 'middle',
+    },
+
+    DateInput__withCaret: {
+      ':before': {
+        content: '""',
+        display: 'inline-block',
+        position: 'absolute',
+        bottom: 'auto',
+        border: `${sizing.tooltipArrowWidth / 2}px solid transparent`,
+        left: 22,
+        zIndex: zIndex + 2,
+      },
+
+      ':after': {
+        content: '""',
+        display: 'inline-block',
+        position: 'absolute',
+        bottom: 'auto',
+        border: `${sizing.tooltipArrowWidth / 2}px solid transparent`,
+        left: 22,
+        zIndex: zIndex + 2,
+      },
+    },
+
+    DateInput__openUp: {
+      ':before': {
+        borderBottom: 0,
+        top: inputHeight - spacing.inputMarginBottom,
+        borderTopColor: 'rgba(0, 0, 0, 0.1)',
+      },
+
+      ':after': {
+        borderBottom: 0,
+        top: inputHeight - spacing.inputMarginBottom - 1,
+        borderTopColor: color.background,
+      },
+    },
+
+    DateInput__openDown: {
+      ':before': {
+        borderTop: 0,
+        top: spacing.inputMarginBottom - (sizing.tooltipArrowWidth / 2),
+        borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+      },
+
+      ':after': {
+        borderTop: 0,
+        top: spacing.inputMarginBottom - (sizing.tooltipArrowWidth / 2) + 1,
+        borderBottomColor: color.background,
+      },
+    },
+
+    DateInput__disabled: {
+      background: color.disabled,
+      color: color.textDisabled,
+    },
+
+    DateInput_input: {
+      fontWeight: 200,
+      fontSize: font.input.size,
+      color: color.text,
+      width: '100%',
+      padding: `${spacing.displayTextPaddingVertical}px ${spacing.displayTextPaddingHorizontal}px`,
+      border: border.input.border,
+      borderTop: border.input.borderTop,
+      borderRight: border.input.borderRight,
+      borderBottom: border.input.borderBottom,
+      borderLeft: border.input.borderLeft,
+    },
+
+    DateInput_input__readOnly: {
+      userSelect: 'none',
+    },
+
+    DateInput_input__focused: {
+      outline: border.input.outlineFocused,
+      background: color.backgroundFocused,
+      border: border.input.borderFocused,
+      borderTop: border.input.borderTopFocused,
+      borderRight: border.input.borderRightFocused,
+      borderBottom: border.input.borderBottomFocused,
+      borderLeft: border.input.borderLeftFocused,
+    },
+
+    DateInput_input__disabled: {
+      background: color.disabled,
+      fontStyle: font.input.styleDisabled,
+    },
+
+    DateInput_screenReaderMessage: {
+      border: 0,
+      clip: 'rect(0, 0, 0, 0)',
+      height: 1,
+      margin: -1,
+      overflow: 'hidden',
+      padding: 0,
+      position: 'absolute',
+      width: 1,
+    },
+  };
+})(DateInput);
