@@ -4,7 +4,7 @@ import momentJalaali from 'moment-jalaali';
 import { storiesOf } from '@storybook/react';
 import {
   VERTICAL_ORIENTATION,
-} from '../src/constants';
+} from '../constants';
 
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
 

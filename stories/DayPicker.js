@@ -5,7 +5,7 @@ import DayPicker from '../src/components/DayPicker';
 import {
   VERTICAL_ORIENTATION,
   VERTICAL_SCROLLABLE,
-} from '../src/constants';
+} from '../constants';
 
 const TestPrevIcon = () => (
   <span
