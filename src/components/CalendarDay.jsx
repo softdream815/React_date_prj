@@ -24,7 +24,6 @@ const propTypes = forbidExtraProps({
   onDayMouseEnter: PropTypes.func,
   onDayMouseLeave: PropTypes.func,
   renderDay: PropTypes.func,
-  ariaLabelFormat: PropTypes.string,
 
   // internationalization
   phrases: PropTypes.shape(getPhrasePropTypes(CalendarDayPhrases)),
@@ -41,7 +40,6 @@ const defaultProps = {
   onDayMouseEnter() {},
   onDayMouseLeave() {},
   renderDay: null,
-  ariaLabelFormat: 'dddd, LL',
 
   // internationalization
   phrases: CalendarDayPhrases,
@@ -89,7 +87,6 @@ class CalendarDay extends React.Component {
   render() {
     const {
       day,
-      ariaLabelFormat,
       daySize,
       isOutsideDay,
       modifiers,
@@ -104,7 +101,7 @@ class CalendarDay extends React.Component {
 
     if (!day) return <td />;
 
-    const formattedDate = { date: day.format(ariaLabelFormat) };
+    const formattedDate = { date: `${day.format('dddd')}, ${day.format('LL')}` };
 
     const ariaLabel = modifiers.has(BLOCKED_MODIFIER)
       ? getPhrase(dateIsUnavailable, formattedDate)

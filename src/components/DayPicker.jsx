@@ -84,7 +84,6 @@ const propTypes = forbidExtraProps({
   monthFormat: PropTypes.string,
   weekDayFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(DayPickerPhrases)),
-  dayAriaLabelFormat: PropTypes.string,
 });
 
 export const defaultProps = {
@@ -687,7 +686,6 @@ class DayPicker extends React.Component {
       styles,
       phrases,
       verticalHeight,
-      dayAriaLabelFormat,
     } = this.props;
 
     const numOfWeekHeaders = this.isVertical() ? 1 : numberOfMonths;
@@ -807,7 +805,6 @@ class DayPicker extends React.Component {
                 focusedDate={focusedDate}
                 phrases={phrases}
                 isRTL={isRTL}
-                dayAriaLabelFormat={dayAriaLabelFormat}
               />
               {verticalScrollable && this.renderNavigation()}
             </div>

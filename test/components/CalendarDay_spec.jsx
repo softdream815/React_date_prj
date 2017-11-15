@@ -87,18 +87,6 @@ describe('CalendarDay', () => {
           expect(phrases.dateIsUnavailable.calledWith(expectedFormattedDay)).to.equal(true);
           expect(wrapper.find('button').prop('aria-label')).to.equal('dateIsUnavailable text');
         });
-
-        it('should set aria-label with a value pass through ariaLabelFormat prop if it exists', () => {
-          const modifiers = new Set();
-
-          const wrapper = shallow(<CalendarDay
-            modifiers={modifiers}
-            day={day}
-            ariaLabelFormat="MMMM Do YYYY"
-          />).dive();
-
-          expect(wrapper.find('button').prop('aria-label')).to.equal('October 10th 2017');
-        });
       });
     });
   });

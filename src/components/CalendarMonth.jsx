@@ -50,7 +50,6 @@ const propTypes = forbidExtraProps({
   // i18n
   monthFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(CalendarDayPhrases)),
-  dayAriaLabelFormat: PropTypes.string,
 });
 
 const defaultProps = {
@@ -155,7 +154,6 @@ class CalendarMonth extends React.Component {
       isFocused,
       styles,
       phrases,
-      dayAriaLabelFormat,
     } = this.props;
 
     const { weeks } = this.state;
@@ -204,7 +202,6 @@ class CalendarMonth extends React.Component {
                     renderDay={renderDay}
                     phrases={phrases}
                     modifiers={modifiers[toISODateString(day)]}
-                    ariaLabelFormat={dayAriaLabelFormat}
                   />
                 ))}
               </tr>
