@@ -80,7 +80,6 @@ const propTypes = forbidExtraProps({
   monthFormat: PropTypes.string,
   weekDayFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(DayPickerPhrases)),
-  dayAriaLabelFormat: PropTypes.string,
 
   isRTL: PropTypes.bool,
 });
@@ -902,7 +901,6 @@ export default class DayPickerRangeController extends React.Component {
       showKeyboardShortcuts,
       isRTL,
       weekDayFormat,
-      dayAriaLabelFormat,
       verticalHeight,
     } = this.props;
 
@@ -941,7 +939,6 @@ export default class DayPickerRangeController extends React.Component {
         phrases={phrases}
         isRTL={isRTL}
         weekDayFormat={weekDayFormat}
-        dayAriaLabelFormat={dayAriaLabelFormat}
         verticalHeight={verticalHeight}
       />
     );

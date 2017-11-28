@@ -73,7 +73,6 @@ const propTypes = forbidExtraProps({
   monthFormat: PropTypes.string,
   weekDayFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(DayPickerPhrases)),
-  dayAriaLabelFormat: PropTypes.string,
 
   isRTL: PropTypes.bool,
 });
@@ -584,7 +583,6 @@ export default class DayPickerSingleDateController extends React.Component {
       isFocused,
       isRTL,
       phrases,
-      dayAriaLabelFormat,
       onOutsideClick,
       onBlur,
       showKeyboardShortcuts,
@@ -624,7 +622,6 @@ export default class DayPickerSingleDateController extends React.Component {
         isRTL={isRTL}
         showKeyboardShortcuts={showKeyboardShortcuts}
         weekDayFormat={weekDayFormat}
-        dayAriaLabelFormat={dayAriaLabelFormat}
         verticalHeight={verticalHeight}
       />
     );
