@@ -46,7 +46,9 @@ const defaultProps = {
   focusedInput: null,
 
   // input related props
+  startDateId: START_DATE,
   startDatePlaceholderText: 'Start Date',
+  endDateId: END_DATE,
   endDatePlaceholderText: 'End Date',
   disabled: false,
   required: false,
