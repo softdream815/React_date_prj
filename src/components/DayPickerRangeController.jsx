@@ -59,7 +59,6 @@ const propTypes = forbidExtraProps({
   initialVisibleMonth: PropTypes.func,
   hideKeyboardShortcutsPanel: PropTypes.bool,
   daySize: nonNegativeInteger,
-  noBorder: PropTypes.bool,
 
   navPrev: PropTypes.node,
   navNext: PropTypes.node,
@@ -122,7 +121,6 @@ const defaultProps = {
   renderCalendarInfo: null,
   firstDayOfWeek: null,
   verticalHeight: null,
-  noBorder: false,
 
   // accessibility
   onBlur() {},
@@ -906,7 +904,6 @@ export default class DayPickerRangeController extends React.Component {
       weekDayFormat,
       dayAriaLabelFormat,
       verticalHeight,
-      noBorder,
     } = this.props;
 
     const { currentMonth, phrases, visibleDays } = this.state;
@@ -946,7 +943,6 @@ export default class DayPickerRangeController extends React.Component {
         weekDayFormat={weekDayFormat}
         dayAriaLabelFormat={dayAriaLabelFormat}
         verticalHeight={verticalHeight}
-        noBorder={noBorder}
       />
     );
   }

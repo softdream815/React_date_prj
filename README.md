@@ -126,6 +126,7 @@ showDefaultInputIcon: PropTypes.bool,
 customInputIcon: PropTypes.node,
 customArrowIcon: PropTypes.node,
 customCloseIcon: PropTypes.node,
+noBorder: PropTypes.bool,
 
 // calendar presentation and interaction related props
 renderMonth: PropTypes.func,
@@ -196,6 +197,7 @@ showClearDate: PropTypes.bool,
 customCloseIcon: PropTypes.node,
 showDefaultInputIcon: PropTypes.bool,
 customInputIcon: PropTypes.node,
+noBorder: PropTypes.bool,
 
 // calendar presentation and interaction related props
 renderMonth: PropTypes.func,
@@ -262,7 +264,6 @@ The following is a list of other *OPTIONAL* props you may provide to the `DayPic
   renderCalendarInfo: PropTypes.func,
   onOutsideClick: PropTypes.func,
   keepOpenOnDateSelect: PropTypes.bool,
-  noBorder: PropTypes.bool,
 
   // navigation related props
   navPrev: PropTypes.node,
