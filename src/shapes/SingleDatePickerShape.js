@@ -65,8 +65,7 @@ export default {
   onClose: PropTypes.func,
 
   // day presentation and interaction related props
-  renderCalendarDay: PropTypes.func,
-  renderDayContents: PropTypes.func,
+  renderDay: PropTypes.func,
   enableOutsideDays: PropTypes.bool,
   isDayBlocked: PropTypes.func,
   isOutsideRange: PropTypes.func,

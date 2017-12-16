@@ -71,8 +71,7 @@ const defaultProps = {
   onClose() {},
 
   // day presentation and interaction related props
-  renderCalendarDay: undefined,
-  renderDayContents: null,
+  renderDay: null,
   minimumNights: 1,
   enableOutsideDays: false,
   isDayBlocked: () => false,

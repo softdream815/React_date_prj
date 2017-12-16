@@ -49,7 +49,9 @@ const defaultProps = {
   focusedInput: null,
 
   // input related props
+  startDateId: START_DATE,
   startDatePlaceholderText: 'Start Date',
+  endDateId: END_DATE,
   endDatePlaceholderText: 'End Date',
   disabled: false,
   required: false,
@@ -96,8 +98,7 @@ const defaultProps = {
   onClose() {},
 
   // day presentation and interaction related props
-  renderCalendarDay: undefined,
-  renderDayContents: null,
+  renderDay: null,
   minimumNights: 1,
   enableOutsideDays: false,
   isDayBlocked: () => false,
@@ -317,8 +318,7 @@ class DateRangePicker extends React.Component {
       endDate,
       minimumNights,
       keepOpenOnDateSelect,
-      renderCalendarDay,
-      renderDayContents,
+      renderDay,
       renderCalendarInfo,
       firstDayOfWeek,
       initialVisibleMonth,
@@ -397,8 +397,7 @@ class DateRangePicker extends React.Component {
           isDayHighlighted={isDayHighlighted}
           isDayBlocked={isDayBlocked}
           keepOpenOnDateSelect={keepOpenOnDateSelect}
-          renderCalendarDay={renderCalendarDay}
-          renderDayContents={renderDayContents}
+          renderDay={renderDay}
           renderCalendarInfo={renderCalendarInfo}
           isFocused={isDayPickerFocused}
           showKeyboardShortcuts={showKeyboardShortcuts}

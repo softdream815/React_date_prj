@@ -67,8 +67,7 @@ const propTypes = forbidExtraProps({
   onPrevMonthClick: PropTypes.func,
   onNextMonthClick: PropTypes.func,
   onOutsideClick: PropTypes.func,
-  renderCalendarDay: PropTypes.func,
-  renderDayContents: PropTypes.func,
+  renderDay: PropTypes.func,
   renderCalendarInfo: PropTypes.func,
   firstDayOfWeek: DayOfWeekShape,
   verticalHeight: nonNegativeInteger,
@@ -120,8 +119,7 @@ const defaultProps = {
   onNextMonthClick() {},
   onOutsideClick() {},
 
-  renderCalendarDay: undefined,
-  renderDayContents: null,
+  renderDay: null,
   renderCalendarInfo: null,
   firstDayOfWeek: null,
   verticalHeight: null,
@@ -901,8 +899,7 @@ export default class DayPickerRangeController extends React.Component {
       hideKeyboardShortcutsPanel,
       daySize,
       focusedInput,
-      renderCalendarDay,
-      renderDayContents,
+      renderDay,
       renderCalendarInfo,
       onBlur,
       isFocused,
@@ -939,8 +936,7 @@ export default class DayPickerRangeController extends React.Component {
         onOutsideClick={onOutsideClick}
         navPrev={navPrev}
         navNext={navNext}
-        renderCalendarDay={renderCalendarDay}
-        renderDayContents={renderDayContents}
+        renderDay={renderDay}
         renderCalendarInfo={renderCalendarInfo}
         firstDayOfWeek={firstDayOfWeek}
         hideKeyboardShortcutsPanel={hideKeyboardShortcutsPanel}

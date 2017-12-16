@@ -155,8 +155,7 @@ onClose: PropTypes.func,
 transitionDuration: nonNegativeInteger, // milliseconds
 
 // day presentation and interaction related props
-renderCalendarDay: PropTypes.func,
-renderDayContents: PropTypes.func,
+renderDay: PropTypes.func,
 minimumNights: PropTypes.number,
 enableOutsideDays: PropTypes.bool,
 isDayBlocked: PropTypes.func,
@@ -229,8 +228,7 @@ onClose: PropTypes.func,
 transitionDuration: nonNegativeInteger, // milliseconds
 
 // day presentation and interaction related props
-renderCalendarDay: PropTypes.func,
-renderDayContents: PropTypes.func,
+renderDay: PropTypes.func,
 enableOutsideDays: PropTypes.bool,
 isDayBlocked: PropTypes.func,
 isOutsideRange: PropTypes.func,
@@ -280,8 +278,7 @@ The following is a list of other *OPTIONAL* props you may provide to the `DayPic
   transitionDuration: nonNegativeInteger, // milliseconds
 
   // day presentation and interaction related props
-  renderCalendarDay: PropTypes.func,
-  renderDayContents: PropTypes.func,
+  renderDay: PropTypes.func,
   minimumNights: PropTypes.number,
   isOutsideRange: PropTypes.func,
   isDayBlocked: PropTypes.func,

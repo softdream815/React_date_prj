@@ -79,7 +79,7 @@ const defaultProps = {
   onClose() {},
 
   // day presentation and interaction related props
-  renderDayContents: null,
+  renderDay: null,
   minimumNights: 0,
   enableOutsideDays: false,
   isDayBlocked: () => false,

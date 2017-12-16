@@ -71,8 +71,7 @@ const propTypes = forbidExtraProps({
 
   // day props
   modifiers: PropTypes.object,
-  renderCalendarDay: PropTypes.func,
-  renderDayContents: PropTypes.func,
+  renderDay: PropTypes.func,
   onDayClick: PropTypes.func,
   onDayMouseEnter: PropTypes.func,
   onDayMouseLeave: PropTypes.func,
@@ -120,8 +119,7 @@ export const defaultProps = {
 
   // day props
   modifiers: {},
-  renderCalendarDay: undefined,
-  renderDayContents: null,
+  renderDay: null,
   onDayClick() {},
   onDayMouseEnter() {},
   onDayMouseLeave() {},
@@ -682,8 +680,7 @@ class DayPicker extends React.Component {
       onDayMouseLeave,
       firstDayOfWeek,
       renderMonth,
-      renderCalendarDay,
-      renderDayContents,
+      renderDay,
       renderCalendarInfo,
       hideKeyboardShortcutsPanel,
       onOutsideClick,
@@ -807,8 +804,7 @@ class DayPicker extends React.Component {
                 onDayMouseEnter={onDayMouseEnter}
                 onDayMouseLeave={onDayMouseLeave}
                 renderMonth={renderMonth}
-                renderCalendarDay={renderCalendarDay}
-                renderDayContents={renderDayContents}
+                renderDay={renderDay}
                 onMonthTransitionEnd={this.updateStateAfterMonthTransition}
                 monthFormat={monthFormat}
                 daySize={daySize}

@@ -70,8 +70,7 @@ export default {
   onNextMonthClick: PropTypes.func,
 
   // day presentation and interaction related props
-  renderCalendarDay: PropTypes.func,
-  renderDayContents: PropTypes.func,
+  renderDay: PropTypes.func,
   minimumNights: PropTypes.number,
   enableOutsideDays: PropTypes.bool,
   isDayBlocked: PropTypes.func,

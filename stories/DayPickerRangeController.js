@@ -223,7 +223,7 @@ storiesOf('DayPickerRangeController', module)
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
-      renderDayContents={day => day.format('ddd')}
+      renderDay={day => day.format('ddd')}
     />
   ))
   .addWithInfo('with info panel', () => (

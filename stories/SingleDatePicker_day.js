@@ -58,7 +58,7 @@ storiesOf('SDP - Day Props', module)
   .addWithInfo('with custom daily details', () => (
     <SingleDatePickerWrapper
       numberOfMonths={1}
-      renderDayContents={day => day.format('ddd')}
+      renderDay={day => day.format('ddd')}
       autoFocus
     />
   ));

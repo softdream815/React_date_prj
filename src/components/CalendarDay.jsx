@@ -23,7 +23,7 @@ const propTypes = forbidExtraProps({
   onDayClick: PropTypes.func,
   onDayMouseEnter: PropTypes.func,
   onDayMouseLeave: PropTypes.func,
-  renderDayContents: PropTypes.func,
+  renderDay: PropTypes.func,
   ariaLabelFormat: PropTypes.string,
 
   // internationalization
@@ -40,7 +40,7 @@ const defaultProps = {
   onDayClick() {},
   onDayMouseEnter() {},
   onDayMouseLeave() {},
-  renderDayContents: null,
+  renderDay: null,
   ariaLabelFormat: 'dddd, LL',
 
   // internationalization
@@ -82,17 +82,6 @@ class CalendarDay extends React.Component {
     onDayMouseLeave(day, e);
   }
 
-  onKeyDown(day, e) {
-    const {
-      onDayClick,
-    } = this.props;
-
-    const { key } = e;
-    if (key === 'Enter' || key === ' ') {
-      onDayClick(day, e);
-    }
-  }
-
   setButtonRef(ref) {
     this.buttonRef = ref;
   }
@@ -104,7 +93,7 @@ class CalendarDay extends React.Component {
       daySize,
       isOutsideDay,
       modifiers,
-      renderDayContents,
+      renderDay,
       tabIndex,
       styles,
       phrases: {
@@ -148,9 +137,7 @@ class CalendarDay extends React.Component {
     return (
       <td
         {...css(
-          styles.CalendarDay,
-          useDefaultCursor && styles.CalendarDay__defaultCursor,
-          styles.CalendarDay__default,
+          styles.CalendarDay_container,
           isOutsideDay && styles.CalendarDay__outside,
           modifiers.has('today') && styles.CalendarDay__today,
           modifiers.has('highlighted-calendar') && styles.CalendarDay__highlighted_calendar,
@@ -165,17 +152,23 @@ class CalendarDay extends React.Component {
           isOutsideRange && styles.CalendarDay__blocked_out_of_range,
           daySizeStyles,
         )}
-        role="button" // eslint-disable-line jsx-a11y/no-noninteractive-element-to-interactive-role
-        ref={this.setButtonRef}
-        aria-label={ariaLabel}
-        onMouseEnter={(e) => { this.onDayMouseEnter(day, e); }}
-        onMouseLeave={(e) => { this.onDayMouseLeave(day, e); }}
-        onMouseUp={(e) => { e.currentTarget.blur(); }}
-        onClick={(e) => { this.onDayClick(day, e); }}
-        onKeyDown={(e) => { this.onKeyDown(day, e); }}
-        tabIndex={tabIndex}
       >
-        {renderDayContents ? renderDayContents(day, modifiers) : day.format('D')}
+        <button
+          {...css(
+            styles.CalendarDay_button,
+            useDefaultCursor && styles.CalendarDay_button__default,
+          )}
+          type="button"
+          ref={this.setButtonRef}
+          aria-label={ariaLabel}
+          onMouseEnter={(e) => { this.onDayMouseEnter(day, e); }}
+          onMouseLeave={(e) => { this.onDayMouseLeave(day, e); }}
+          onMouseUp={(e) => { e.currentTarget.blur(); }}
+          onClick={(e) => { this.onDayClick(day, e); }}
+          tabIndex={tabIndex}
+        >
+          {renderDay ? renderDay(day, modifiers) : day.format('D')}
+        </button>
       </td>
     );
   }
@@ -186,23 +179,10 @@ CalendarDay.defaultProps = defaultProps;
 
 export { CalendarDay as PureCalendarDay };
 export default withStyles(({ reactDates: { color, font } }) => ({
-  CalendarDay: {
-    boxSizing: 'border-box',
-    cursor: 'pointer',
-    fontSize: font.size,
-    textAlign: 'center',
-
-    ':active': {
-      outline: 0,
-    },
-  },
-
-  CalendarDay__defaultCursor: {
-    cursor: 'default',
-  },
-
-  CalendarDay__default: {
+  CalendarDay_container: {
     border: `1px solid ${color.core.borderLight}`,
+    padding: 0,
+    boxSizing: 'border-box',
     color: color.text,
     background: color.background,
 
@@ -211,6 +191,33 @@ export default withStyles(({ reactDates: { color, font } }) => ({
       border: `1px double ${color.core.borderLight}`,
       color: 'inherit',
     },
+  },
+
+  CalendarDay_button: {
+    position: 'relative',
+    height: '100%',
+    width: '100%',
+    textAlign: 'center',
+    background: 'none',
+    border: 0,
+    margin: 0,
+    padding: 0,
+    color: 'inherit',
+    lineHeight: 'normal',
+    overflow: 'visible',
+    boxSizing: 'border-box',
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    fontStyle: 'inherit',
+    fontSize: font.size,
+
+    ':active': {
+      outline: 0,
+    },
+  },
+
+  CalendarDay_button__default: {
+    cursor: 'default',
   },
 
   CalendarDay__outside: {

@@ -11,7 +11,6 @@ import moment from 'moment';
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
-import CalendarWeek from './CalendarWeek';
 import CalendarDay from './CalendarDay';
 
 import calculateDimension from '../utils/calculateDimension';
@@ -41,8 +40,7 @@ const propTypes = forbidExtraProps({
   onDayMouseEnter: PropTypes.func,
   onDayMouseLeave: PropTypes.func,
   renderMonth: PropTypes.func,
-  renderCalendarDay: PropTypes.func,
-  renderDayContents: PropTypes.func,
+  renderDay: PropTypes.func,
   firstDayOfWeek: DayOfWeekShape,
   setMonthHeight: PropTypes.func,
 
@@ -66,8 +64,7 @@ const defaultProps = {
   onDayMouseEnter() {},
   onDayMouseLeave() {},
   renderMonth: null,
-  renderCalendarDay: props => (<CalendarDay {...props} />),
-  renderDayContents: null,
+  renderDay: null,
   firstDayOfWeek: null,
   setMonthHeight() {},
 
@@ -152,8 +149,7 @@ class CalendarMonth extends React.Component {
       onDayMouseEnter,
       onDayMouseLeave,
       renderMonth,
-      renderCalendarDay,
-      renderDayContents,
+      renderDay,
       daySize,
       focusedDate,
       isFocused,
@@ -193,23 +189,25 @@ class CalendarMonth extends React.Component {
         >
           <tbody ref={this.setGridRef}>
             {weeks.map((week, i) => (
-              <CalendarWeek key={i}>
-                {week.map((day, dayOfWeek) => renderCalendarDay({
-                  key: dayOfWeek,
-                  day,
-                  daySize,
-                  isOutsideDay: !day || day.month() !== month.month(),
-                  tabIndex: isVisible && isSameDay(day, focusedDate) ? 0 : -1,
-                  isFocused,
-                  onDayMouseEnter,
-                  onDayMouseLeave,
-                  onDayClick,
-                  renderDayContents,
-                  phrases,
-                  modifiers: modifiers[toISODateString(day)],
-                  ariaLabelFormat: dayAriaLabelFormat,
-                }))}
-              </CalendarWeek>
+              <tr key={i}>
+                {week.map((day, dayOfWeek) => (
+                  <CalendarDay
+                    day={day}
+                    daySize={daySize}
+                    isOutsideDay={!day || day.month() !== month.month()}
+                    tabIndex={isVisible && isSameDay(day, focusedDate) ? 0 : -1}
+                    isFocused={isFocused}
+                    key={dayOfWeek}
+                    onDayMouseEnter={onDayMouseEnter}
+                    onDayMouseLeave={onDayMouseLeave}
+                    onDayClick={onDayClick}
+                    renderDay={renderDay}
+                    phrases={phrases}
+                    modifiers={modifiers[toISODateString(day)]}
+                    ariaLabelFormat={dayAriaLabelFormat}
+                  />
+                ))}
+              </tr>
             ))}
           </tbody>
         </table>
