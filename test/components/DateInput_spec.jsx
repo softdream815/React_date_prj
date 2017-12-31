@@ -38,7 +38,7 @@ describe('DateInput', () => {
         });
       });
 
-      describe('props.readOnly is falsy', () => {
+      describe('props.readOnly is falsey', () => {
         it('does not set readOnly', () => {
           const wrapper = shallow(<DateInput id="date" readOnly={false} />).dive();
           expect(!!wrapper.find('input').prop('readOnly')).to.equal(false);
@@ -73,7 +73,7 @@ describe('DateInput', () => {
         });
       });
 
-      describe('props.screenReaderMessage is falsy', () => {
+      describe('props.screenReaderMessage is falsey', () => {
         beforeEach(() => {
           wrapper = shallow(<DateInput id={inputId} />).dive();
         });

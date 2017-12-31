@@ -199,8 +199,7 @@ class CalendarMonthGrid extends React.Component {
   }
 
   onTransitionEnd() {
-    const { onMonthTransitionEnd } = this.props;
-    onMonthTransitionEnd();
+    this.props.onMonthTransitionEnd();
   }
 
   setContainerRef(ref) {

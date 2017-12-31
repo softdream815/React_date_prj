@@ -216,9 +216,8 @@ export default class DateRangePickerInputController extends React.Component {
   }
 
   onStartDateFocus() {
-    const { disabled, onFocusChange } = this.props;
-    if (!disabled) {
-      onFocusChange(START_DATE);
+    if (!this.props.disabled) {
+      this.props.onFocusChange(START_DATE);
     }
   }
 
