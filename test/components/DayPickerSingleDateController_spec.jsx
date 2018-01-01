@@ -690,7 +690,7 @@ describe('DayPickerSingleDateController', () => {
         currentMonth: today,
       });
       wrapper.instance().onPrevMonthClick();
-      expect(wrapper.state().currentMonth.month()).to.equal(today.month() - 1);
+      expect(wrapper.state().currentMonth.month()).to.equal(today.clone().subtract(1, 'month').month());
     });
 
     it('new visibleDays has previous month', () => {
@@ -844,7 +844,7 @@ describe('DayPickerSingleDateController', () => {
   });
 
   describe('#getFirstFocusableDay', () => {
-    it('returns first day of arg month if not blocked and props.date is falsey', () => {
+    it('returns first day of arg month if not blocked and props.date is falsy', () => {
       sinon.stub(DayPickerSingleDateController.prototype, 'isBlocked').returns(false);
       const wrapper = shallow((
         <DayPickerSingleDateController
