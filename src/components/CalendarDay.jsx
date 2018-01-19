@@ -129,7 +129,6 @@ class CalendarDay extends React.Component {
           styles.CalendarDay__default,
           isOutsideDay && styles.CalendarDay__outside,
           modifiers.has('today') && styles.CalendarDay__today,
-          modifiers.has('hovered-offset') && styles.CalendarDay__hovered_offset,
           modifiers.has('highlighted-calendar') && styles.CalendarDay__highlighted_calendar,
           modifiers.has('blocked-minimum-nights') && styles.CalendarDay__blocked_minimum_nights,
           modifiers.has('blocked-calendar') && styles.CalendarDay__blocked_calendar,
@@ -188,12 +187,6 @@ export default withStyles(({ reactDates: { color, font } }) => ({
       border: `1px double ${color.core.borderLight}`,
       color: 'inherit',
     },
-  },
-
-  CalendarDay__hovered_offset: {
-    background: color.core.borderBright,
-    border: `1px double ${color.core.borderLight}`,
-    color: 'inherit',
   },
 
   CalendarDay__outside: {

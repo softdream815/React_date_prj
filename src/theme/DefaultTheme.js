@@ -9,7 +9,6 @@ const core = {
   border: '#dbdbdb',
   borderLight: '#e4e7e7',
   borderLighter: '#eceeee',
-  borderBright: '#f4f5f5',
 
   primary: '#00a699',
   primaryShade_1: '#33dacd',
