@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import moment from 'moment';
-import momentJalaali from 'moment-jalaali';
 import omit from 'lodash/omit';
 
 import DateRangePicker from '../src/components/DateRangePicker';
@@ -16,7 +15,6 @@ const propTypes = {
   // example props for the demo
   autoFocus: PropTypes.bool,
   autoFocusEndDate: PropTypes.bool,
-  isPersianDateRangePicker: PropTypes.bool,
   initialStartDate: momentPropTypes.momentObj,
   initialEndDate: momentPropTypes.momentObj,
 
@@ -33,7 +31,6 @@ const defaultProps = {
   // example props for the demo
   autoFocus: false,
   autoFocusEndDate: false,
-  isPersianDateRangePicker: false,
   initialStartDate: null,
   initialEndDate: null,
 
@@ -111,14 +108,7 @@ class DateRangePickerWrapper extends React.Component {
   }
 
   onDatesChange({ startDate, endDate }) {
-    if (this.props.isPersianDateRangePicker) {
-      this.setState({
-        startDate: startDate && momentJalaali(startDate),
-        endDate: endDate && momentJalaali(endDate),
-      });
-    } else {
-      this.setState({ startDate, endDate });
-    }
+    this.setState({ startDate, endDate });
   }
 
   onFocusChange(focusedInput) {
@@ -136,7 +126,6 @@ class DateRangePickerWrapper extends React.Component {
       'autoFocusEndDate',
       'initialStartDate',
       'initialEndDate',
-      'isPersianDateRangePicker',
     ]);
 
     return (
