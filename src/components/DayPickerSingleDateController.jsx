@@ -20,11 +20,16 @@ import toISOMonthString from '../utils/toISOMonthString';
 
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
+import CalendarInfoPositionShape from '../shapes/CalendarInfoPositionShape';
 
 import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_SCROLLABLE,
   DAY_SIZE,
+  INFO_POSITION_TOP,
+  INFO_POSITION_BOTTOM,
+  INFO_POSITION_LEFT,
+  INFO_POSITION_RIGHT,
 } from '../constants';
 
 import DayPicker from './DayPicker';
@@ -66,6 +71,7 @@ const propTypes = forbidExtraProps({
   renderCalendarDay: PropTypes.func,
   renderDayContents: PropTypes.func,
   renderCalendarInfo: PropTypes.func,
+  calendarInfoPosition: CalendarInfoPositionShape,
 
   // accessibility
   onBlur: PropTypes.func,
@@ -118,6 +124,7 @@ const defaultProps = {
   renderCalendarDay: undefined,
   renderDayContents: null,
   renderCalendarInfo: null,
+  calendarInfoPosition: INFO_POSITION_TOP,
 
   // accessibility
   onBlur() {},
@@ -148,8 +155,6 @@ export default class DayPickerSingleDateController extends React.Component {
       valid: day => !this.isBlocked(day),
       hovered: day => this.isHovered(day),
       selected: day => this.isSelected(day),
-      'first-day-of-week': day => this.isFirstDayOfWeek(day),
-      'last-day-of-week': day => this.isLastDayOfWeek(day),
     };
 
     const { currentMonth, visibleDays } = this.getStateForNewMonth(props);
@@ -573,16 +578,6 @@ export default class DayPickerSingleDateController extends React.Component {
     return isSameDay(day, this.today);
   }
 
-  isFirstDayOfWeek(day) {
-    const { firstDayOfWeek } = this.props;
-    return day.day() === (firstDayOfWeek || moment.localeData().firstDayOfWeek());
-  }
-
-  isLastDayOfWeek(day) {
-    const { firstDayOfWeek } = this.props;
-    return day.day() === ((firstDayOfWeek || moment.localeData().firstDayOfWeek()) + 6) % 7;
-  }
-
   render() {
     const {
       numberOfMonths,
@@ -600,6 +595,7 @@ export default class DayPickerSingleDateController extends React.Component {
       renderCalendarDay,
       renderDayContents,
       renderCalendarInfo,
+      calendarInfoPosition,
       isFocused,
       isRTL,
       phrases,
@@ -638,6 +634,7 @@ export default class DayPickerSingleDateController extends React.Component {
         renderCalendarDay={renderCalendarDay}
         renderDayContents={renderDayContents}
         renderCalendarInfo={renderCalendarInfo}
+        calendarInfoPosition={calendarInfoPosition}
         isFocused={isFocused}
         getFirstFocusableDay={this.getFirstFocusableDay}
         onBlur={onBlur}
