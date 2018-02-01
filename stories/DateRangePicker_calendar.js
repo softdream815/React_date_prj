@@ -36,6 +36,7 @@ const TestCustomInfoPanel = () => (
   <div
     style={{
       padding: '10px 21px',
+      borderTop: '1px solid #dce0e0',
       color: '#484848',
     }}
   >
@@ -129,44 +130,8 @@ storiesOf('DRP - Calendar Props', module)
       autoFocus
     />
   ))
-  .addWithInfo('with info panel default', () => (
+  .addWithInfo('with info panel', () => (
     <DateRangePickerWrapper
-      renderCalendarInfo={() => (
-        <TestCustomInfoPanel />
-      )}
-      autoFocus
-    />
-  ))
-  .addWithInfo('with info panel left', () => (
-    <DateRangePickerWrapper
-      calendarInfoPosition="left"
-      renderCalendarInfo={() => (
-        <TestCustomInfoPanel />
-      )}
-      autoFocus
-    />
-  ))
-  .addWithInfo('with info panel right', () => (
-    <DateRangePickerWrapper
-      calendarInfoPosition="right"
-      renderCalendarInfo={() => (
-        <TestCustomInfoPanel />
-      )}
-      autoFocus
-    />
-  ))
-  .addWithInfo('with info panel bottom', () => (
-    <DateRangePickerWrapper
-      calendarInfoPosition="bottom"
-      renderCalendarInfo={() => (
-        <TestCustomInfoPanel />
-      )}
-      autoFocus
-    />
-  ))
-  .addWithInfo('with info panel top', () => (
-    <DateRangePickerWrapper
-      calendarInfoPosition="top"
       renderCalendarInfo={() => (
         <TestCustomInfoPanel />
       )}
