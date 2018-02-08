@@ -86,7 +86,6 @@ const defaultProps = {
   // i18n
   monthFormat: 'MMMM YYYY', // english locale
   phrases: CalendarDayPhrases,
-  dayAriaLabelFormat: undefined,
 };
 
 function getMonths(initialMonth, numberOfMonths, withoutTransitionMonths) {

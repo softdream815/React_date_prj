@@ -77,7 +77,6 @@ const defaultProps = {
   // i18n
   monthFormat: 'MMMM YYYY', // english locale
   phrases: CalendarDayPhrases,
-  dayAriaLabelFormat: undefined,
 };
 
 class CalendarMonth extends React.Component {

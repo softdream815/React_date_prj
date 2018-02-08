@@ -26,6 +26,7 @@ import toISOMonthString from '../utils/toISOMonthString';
 import FocusedInputShape from '../shapes/FocusedInputShape';
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
+import CalendarInfoPositionShape from '../shapes/CalendarInfoPositionShape';
 
 import {
   START_DATE,
@@ -33,6 +34,7 @@ import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_SCROLLABLE,
   DAY_SIZE,
+  INFO_POSITION_BOTTOM,
 } from '../constants';
 
 import DayPicker from './DayPicker';
@@ -74,6 +76,7 @@ const propTypes = forbidExtraProps({
   renderCalendarDay: PropTypes.func,
   renderDayContents: PropTypes.func,
   renderCalendarInfo: PropTypes.func,
+  calendarInfoPosition: CalendarInfoPositionShape,
   firstDayOfWeek: DayOfWeekShape,
   verticalHeight: nonNegativeInteger,
   transitionDuration: nonNegativeInteger,
@@ -129,6 +132,7 @@ const defaultProps = {
   renderCalendarDay: undefined,
   renderDayContents: null,
   renderCalendarInfo: null,
+  calendarInfoPosition: INFO_POSITION_BOTTOM,
   firstDayOfWeek: null,
   verticalHeight: null,
   noBorder: false,
@@ -143,7 +147,6 @@ const defaultProps = {
   monthFormat: 'MMMM YYYY',
   weekDayFormat: 'dd',
   phrases: DayPickerPhrases,
-  dayAriaLabelFormat: undefined,
 
   isRTL: false,
 };
@@ -179,8 +182,6 @@ export default class DayPickerRangeController extends React.Component {
       'hovered-span': day => this.isInHoveredSpan(day),
       'hovered-offset': day => this.isInHoveredSpan(day),
       'after-hovered-start': day => this.isDayAfterHoveredStartDate(day),
-      'first-day-of-week': day => this.isFirstDayOfWeek(day),
-      'last-day-of-week': day => this.isLastDayOfWeek(day),
     };
 
     const { currentMonth, visibleDays } = this.getStateForNewMonth(props);
@@ -622,9 +623,9 @@ export default class DayPickerRangeController extends React.Component {
         ...newVisibleDays,
         ...this.getModifiers(prevMonthVisibleDays),
       },
-    }, () => {
-      onPrevMonthClick(newCurrentMonth.clone());
     });
+
+    onPrevMonthClick(newCurrentMonth.clone());
   }
 
   onNextMonthClick() {
@@ -646,9 +647,9 @@ export default class DayPickerRangeController extends React.Component {
         ...newVisibleDays,
         ...this.getModifiers(nextMonthVisibleDays),
       },
-    }, () => {
-      onNextMonthClick(newCurrentMonth.clone());
     });
+
+    onNextMonthClick(newCurrentMonth.clone());
   }
 
   onMultiplyScrollableMonths() {
@@ -945,16 +946,6 @@ export default class DayPickerRangeController extends React.Component {
     return isSameDay(day, this.today);
   }
 
-  isFirstDayOfWeek(day) {
-    const { firstDayOfWeek } = this.props;
-    return day.day() === (firstDayOfWeek || moment.localeData().firstDayOfWeek());
-  }
-
-  isLastDayOfWeek(day) {
-    const { firstDayOfWeek } = this.props;
-    return day.day() === ((firstDayOfWeek || moment.localeData().firstDayOfWeek()) + 6) % 7;
-  }
-
   render() {
     const {
       numberOfMonths,
@@ -973,6 +964,7 @@ export default class DayPickerRangeController extends React.Component {
       renderCalendarDay,
       renderDayContents,
       renderCalendarInfo,
+      calendarInfoPosition,
       onBlur,
       isFocused,
       showKeyboardShortcuts,
@@ -1011,6 +1003,7 @@ export default class DayPickerRangeController extends React.Component {
         renderCalendarDay={renderCalendarDay}
         renderDayContents={renderDayContents}
         renderCalendarInfo={renderCalendarInfo}
+        calendarInfoPosition={calendarInfoPosition}
         firstDayOfWeek={firstDayOfWeek}
         hideKeyboardShortcutsPanel={hideKeyboardShortcutsPanel}
         isFocused={isFocused}
