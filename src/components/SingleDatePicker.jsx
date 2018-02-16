@@ -109,7 +109,6 @@ const defaultProps = {
   monthFormat: 'MMMM YYYY',
   weekDayFormat: 'dd',
   phrases: SingleDatePickerPhrases,
-  dayAriaLabelFormat: undefined,
 };
 
 class SingleDatePicker extends React.Component {
@@ -368,7 +367,6 @@ class SingleDatePicker extends React.Component {
       firstDayOfWeek,
       customCloseIcon,
       phrases,
-      dayAriaLabelFormat,
       daySize,
       isRTL,
       isOutsideRange,
@@ -440,7 +438,6 @@ class SingleDatePicker extends React.Component {
           showKeyboardShortcuts={showKeyboardShortcuts}
           onBlur={this.onDayPickerBlur}
           phrases={phrases}
-          dayAriaLabelFormat={dayAriaLabelFormat}
           daySize={daySize}
           isRTL={isRTL}
           isOutsideRange={isOutsideRange}

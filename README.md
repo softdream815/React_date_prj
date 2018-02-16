@@ -170,7 +170,6 @@ displayFormat: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 monthFormat: PropTypes.string,
 weekDayFormat: PropTypes.string,
 phrases: PropTypes.shape(getPhrasePropTypes(DateRangePickerPhrases)),
-dayAriaLabelFormat: PropTypes.string,
 ```
 
 #### SingleDatePicker
@@ -246,7 +245,6 @@ displayFormat: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 monthFormat: PropTypes.string,
 weekDayFormat: PropTypes.string,
 phrases: PropTypes.shape(getPhrasePropTypes(SingleDatePickerPhrases)),
-dayAriaLabelFormat: PropTypes.string,
 ```
 
 #### DayPickerRangeController
@@ -297,7 +295,6 @@ The following is a list of other *OPTIONAL* props you may provide to the `DayPic
   monthFormat: PropTypes.string,
   weekDayFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(DayPickerPhrases)),
-  dayAriaLabelFormat: PropTypes.string,
 />
 ```
 
