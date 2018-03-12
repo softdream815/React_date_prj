@@ -53,6 +53,8 @@ export default {
   horizontalMargin: PropTypes.number,
   withPortal: PropTypes.bool,
   withFullScreenPortal: PropTypes.bool,
+  appendToBody: PropTypes.bool,
+  disableScroll: PropTypes.bool,
   daySize: nonNegativeInteger,
   isRTL: PropTypes.bool,
   firstDayOfWeek: DayOfWeekShape,
