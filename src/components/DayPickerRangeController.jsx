@@ -23,7 +23,6 @@ import getSelectedDateOffset from '../utils/getSelectedDateOffset';
 import toISODateString from '../utils/toISODateString';
 import toISOMonthString from '../utils/toISOMonthString';
 
-import DisabledShape from '../shapes/DisabledShape';
 import FocusedInputShape from '../shapes/FocusedInputShape';
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
@@ -53,7 +52,6 @@ const propTypes = forbidExtraProps({
 
   keepOpenOnDateSelect: PropTypes.bool,
   minimumNights: PropTypes.number,
-  disabled: DisabledShape,
   isOutsideRange: PropTypes.func,
   isDayBlocked: PropTypes.func,
   isDayHighlighted: PropTypes.func,
@@ -110,7 +108,6 @@ const defaultProps = {
 
   keepOpenOnDateSelect: false,
   minimumNights: 1,
-  disabled: false,
   isOutsideRange() {},
   isDayBlocked() {},
   isDayHighlighted() {},
@@ -442,7 +439,6 @@ export default class DayPickerRangeController extends React.Component {
       onDatesChange,
       startDateOffset,
       endDateOffset,
-      disabled,
     } = this.props;
 
     if (e) e.preventDefault();
@@ -460,22 +456,13 @@ export default class DayPickerRangeController extends React.Component {
       }
     } else if (focusedInput === START_DATE) {
       const lastAllowedStartDate = endDate && endDate.clone().subtract(minimumNights, 'days');
-      const isStartDateAfterEndDate = isBeforeDay(lastAllowedStartDate, day) ||
-        isAfterDay(startDate, endDate);
-      const isEndDateDisabled = disabled === END_DATE;
 
-      if (!isEndDateDisabled || !isStartDateAfterEndDate) {
-        startDate = day;
-        if (isStartDateAfterEndDate) {
-          endDate = null;
-        }
-      }
+      onFocusChange(END_DATE);
 
-      if (isEndDateDisabled && !isStartDateAfterEndDate) {
-        onFocusChange(null);
-        onClose({ startDate, endDate });
-      } else if (!isEndDateDisabled) {
-        onFocusChange(END_DATE);
+      startDate = day;
+
+      if (isBeforeDay(lastAllowedStartDate, day) || isAfterDay(startDate, endDate)) {
+        endDate = null;
       }
     } else if (focusedInput === END_DATE) {
       const firstAllowedEndDate = startDate && startDate.clone().add(minimumNights, 'days');
@@ -489,7 +476,7 @@ export default class DayPickerRangeController extends React.Component {
           onFocusChange(null);
           onClose({ startDate, endDate });
         }
-      } else if (disabled !== START_DATE) {
+      } else {
         startDate = day;
         endDate = null;
       }

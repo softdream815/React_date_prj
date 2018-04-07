@@ -9,7 +9,6 @@ import openDirectionShape from '../shapes/OpenDirectionShape';
 
 import DateInput from './DateInput';
 import IconPositionShape from '../shapes/IconPositionShape';
-import DisabledShape from '../shapes/DisabledShape';
 
 import RightArrow from './RightArrow';
 import LeftArrow from './LeftArrow';
@@ -49,7 +48,7 @@ const propTypes = forbidExtraProps({
   isStartDateFocused: PropTypes.bool,
   isEndDateFocused: PropTypes.bool,
   showClearDates: PropTypes.bool,
-  disabled: DisabledShape,
+  disabled: PropTypes.bool,
   required: PropTypes.bool,
   readOnly: PropTypes.bool,
   openDirection: openDirectionShape,
@@ -201,8 +200,6 @@ function DateRangePickerInput({
       {calendarIcon}
     </button>
   );
-  const startDateDisabled = disabled === START_DATE || disabled;
-  const endDateDisabled = disabled === END_DATE || disabled;
 
   return (
     <div
@@ -224,7 +221,7 @@ function DateRangePickerInput({
         screenReaderMessage={screenReaderText}
         focused={isStartDateFocused}
         isFocused={isFocused}
-        disabled={startDateDisabled}
+        disabled={disabled}
         required={required}
         readOnly={readOnly}
         showCaret={showCaret}
@@ -254,7 +251,7 @@ function DateRangePickerInput({
         screenReaderMessage={screenReaderText}
         focused={isEndDateFocused}
         isFocused={isFocused}
-        disabled={endDateDisabled}
+        disabled={disabled}
         required={required}
         readOnly={readOnly}
         showCaret={showCaret}

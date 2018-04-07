@@ -47,8 +47,6 @@ export default {
   horizontalMargin: PropTypes.number,
   withPortal: PropTypes.bool,
   withFullScreenPortal: PropTypes.bool,
-  appendToBody: PropTypes.bool,
-  disableScroll: PropTypes.bool,
   initialVisibleMonth: PropTypes.func,
   firstDayOfWeek: DayOfWeekShape,
   numberOfMonths: PropTypes.number,
@@ -83,5 +81,4 @@ export default {
   monthFormat: PropTypes.string,
   weekDayFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(SingleDatePickerPhrases)),
-  dayAriaLabelFormat: PropTypes.string,
 };
