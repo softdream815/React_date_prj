@@ -18,8 +18,6 @@ import {
 const requiredProps = {
   onDatesChange: () => {},
   onFocusChange: () => {},
-  startDateId: 'startDate',
-  endDateId: 'endDate',
 };
 
 describe('DateRangePicker', () => {
@@ -318,6 +316,7 @@ describe('DateRangePicker', () => {
         const wrapper = shallow((
           <DateRangePicker
             {...requiredProps}
+            onDateChange={sinon.stub()}
             onFocusChange={sinon.stub()}
             keepFocusOnInput
           />
@@ -331,6 +330,7 @@ describe('DateRangePicker', () => {
         const wrapper = shallow((
           <DateRangePicker
             {...requiredProps}
+            onDateChange={sinon.stub()}
             onFocusChange={sinon.stub()}
             keepFocusOnInput
             withFullScreenPortal

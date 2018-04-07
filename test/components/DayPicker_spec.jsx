@@ -460,8 +460,7 @@ describe('DayPicker', () => {
         const wrapper = shallow((
           <DayPicker getFirstFocusableDay={getFirstFocusableDayStub} />
         )).dive();
-        // getFirstFocusableDay gets called in the constructor
-        getFirstFocusableDayStub.resetHistory();
+        getFirstFocusableDayStub.reset(); // getFirstFocusableDay gets called in the constructor
 
         wrapper.instance().getFocusedDay();
         expect(getFirstFocusableDayStub.callCount).to.equal(1);
@@ -472,8 +471,7 @@ describe('DayPicker', () => {
         const wrapper = shallow((
           <DayPicker getFirstFocusableDay={getFirstFocusableDayStub} />
         )).dive();
-        // getFirstFocusableDay gets called in the constructor
-        getFirstFocusableDayStub.resetHistory();
+        getFirstFocusableDayStub.reset(); // getFirstFocusableDay gets called in the constructor
 
         wrapper.instance().getFocusedDay(today);
         expect(getFirstFocusableDayStub.getCall(0).args[0].isSame(today, 'day')).to.equal(true);
@@ -816,7 +814,7 @@ describe('DayPicker', () => {
         });
 
         afterEach(() => {
-          containerFocusStub.resetHistory();
+          containerFocusStub.reset();
         });
 
         describe('when focusedDate is not defined', () => {
