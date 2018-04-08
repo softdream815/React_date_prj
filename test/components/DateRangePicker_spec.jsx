@@ -18,8 +18,6 @@ import {
 const requiredProps = {
   onDatesChange: () => {},
   onFocusChange: () => {},
-  startDateId: 'startDate',
-  endDateId: 'endDate',
 };
 
 describe('DateRangePicker', () => {
@@ -105,6 +103,17 @@ describe('DateRangePicker', () => {
           )).dive();
           expect(wrapper.find(Portal)).to.have.length(0);
         });
+      });
+    });
+
+    describe('props.appendToBody', () => {
+      it('renders <DayPickerRangeController> inside <Portal>', () => {
+        const wrapper = shallow((
+          <DateRangePicker {...requiredProps} appendToBody focusedInput={START_DATE} />
+        )).dive();
+        const portal = wrapper.find(Portal);
+        expect(portal).to.have.length(1);
+        expect(portal.find(DayPickerRangeController)).to.have.length(1);
       });
     });
 
@@ -318,6 +327,7 @@ describe('DateRangePicker', () => {
         const wrapper = shallow((
           <DateRangePicker
             {...requiredProps}
+            onDateChange={sinon.stub()}
             onFocusChange={sinon.stub()}
             keepFocusOnInput
           />
@@ -331,6 +341,7 @@ describe('DateRangePicker', () => {
         const wrapper = shallow((
           <DateRangePicker
             {...requiredProps}
+            onDateChange={sinon.stub()}
             onFocusChange={sinon.stub()}
             keepFocusOnInput
             withFullScreenPortal

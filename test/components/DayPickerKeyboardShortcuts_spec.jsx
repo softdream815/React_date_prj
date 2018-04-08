@@ -117,7 +117,7 @@ describe('DayPickerKeyboardShortcuts', () => {
         });
 
         afterEach(() => {
-          openKeyboardShortcutsPanelStub.resetHistory();
+          openKeyboardShortcutsPanelStub.reset();
         });
 
         it('onClick calls onShowKeyboardShortcutsButtonClick', () => {
@@ -205,9 +205,9 @@ describe('DayPickerKeyboardShortcuts', () => {
         });
 
         afterEach(() => {
-          closeKeyboardShortcutsPanelStub.resetHistory();
-          event.stopPropagation.resetHistory();
-          event.preventDefault.resetHistory();
+          closeKeyboardShortcutsPanelStub.reset();
+          event.stopPropagation.reset();
+          event.preventDefault.reset();
         });
 
         it('onClick calls onShowKeyboardShortcutsButtonClick', () => {
