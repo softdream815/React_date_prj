@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { Portal } from 'react-portal';
 
 import DateRangePicker, { PureDateRangePicker } from '../../src/components/DateRangePicker';
@@ -15,11 +15,11 @@ import {
   START_DATE,
 } from '../../src/constants';
 
-const describeIfWindow = typeof document === 'undefined' ? describe.skip : describe;
-
 const requiredProps = {
   onDatesChange: () => {},
   onFocusChange: () => {},
+  startDateId: 'startDate',
+  endDateId: 'endDate',
 };
 
 describe('DateRangePicker', () => {
@@ -104,64 +104,6 @@ describe('DateRangePicker', () => {
             />
           )).dive();
           expect(wrapper.find(Portal)).to.have.length(0);
-        });
-      });
-    });
-
-    describe('props.appendToBody', () => {
-      it('renders <DayPickerRangeController> inside <Portal>', () => {
-        const wrapper = shallow((
-          <DateRangePicker {...requiredProps} appendToBody focusedInput={START_DATE} />
-        )).dive();
-        const portal = wrapper.find(Portal);
-        expect(portal).to.have.length(1);
-        expect(portal.find(DayPickerRangeController)).to.have.length(1);
-      });
-
-      describeIfWindow('mounted', () => {
-        let wrapper;
-        let instance;
-        let onCloseStub;
-
-        beforeEach(() => {
-          onCloseStub = sinon.stub();
-          wrapper = mount(shallow((
-            <DateRangePicker
-              {...requiredProps}
-              appendToBody
-              focusedInput={START_DATE}
-              onClose={onCloseStub}
-            />
-          )).get(0));
-          instance = wrapper.instance();
-        });
-
-        it('positions <DateRangePickerInputController> using top and transform CSS properties', () => {
-          const dayPickerEl = instance.dayPickerContainer;
-          expect(dayPickerEl.style.top).not.to.equal('');
-          expect(dayPickerEl.style.transform).not.to.equal('');
-        });
-
-        it('disables scroll', () => {
-          expect(instance.enableScroll).to.be.a('function');
-        });
-
-        it('ignores click events from inside picker', () => {
-          const event = { target: instance.dayPickerContainer };
-          instance.onOutsideClick(event);
-          expect(onCloseStub.callCount).to.equal(0);
-        });
-
-        it('enables scroll when closed', () => {
-          const enableScrollSpy = sinon.spy(instance, 'enableScroll');
-          wrapper.setProps({ focusedInput: null });
-          expect(enableScrollSpy.callCount).to.equal(1);
-        });
-
-        it('enables scroll when unmounted', () => {
-          const enableScrollSpy = sinon.spy(instance, 'enableScroll');
-          wrapper.unmount();
-          expect(enableScrollSpy.callCount).to.equal(1);
         });
       });
     });
@@ -376,7 +318,6 @@ describe('DateRangePicker', () => {
         const wrapper = shallow((
           <DateRangePicker
             {...requiredProps}
-            onDateChange={sinon.stub()}
             onFocusChange={sinon.stub()}
             keepFocusOnInput
           />
@@ -390,7 +331,6 @@ describe('DateRangePicker', () => {
         const wrapper = shallow((
           <DateRangePicker
             {...requiredProps}
-            onDateChange={sinon.stub()}
             onFocusChange={sinon.stub()}
             keepFocusOnInput
             withFullScreenPortal
