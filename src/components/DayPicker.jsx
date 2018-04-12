@@ -66,7 +66,6 @@ const propTypes = forbidExtraProps({
   verticalHeight: nonNegativeInteger,
   noBorder: PropTypes.bool,
   transitionDuration: nonNegativeInteger,
-  verticalBorderSpacing: nonNegativeInteger,
 
   // navigation props
   navPrev: PropTypes.node,
@@ -117,7 +116,6 @@ export const defaultProps = {
   verticalHeight: null,
   noBorder: false,
   transitionDuration: undefined,
-  verticalBorderSpacing: undefined,
 
   // navigation props
   navPrev: null,
@@ -755,7 +753,6 @@ class DayPicker extends React.Component {
       dayAriaLabelFormat,
       noBorder,
       transitionDuration,
-      verticalBorderSpacing,
     } = this.props;
 
     const isHorizontal = this.isHorizontal();
@@ -913,7 +910,6 @@ class DayPicker extends React.Component {
                   isRTL={isRTL}
                   dayAriaLabelFormat={dayAriaLabelFormat}
                   transitionDuration={transitionDuration}
-                  verticalBorderSpacing={verticalBorderSpacing}
                 />
                 {verticalScrollable && this.renderNavigation()}
               </div>

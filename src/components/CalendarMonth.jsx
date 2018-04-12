@@ -45,7 +45,6 @@ const propTypes = forbidExtraProps({
   renderDayContents: PropTypes.func,
   firstDayOfWeek: DayOfWeekShape,
   setMonthHeight: PropTypes.func,
-  verticalBorderSpacing: nonNegativeInteger,
 
   focusedDate: momentPropTypes.momentObj, // indicates focusable day
   isFocused: PropTypes.bool, // indicates whether or not to move focus to focusable day
@@ -79,7 +78,6 @@ const defaultProps = {
   monthFormat: 'MMMM YYYY', // english locale
   phrases: CalendarDayPhrases,
   dayAriaLabelFormat: undefined,
-  verticalBorderSpacing: undefined,
 };
 
 class CalendarMonth extends React.Component {
@@ -163,7 +161,6 @@ class CalendarMonth extends React.Component {
       styles,
       phrases,
       dayAriaLabelFormat,
-      verticalBorderSpacing,
     } = this.props;
 
     const { weeks } = this.state;
@@ -192,11 +189,7 @@ class CalendarMonth extends React.Component {
         </div>
 
         <table
-          {...css(
-            !verticalBorderSpacing && styles.CalendarMonth_table,
-            verticalBorderSpacing && styles.CalendarMonth_verticalSpacing,
-            verticalBorderSpacing && { borderSpacing: `0px ${verticalBorderSpacing}px` },
-          )}
+          {...css(styles.CalendarMonth_table)}
           role="presentation"
         >
           <tbody ref={this.setGridRef}>
@@ -241,10 +234,6 @@ export default withStyles(({ reactDates: { color, font, spacing } }) => ({
   CalendarMonth_table: {
     borderCollapse: 'collapse',
     borderSpacing: 0,
-  },
-
-  CalendarMonth_verticalSpacing: {
-    borderCollapse: 'separate',
   },
 
   CalendarMonth_caption: {

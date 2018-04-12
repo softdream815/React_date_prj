@@ -52,7 +52,6 @@ const propTypes = forbidExtraProps({
   setCalendarMonthHeights: PropTypes.func,
   isRTL: PropTypes.bool,
   transitionDuration: nonNegativeInteger,
-  verticalBorderSpacing: nonNegativeInteger,
 
   // i18n
   monthFormat: PropTypes.string,
@@ -83,7 +82,6 @@ const defaultProps = {
   setCalendarMonthHeights() {},
   isRTL: false,
   transitionDuration: 200,
-  verticalBorderSpacing: undefined,
 
   // i18n
   monthFormat: 'MMMM YYYY', // english locale
@@ -248,7 +246,6 @@ class CalendarMonthGrid extends React.Component {
       phrases,
       dayAriaLabelFormat,
       transitionDuration,
-      verticalBorderSpacing,
     } = this.props;
 
     const { months } = this.state;
@@ -328,7 +325,6 @@ class CalendarMonthGrid extends React.Component {
                 phrases={phrases}
                 setMonthHeight={(height) => { this.setMonthHeight(height, i); }}
                 dayAriaLabelFormat={dayAriaLabelFormat}
-                verticalBorderSpacing={verticalBorderSpacing}
               />
             </div>
           );

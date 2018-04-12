@@ -20,7 +20,6 @@ const propTypes = forbidExtraProps({
   initialEndDate: momentPropTypes.momentObj,
   startDateOffset: PropTypes.func,
   endDateOffset: PropTypes.func,
-  showInputs: PropTypes.bool,
 
   keepOpenOnDateSelect: PropTypes.bool,
   minimumNights: PropTypes.number,
@@ -58,7 +57,6 @@ const defaultProps = {
   initialEndDate: null,
   startDateOffset: undefined,
   endDateOffset: undefined,
-  showInputs: false,
 
   // day presentation and interaction related props
   renderCalendarDay: undefined,
@@ -123,7 +121,6 @@ class DayPickerRangeControllerWrapper extends React.Component {
       'autoFocusEndDate',
       'initialStartDate',
       'initialEndDate',
-      'showInputs',
     ]);
 
     const startDateString = startDate && startDate.format('YYYY-MM-DD');
