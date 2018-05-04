@@ -345,32 +345,25 @@ export default class DayPickerRangeController extends React.Component {
       modifiers = this.addModifierToRange(modifiers, startSpan, endSpan, 'after-hovered-start');
     }
 
-    if (prevMinimumNights > 0) {
-      if (didFocusChange || didStartDateChange || minimumNights !== prevMinimumNights) {
+    if (minimumNights > 0 || minimumNights !== prevMinimumNights) {
+      if (didFocusChange || didStartDateChange) {
         const startSpan = prevStartDate || this.today;
         modifiers = this.deleteModifierFromRange(
           modifiers,
           startSpan,
-          startSpan.clone().add(prevMinimumNights, 'days'),
+          startSpan.clone().add(minimumNights, 'days'),
           'blocked-minimum-nights',
         );
+      }
 
-        modifiers = this.deleteModifierFromRange(
+      if (startDate && focusedInput === END_DATE) {
+        modifiers = this.addModifierToRange(
           modifiers,
-          startSpan,
-          startSpan.clone().add(prevMinimumNights, 'days'),
-          'blocked',
+          startDate,
+          startDate.clone().add(minimumNights, 'days'),
+          'blocked-minimum-nights',
         );
       }
-    }
-
-    if (minimumNights > 0 && startDate && focusedInput === END_DATE) {
-      modifiers = this.addModifierToRange(
-        modifiers,
-        startDate,
-        startDate.clone().add(minimumNights, 'days'),
-        'blocked-minimum-nights',
-      );
     }
 
     if (didFocusChange || recomputePropModifiers) {
@@ -841,6 +834,7 @@ export default class DayPickerRangeController extends React.Component {
   deleteModifier(updatedDays, day, modifier) {
     const { numberOfMonths: numberOfVisibleMonths, enableOutsideDays, orientation } = this.props;
     const { currentMonth: firstVisibleMonth, visibleDays } = this.state;
+
     let currentMonth = firstVisibleMonth;
     let numberOfMonths = numberOfVisibleMonths;
     if (orientation !== VERTICAL_SCROLLABLE) {
