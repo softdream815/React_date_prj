@@ -44,7 +44,7 @@ const propTypes = forbidExtraProps({
   renderCalendarDay: PropTypes.func,
   renderDayContents: PropTypes.func,
   firstDayOfWeek: DayOfWeekShape,
-  setMonthTitleHeight: PropTypes.func,
+  setMonthHeight: PropTypes.func,
   verticalBorderSpacing: nonNegativeInteger,
 
   focusedDate: momentPropTypes.momentObj, // indicates focusable day
@@ -70,7 +70,7 @@ const defaultProps = {
   renderCalendarDay: props => (<CalendarDay {...props} />),
   renderDayContents: null,
   firstDayOfWeek: null,
-  setMonthTitleHeight: null,
+  setMonthHeight() {},
 
   focusedDate: null,
   isFocused: false,
@@ -95,11 +95,12 @@ class CalendarMonth extends React.Component {
     };
 
     this.setCaptionRef = this.setCaptionRef.bind(this);
-    this.setMonthTitleHeight = this.setMonthTitleHeight.bind(this);
+    this.setGridRef = this.setGridRef.bind(this);
+    this.setMonthHeight = this.setMonthHeight.bind(this);
   }
 
   componentDidMount() {
-    this.setMonthTitleHeightTimeout = setTimeout(this.setMonthTitleHeight, 0);
+    this.setMonthHeightTimeout = setTimeout(this.setMonthHeight, 0);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -122,21 +123,25 @@ class CalendarMonth extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.setMonthTitleHeightTimeout) {
-      clearTimeout(this.setMonthTitleHeightTimeout);
+    if (this.setMonthHeightTimeout) {
+      clearTimeout(this.setMonthHeightTimeout);
     }
   }
 
-  setMonthTitleHeight() {
-    const { setMonthTitleHeight } = this.props;
-    if (setMonthTitleHeight) {
-      const captionHeight = calculateDimension(this.captionRef, 'height', true, true);
-      setMonthTitleHeight(captionHeight);
-    }
+  setMonthHeight() {
+    const { setMonthHeight } = this.props;
+    const captionHeight = calculateDimension(this.captionRef, 'height', true, true);
+    const gridHeight = calculateDimension(this.gridRef, 'height');
+
+    setMonthHeight(captionHeight + gridHeight + 1);
   }
 
   setCaptionRef(ref) {
     this.captionRef = ref;
+  }
+
+  setGridRef(ref) {
+    this.gridRef = ref;
   }
 
   render() {
@@ -194,7 +199,7 @@ class CalendarMonth extends React.Component {
           )}
           role="presentation"
         >
-          <tbody>
+          <tbody ref={this.setGridRef}>
             {weeks.map((week, i) => (
               <CalendarWeek key={i}>
                 {week.map((day, dayOfWeek) => renderCalendarDay({

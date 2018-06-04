@@ -210,17 +210,14 @@ function SingleDatePickerInput({
 SingleDatePickerInput.propTypes = propTypes;
 SingleDatePickerInput.defaultProps = defaultProps;
 
-export default withStyles(({ reactDates: { border, color } }) => ({
+export default withStyles(({ reactDates: { color } }) => ({
   SingleDatePickerInput: {
     display: 'inline-block',
     backgroundColor: color.background,
   },
 
   SingleDatePickerInput__withBorder: {
-    borderColor: color.border,
-    borderWidth: border.pickerInput.borderWidth,
-    borderStyle: border.pickerInput.borderStyle,
-    borderRadius: border.pickerInput.borderRadius,
+    border: `1px solid ${color.core.border}`,
   },
 
   SingleDatePickerInput__rtl: {

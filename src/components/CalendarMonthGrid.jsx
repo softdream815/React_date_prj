@@ -44,12 +44,12 @@ const propTypes = forbidExtraProps({
   renderMonth: PropTypes.func,
   renderCalendarDay: PropTypes.func,
   renderDayContents: PropTypes.func,
-  translationValue: PropTypes.number,
+  transformValue: PropTypes.string,
   daySize: nonNegativeInteger,
   focusedDate: momentPropTypes.momentObj, // indicates focusable day
   isFocused: PropTypes.bool, // indicates whether or not to move focus to focusable day
   firstDayOfWeek: DayOfWeekShape,
-  setMonthTitleHeight: PropTypes.func,
+  setCalendarMonthHeights: PropTypes.func,
   isRTL: PropTypes.bool,
   transitionDuration: nonNegativeInteger,
   verticalBorderSpacing: nonNegativeInteger,
@@ -75,12 +75,12 @@ const defaultProps = {
   renderMonth: null,
   renderCalendarDay: undefined,
   renderDayContents: null,
-  translationValue: null,
+  transformValue: 'none',
   daySize: DAY_SIZE,
   focusedDate: null,
   isFocused: false,
   firstDayOfWeek: null,
-  setMonthTitleHeight: null,
+  setCalendarMonthHeights() {},
   isRTL: false,
   transitionDuration: 200,
   verticalBorderSpacing: undefined,
@@ -112,6 +112,8 @@ class CalendarMonthGrid extends React.Component {
       months: getMonths(props.initialMonth, props.numberOfMonths, withoutTransitionMonths),
     };
 
+    this.calendarMonthHeights = [];
+
     this.isTransitionEndSupported = isTransitionEndSupported();
     this.onTransitionEnd = this.onTransitionEnd.bind(this);
     this.setContainerRef = this.setContainerRef.bind(this);
@@ -120,11 +122,16 @@ class CalendarMonthGrid extends React.Component {
   }
 
   componentDidMount() {
+    const { setCalendarMonthHeights } = this.props;
     this.removeEventListener = addEventListener(
       this.container,
       'transitionend',
       this.onTransitionEnd,
     );
+
+    this.setCalendarMonthHeightsTimeout = setTimeout(() => {
+      setCalendarMonthHeights(this.calendarMonthHeights);
+    }, 0);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -165,11 +172,12 @@ class CalendarMonthGrid extends React.Component {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const {
       isAnimating,
       transitionDuration,
       onMonthTransitionEnd,
+      setCalendarMonthHeights,
     } = this.props;
 
     // For IE9, immediately call onMonthTransitionEnd instead of
@@ -178,10 +186,19 @@ class CalendarMonthGrid extends React.Component {
     if ((!this.isTransitionEndSupported || !transitionDuration) && isAnimating) {
       onMonthTransitionEnd();
     }
+
+    if (!isAnimating && prevProps.isAnimating) {
+      this.setCalendarMonthHeightsTimeout = setTimeout(() => {
+        setCalendarMonthHeights(this.calendarMonthHeights);
+      }, 0);
+    }
   }
 
   componentWillUnmount() {
     if (this.removeEventListener) this.removeEventListener();
+    if (this.setCalendarMonthHeightsTimeout) {
+      clearTimeout(this.setCalendarMonthHeightsTimeout);
+    }
   }
 
   onTransitionEnd() {
@@ -193,6 +210,18 @@ class CalendarMonthGrid extends React.Component {
     this.container = ref;
   }
 
+  setMonthHeight(height, i) {
+    if (this.calendarMonthHeights[i]) {
+      if (i === 0) {
+        this.calendarMonthHeights = [height].concat(this.calendarMonthHeights.slice(0, -1));
+      } else if (i === this.calendarMonthHeights.length - 1) {
+        this.calendarMonthHeights = this.calendarMonthHeights.slice(1).concat(height);
+      }
+    } else {
+      this.calendarMonthHeights[i] = height;
+    }
+  }
+
   render() {
     const {
       enableOutsideDays,
@@ -202,7 +231,7 @@ class CalendarMonthGrid extends React.Component {
       numberOfMonths,
       monthFormat,
       orientation,
-      translationValue,
+      transformValue,
       daySize,
       onDayMouseEnter,
       onDayMouseLeave,
@@ -220,7 +249,6 @@ class CalendarMonthGrid extends React.Component {
       dayAriaLabelFormat,
       transitionDuration,
       verticalBorderSpacing,
-      setMonthTitleHeight,
     } = this.props;
 
     const { months } = this.state;
@@ -233,9 +261,6 @@ class CalendarMonthGrid extends React.Component {
     const width = isVertical || isVerticalScrollable ?
       calendarMonthWidth :
       (numberOfMonths + 2) * calendarMonthWidth;
-
-    const transformType = (isVertical || isVerticalScrollable) ? 'translateY' : 'translateX';
-    const transformValue = `${transformType}(${translationValue}px)`;
 
     return (
       <div
@@ -278,7 +303,7 @@ class CalendarMonthGrid extends React.Component {
                 },
                 showForAnimation && isVertical && {
                   position: 'absolute',
-                  top: -translationValue,
+                  top: -this.calendarMonthHeights[0],
                 },
                 !isVisible && !isAnimating && styles.CalendarMonthGrid_month__hidden,
               )}
@@ -301,7 +326,7 @@ class CalendarMonthGrid extends React.Component {
                 focusedDate={isVisible ? focusedDate : null}
                 isFocused={isFocused}
                 phrases={phrases}
-                setMonthTitleHeight={setMonthTitleHeight}
+                setMonthHeight={(height) => { this.setMonthHeight(height, i); }}
                 dayAriaLabelFormat={dayAriaLabelFormat}
                 verticalBorderSpacing={verticalBorderSpacing}
               />
