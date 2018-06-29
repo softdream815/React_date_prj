@@ -19,7 +19,6 @@ import getCalendarMonthWeeks from '../utils/getCalendarMonthWeeks';
 import isSameDay from '../utils/isSameDay';
 import toISODateString from '../utils/toISODateString';
 
-import ModifiersShape from '../shapes/ModifiersShape';
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
 
@@ -35,7 +34,7 @@ const propTypes = forbidExtraProps({
   month: momentPropTypes.momentObj,
   isVisible: PropTypes.bool,
   enableOutsideDays: PropTypes.bool,
-  modifiers: PropTypes.objectOf(ModifiersShape),
+  modifiers: PropTypes.object,
   orientation: ScrollableOrientationShape,
   daySize: nonNegativeInteger,
   onDayClick: PropTypes.func,
@@ -111,16 +110,9 @@ class CalendarMonth extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { month, enableOutsideDays, firstDayOfWeek } = nextProps;
-    const {
-      month: prevMonth,
-      enableOutsideDays: prevEnableOutsideDays,
-      firstDayOfWeek: prevFirstDayOfWeek,
-    } = this.props;
-    if (
-      !month.isSame(prevMonth)
-      || enableOutsideDays !== prevEnableOutsideDays
-      || firstDayOfWeek !== prevFirstDayOfWeek
-    ) {
+    if (!month.isSame(this.props.month)
+        || enableOutsideDays !== this.props.enableOutsideDays
+        || firstDayOfWeek !== this.props.firstDayOfWeek) {
       this.setState({
         weeks: getCalendarMonthWeeks(
           month,
@@ -200,11 +192,11 @@ class CalendarMonth extends React.Component {
             verticalScrollable && styles.CalendarMonth_caption__verticalScrollable,
           )}
         >
-          {renderMonthElement ? (
-            renderMonthElement({ month, onMonthSelect, onYearSelect })
-          ) : (
-            <strong>{monthTitle}</strong>
-          )}
+          {
+            renderMonthElement ?
+              renderMonthElement({ month, onMonthSelect, onYearSelect }) :
+              <strong>{monthTitle}</strong>
+          }
         </div>
 
         <table

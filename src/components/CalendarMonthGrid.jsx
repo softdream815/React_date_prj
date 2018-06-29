@@ -19,7 +19,6 @@ import toISOMonthString from '../utils/toISOMonthString';
 import isPrevMonth from '../utils/isPrevMonth';
 import isNextMonth from '../utils/isNextMonth';
 
-import ModifiersShape from '../shapes/ModifiersShape';
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
 
@@ -37,7 +36,7 @@ const propTypes = forbidExtraProps({
   initialMonth: momentPropTypes.momentObj,
   isAnimating: PropTypes.bool,
   numberOfMonths: PropTypes.number,
-  modifiers: PropTypes.objectOf(PropTypes.objectOf(ModifiersShape)),
+  modifiers: PropTypes.object,
   orientation: ScrollableOrientationShape,
   onDayClick: PropTypes.func,
   onDayMouseEnter: PropTypes.func,
@@ -141,19 +140,15 @@ class CalendarMonthGrid extends React.Component {
     const { initialMonth, numberOfMonths, orientation } = nextProps;
     const { months } = this.state;
 
-    const {
-      initialMonth: prevInitialMonth,
-      numberOfMonths: prevNumberOfMonths,
-    } = this.props;
-    const hasMonthChanged = !prevInitialMonth.isSame(initialMonth, 'month');
-    const hasNumberOfMonthsChanged = prevNumberOfMonths !== numberOfMonths;
+    const hasMonthChanged = !this.props.initialMonth.isSame(initialMonth, 'month');
+    const hasNumberOfMonthsChanged = this.props.numberOfMonths !== numberOfMonths;
     let newMonths = months;
 
     if (hasMonthChanged && !hasNumberOfMonthsChanged) {
-      if (isNextMonth(prevInitialMonth, initialMonth)) {
+      if (isNextMonth(this.props.initialMonth, initialMonth)) {
         newMonths = months.slice(1);
         newMonths.push(months[months.length - 1].clone().add(1, 'month'));
-      } else if (isPrevMonth(prevInitialMonth, initialMonth)) {
+      } else if (isPrevMonth(this.props.initialMonth, initialMonth)) {
         newMonths = months.slice(0, months.length - 1);
         newMonths.unshift(months[0].clone().subtract(1, 'month'));
       } else {
@@ -235,7 +230,6 @@ class CalendarMonthGrid extends React.Component {
   setContainerRef(ref) {
     this.container = ref;
   }
-
   render() {
     const {
       enableOutsideDays,
@@ -274,9 +268,9 @@ class CalendarMonthGrid extends React.Component {
 
     const calendarMonthWidth = getCalendarMonthWidth(daySize);
 
-    const width = isVertical || isVerticalScrollable
-      ? calendarMonthWidth
-      : (numberOfMonths + 2) * calendarMonthWidth;
+    const width = isVertical || isVerticalScrollable ?
+      calendarMonthWidth :
+      (numberOfMonths + 2) * calendarMonthWidth;
 
     const transformType = (isVertical || isVerticalScrollable) ? 'translateY' : 'translateX';
     const transformValue = `${transformType}(${translationValue}px)`;

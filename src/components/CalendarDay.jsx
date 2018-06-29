@@ -9,7 +9,6 @@ import moment from 'moment';
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 import getCalendarDaySettings from '../utils/getCalendarDaySettings';
-import ModifiersShape from '../shapes/ModifiersShape';
 
 import { DAY_SIZE } from '../constants';
 
@@ -18,7 +17,7 @@ const propTypes = forbidExtraProps({
   day: momentPropTypes.momentObj,
   daySize: nonNegativeInteger,
   isOutsideDay: PropTypes.bool,
-  modifiers: ModifiersShape,
+  modifiers: PropTypes.instanceOf(Set),
   isFocused: PropTypes.bool,
   tabIndex: PropTypes.oneOf([0, -1]),
   onDayClick: PropTypes.func,

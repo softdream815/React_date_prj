@@ -76,8 +76,7 @@ class DayPickerKeyboardShortcuts extends React.Component {
   constructor(...args) {
     super(...args);
 
-    const { phrases } = this.props;
-    this.keyboardShortcuts = getKeyboardShortcuts(phrases);
+    this.keyboardShortcuts = getKeyboardShortcuts(this.props.phrases);
 
     this.onShowKeyboardShortcutsButtonClick = this.onShowKeyboardShortcutsButtonClick.bind(this);
     this.setShowKeyboardShortcutsButtonRef = this.setShowKeyboardShortcutsButtonRef.bind(this);
@@ -87,8 +86,7 @@ class DayPickerKeyboardShortcuts extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { phrases } = this.props;
-    if (nextProps.phrases !== phrases) {
+    if (nextProps.phrases !== this.props.phrases) {
       this.keyboardShortcuts = getKeyboardShortcuts(nextProps.phrases);
     }
   }
@@ -213,7 +211,7 @@ class DayPickerKeyboardShortcuts extends React.Component {
           </span>
         </button>
 
-        {showKeyboardShortcutsPanel && (
+        {showKeyboardShortcutsPanel &&
           <div
             {...css(styles.DayPickerKeyboardShortcuts_panel)}
             role="dialog"
@@ -257,7 +255,7 @@ class DayPickerKeyboardShortcuts extends React.Component {
               ))}
             </ul>
           </div>
-        )}
+        }
       </div>
     );
   }

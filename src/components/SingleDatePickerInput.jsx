@@ -87,8 +87,6 @@ const defaultProps = {
   phrases: SingleDatePickerInputPhrases,
 };
 
-/* eslint react/no-this-in-sfc: 1 */
-
 function SingleDatePickerInput({
   id,
   placeholder,

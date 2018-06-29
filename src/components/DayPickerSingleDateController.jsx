@@ -195,33 +195,23 @@ export default class DayPickerSingleDateController extends React.Component {
       numberOfMonths,
       enableOutsideDays,
     } = nextProps;
-    const {
-      isOutsideRange: prevIsOutsideRange,
-      isDayBlocked: prevIsDayBlocked,
-      isDayHighlighted: prevIsDayHighlighted,
-      numberOfMonths: prevNumberOfMonths,
-      enableOutsideDays: prevEnableOutsideDays,
-      initialVisibleMonth: prevInitialVisibleMonth,
-      focused: prevFocused,
-      date: prevDate,
-    } = this.props;
     let { visibleDays } = this.state;
 
     let recomputeOutsideRange = false;
     let recomputeDayBlocked = false;
     let recomputeDayHighlighted = false;
 
-    if (isOutsideRange !== prevIsOutsideRange) {
+    if (isOutsideRange !== this.props.isOutsideRange) {
       this.modifiers['blocked-out-of-range'] = day => isOutsideRange(day);
       recomputeOutsideRange = true;
     }
 
-    if (isDayBlocked !== prevIsDayBlocked) {
+    if (isDayBlocked !== this.props.isDayBlocked) {
       this.modifiers['blocked-calendar'] = day => isDayBlocked(day);
       recomputeDayBlocked = true;
     }
 
-    if (isDayHighlighted !== prevIsDayHighlighted) {
+    if (isDayHighlighted !== this.props.isDayHighlighted) {
       this.modifiers['highlighted-calendar'] = day => isDayHighlighted(day);
       recomputeDayHighlighted = true;
     }
@@ -231,12 +221,12 @@ export default class DayPickerSingleDateController extends React.Component {
     );
 
     if (
-      numberOfMonths !== prevNumberOfMonths
-      || enableOutsideDays !== prevEnableOutsideDays
-      || (
-        initialVisibleMonth !== prevInitialVisibleMonth
-        && !prevFocused
-        && focused
+      numberOfMonths !== this.props.numberOfMonths ||
+      enableOutsideDays !== this.props.enableOutsideDays ||
+      (
+        initialVisibleMonth !== this.props.initialVisibleMonth &&
+        !this.props.focused &&
+        focused
       )
     ) {
       const newMonthState = this.getStateForNewMonth(nextProps);
@@ -248,13 +238,13 @@ export default class DayPickerSingleDateController extends React.Component {
       });
     }
 
-    const didDateChange = date !== prevDate;
-    const didFocusChange = focused !== prevFocused;
+    const didDateChange = date !== this.props.date;
+    const didFocusChange = focused !== this.props.focused;
 
     let modifiers = {};
 
     if (didDateChange) {
-      modifiers = this.deleteModifier(modifiers, prevDate, 'selected');
+      modifiers = this.deleteModifier(modifiers, this.props.date, 'selected');
       modifiers = this.addModifier(modifiers, date, 'selected');
     }
 
@@ -414,12 +404,8 @@ export default class DayPickerSingleDateController extends React.Component {
   onMonthChange(newMonth) {
     const { numberOfMonths, enableOutsideDays, orientation } = this.props;
     const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
-    const newVisibleDays = getVisibleDays(
-      newMonth,
-      numberOfMonths,
-      enableOutsideDays,
-      withoutTransitionMonths,
-    );
+    const newVisibleDays =
+      getVisibleDays(newMonth, numberOfMonths, enableOutsideDays, withoutTransitionMonths);
 
     this.setState({
       currentMonth: newMonth.clone(),
@@ -430,12 +416,8 @@ export default class DayPickerSingleDateController extends React.Component {
   onYearChange(newMonth) {
     const { numberOfMonths, enableOutsideDays, orientation } = this.props;
     const withoutTransitionMonths = orientation === VERTICAL_SCROLLABLE;
-    const newVisibleDays = getVisibleDays(
-      newMonth,
-      numberOfMonths,
-      enableOutsideDays,
-      withoutTransitionMonths,
-    );
+    const newVisibleDays =
+      getVisibleDays(newMonth, numberOfMonths, enableOutsideDays, withoutTransitionMonths);
 
     this.setState({
       currentMonth: newMonth.clone(),
@@ -617,8 +599,7 @@ export default class DayPickerSingleDateController extends React.Component {
   }
 
   isSelected(day) {
-    const { date } = this.props;
-    return isSameDay(day, date);
+    return isSameDay(day, this.props.date);
   }
 
   isToday(day) {
