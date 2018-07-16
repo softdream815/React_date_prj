@@ -191,10 +191,7 @@ export default withStyles(({ reactDates: { color, zIndex } }) => ({
     zIndex: zIndex + 2,
   },
 
-  DayPickerNavigation__horizontal: {
-    height: 0,
-  },
-
+  DayPickerNavigation__horizontal: {},
   DayPickerNavigation__vertical: {},
   DayPickerNavigation__verticalScrollable: {},
 

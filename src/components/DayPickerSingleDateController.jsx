@@ -508,9 +508,7 @@ export default class DayPickerSingleDateController extends React.Component {
 
     let currentMonth = firstVisibleMonth;
     let numberOfMonths = numberOfVisibleMonths;
-    if (orientation === VERTICAL_SCROLLABLE) {
-      numberOfMonths = Object.keys(visibleDays).length;
-    } else {
+    if (orientation !== VERTICAL_SCROLLABLE) {
       currentMonth = currentMonth.clone().subtract(1, 'month');
       numberOfMonths += 2;
     }
@@ -562,9 +560,7 @@ export default class DayPickerSingleDateController extends React.Component {
 
     let currentMonth = firstVisibleMonth;
     let numberOfMonths = numberOfVisibleMonths;
-    if (orientation === VERTICAL_SCROLLABLE) {
-      numberOfMonths = Object.keys(visibleDays).length;
-    } else {
+    if (orientation !== VERTICAL_SCROLLABLE) {
       currentMonth = currentMonth.clone().subtract(1, 'month');
       numberOfMonths += 2;
     }
