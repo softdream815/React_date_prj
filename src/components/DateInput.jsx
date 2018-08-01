@@ -187,7 +187,7 @@ class DateInput extends React.Component {
       theme: { reactDates },
     } = this.props;
 
-    const value = dateString || displayValue || '';
+    const value = displayValue || dateString || '';
     const screenReaderMessageId = `DateInput__screen-reader-message-${id}`;
 
     const withFang = showCaret && focused;
