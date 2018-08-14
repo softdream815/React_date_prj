@@ -72,6 +72,8 @@ const propTypes = forbidExtraProps({
   horizontalMonthPadding: nonNegativeInteger,
 
   // navigation props
+  hasPrev: PropTypes.bool,
+  hasNext: PropTypes.bool,
   navPrev: PropTypes.node,
   navNext: PropTypes.node,
   noNavButtons: PropTypes.bool,
@@ -130,6 +132,8 @@ export const defaultProps = {
   horizontalMonthPadding: 13,
 
   // navigation props
+  hasPrev: true,
+  hasNext: true,
   navPrev: null,
   navNext: null,
   noNavButtons: false,
@@ -205,7 +209,6 @@ class DayPicker extends React.PureComponent {
 
     this.calendarMonthGridHeight = 0;
     this.setCalendarInfoWidthTimeout = null;
-    this.setCalendarMonthGridHeightTimeout = null;
 
     this.onKeyDown = this.onKeyDown.bind(this);
     this.throttledKeyDown = throttle(this.onFinalKeyDown, 200, { trailing: false });
@@ -347,7 +350,6 @@ class DayPicker extends React.PureComponent {
 
   componentWillUnmount() {
     clearTimeout(this.setCalendarInfoWidthTimeout);
-    clearTimeout(this.setCalendarMonthGridHeightTimeout);
   }
 
   onKeyDown(e) {
@@ -766,7 +768,7 @@ class DayPicker extends React.PureComponent {
     if (monthHeight !== this.calendarMonthGridHeight) {
       this.transitionContainer.style.height = `${monthHeight}px`;
       if (!this.calendarMonthGridHeight) {
-        this.setCalendarMonthGridHeightTimeout = setTimeout(() => {
+        setTimeout(() => {
           this.setState({ hasSetHeight: true });
         }, 0);
       }
@@ -809,6 +811,8 @@ class DayPicker extends React.PureComponent {
 
   renderNavigation() {
     const {
+      hasPrev,
+      hasNext,
       navPrev,
       navNext,
       noNavButtons,
@@ -827,6 +831,8 @@ class DayPicker extends React.PureComponent {
 
     return (
       <DayPickerNavigation
+        hasPrev={hasPrev}
+        hasNext={hasNext}
         onPrevMonthClick={this.onPrevMonthClick}
         onNextMonthClick={onNextMonthClick}
         navPrev={navPrev}
