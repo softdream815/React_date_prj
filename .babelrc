@@ -8,7 +8,6 @@
         "istanbul"
       ]
     },
-
     "development": {
       "presets": ["airbnb"],
       "plugins": [
@@ -16,25 +15,22 @@
         ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
       ],
     },
-
     "production": {
-      "presets": [["airbnb", { removePropTypes: true }]],
+      "presets": ["airbnb"],
       "plugins": [
         "inline-react-svg",
         ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
       ],
     },
-
     "cjs": {
-      "presets": [["airbnb", { removePropTypes: true }]],
+      "presets": ["airbnb"],
       "plugins": [
         "inline-react-svg",
         ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
       ],
     },
-
     "esm": {
-      "presets": [["airbnb", { modules: false, removePropTypes: true }]],
+      "presets": [["airbnb", { modules: false }]],
       "plugins": [
         "inline-react-svg",
         ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
