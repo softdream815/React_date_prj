@@ -10,6 +10,7 @@ import openDirectionShape from '../shapes/OpenDirectionShape';
 import DateInput from './DateInput';
 import IconPositionShape from '../shapes/IconPositionShape';
 import DisabledShape from '../shapes/DisabledShape';
+import { pureComponentAvailable } from '../utils/baseClass';
 
 import RightArrow from './RightArrow';
 import LeftArrow from './LeftArrow';
@@ -285,7 +286,7 @@ function DateRangePickerInput({
 DateRangePickerInput.propTypes = propTypes;
 DateRangePickerInput.defaultProps = defaultProps;
 
-export default withStyles(({ reactDates: { color, sizing } }) => ({
+export default withStyles(({ reactDates: { border, color, sizing } }) => ({
   DateRangePickerInput: {
     backgroundColor: color.background,
     display: 'inline-block',
@@ -296,8 +297,10 @@ export default withStyles(({ reactDates: { color, sizing } }) => ({
   },
 
   DateRangePickerInput__withBorder: {
-    border: `1px solid ${color.border}`,
-    borderRadius: 2,
+    borderColor: color.border,
+    borderWidth: border.pickerInput.borderWidth,
+    borderStyle: border.pickerInput.borderStyle,
+    borderRadius: border.pickerInput.borderRadius,
   },
 
   DateRangePickerInput__rtl: {
@@ -394,4 +397,4 @@ export default withStyles(({ reactDates: { color, sizing } }) => ({
     width: 14,
     verticalAlign: 'middle',
   },
-}))(DateRangePickerInput);
+}), { pureComponent: pureComponentAvailable })(DateRangePickerInput);
