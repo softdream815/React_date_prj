@@ -59,7 +59,7 @@ const defaultProps = {
   customCloseIcon: null,
 
   // calendar presentation and interaction related props
-  renderMonthText: null,
+  renderMonth: null,
   orientation: HORIZONTAL_ORIENTATION,
   anchorDirection: ANCHOR_LEFT,
   horizontalMargin: 0,

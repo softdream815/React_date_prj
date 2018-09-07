@@ -91,7 +91,7 @@ storiesOf('DateRangePicker (DRP)', module)
         stateDateWrapper={momentJalaali}
         startDatePlaceholderText="تاریخ شروع"
         endDatePlaceholderText="تاریخ پایان"
-        renderMonthText={month => momentJalaali(month).format('jMMMM jYYYY')}
+        renderMonth={month => momentJalaali(month).format('jMMMM jYYYY')}
         renderDayContents={day => momentJalaali(day).format('jD')}
       />
     );

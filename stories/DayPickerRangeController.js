@@ -148,38 +148,6 @@ storiesOf('DayPickerRangeController', module)
       numberOfMonths={1}
     />
   ))
-  .addWithInfo('single month, custom caption', () => (
-    <DayPickerRangeControllerWrapper
-      onOutsideClick={action('DayPickerSingleDateController::onOutsideClick')}
-      onPrevMonthClick={action('DayPickerSingleDateController::onPrevMonthClick')}
-      onNextMonthClick={action('DayPickerSingleDateController::onNextMonthClick')}
-      numberOfMonths={1}
-      renderMonthElement={({ month, onMonthSelect, onYearSelect }) => (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div>
-            <select
-              value={month.month()}
-              onChange={(e) => { onMonthSelect(month, e.target.value); }}
-            >
-              {moment.months().map((label, value) => (
-                <option value={value}>{label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <select
-              value={month.year()}
-              onChange={(e) => { onYearSelect(month, e.target.value); }}
-            >
-              <option value={moment().year() - 1}>Last year</option>
-              <option value={moment().year()}>{moment().year()}</option>
-              <option value={moment().year() + 1}>Next year</option>
-            </select>
-          </div>
-        </div>
-      )}
-    />
-  ))
   .addWithInfo('3 months', () => (
     <DayPickerRangeControllerWrapper
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
@@ -197,7 +165,7 @@ storiesOf('DayPickerRangeController', module)
     />
   ))
   .addWithInfo('vertical scrollable', () => (
-    <div style={{ height: 500 }}>
+    <div style={{ height: 300 }}>
       <DayPickerRangeControllerWrapper
         onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
         onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
@@ -205,35 +173,6 @@ storiesOf('DayPickerRangeController', module)
         orientation={VERTICAL_SCROLLABLE}
         numberOfMonths={6}
         verticalHeight={800}
-      />
-    </div>
-  ))
-  .addWithInfo('vertical scrollable with custom month nav', () => (
-    <div style={{ height: 500 }}>
-      <DayPickerRangeControllerWrapper
-        onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
-        onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
-        onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
-        orientation={VERTICAL_SCROLLABLE}
-        numberOfMonths={3}
-        verticalHeight={300}
-        navNext={
-          <div style={{ position: 'relative' }}>
-            <span
-              style={{
-                position: 'absolute',
-                bottom: 20,
-                left: 50,
-                fontSize: 24,
-                border: '1px solid gray',
-                width: 200,
-                padding: 10,
-              }}
-            >
-              Show More Months
-            </span>
-          </div>
-        }
       />
     </div>
   ))
@@ -359,19 +298,6 @@ storiesOf('DayPickerRangeController', module)
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
       verticalBorderSpacing={16}
     />
-  ))
-  .addWithInfo('with custom horizontal month spacing applied', () => (
-    <div style={{ height: 500 }}>
-      <DayPickerRangeControllerWrapper
-        onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
-        onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
-        onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
-        orientation={VERTICAL_SCROLLABLE}
-        numberOfMonths={6}
-        verticalHeight={800}
-        horizontalMonthPadding={0}
-      />
-    </div>
   ))
   .addWithInfo('with no nav buttons', () => (
     <DayPickerRangeControllerWrapper

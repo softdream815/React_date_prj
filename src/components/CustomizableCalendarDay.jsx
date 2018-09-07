@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import shallowCompare from 'react-addons-shallow-compare';
 import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps, nonNegativeInteger, or } from 'airbnb-prop-types';
 import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
@@ -8,7 +9,6 @@ import moment from 'moment';
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 import getCalendarDaySettings from '../utils/getCalendarDaySettings';
-import BaseClass, { pureComponentAvailable } from '../utils/baseClass';
 
 import { DAY_SIZE } from '../constants';
 import DefaultTheme from '../theme/DefaultTheme';
@@ -81,7 +81,7 @@ export const defaultStyles = {
 
   hover: {
     background: color.core.borderLight,
-    border: `1px solid ${color.core.borderLight}`,
+    border: `1px double ${color.core.borderLight}`,
     color: 'inherit',
   },
 };
@@ -139,44 +139,40 @@ export const blockedOutOfRangeStyles = {
 
 export const hoveredSpanStyles = {
   background: color.hoveredSpan.backgroundColor,
-  border: `1px double ${color.hoveredSpan.borderColor}`,
+  border: `1px solid ${color.hoveredSpan.borderColor}`,
   color: color.hoveredSpan.color,
 
   hover: {
     background: color.hoveredSpan.backgroundColor_hover,
-    border: `1px double ${color.hoveredSpan.borderColor}`,
+    border: `1px solid ${color.hoveredSpan.borderColor}`,
     color: color.hoveredSpan.color_active,
   },
 };
 
 export const selectedSpanStyles = {
   background: color.selectedSpan.backgroundColor,
-  border: `1px double ${color.selectedSpan.borderColor}`,
+  border: `1px solid ${color.selectedSpan.borderColor}`,
   color: color.selectedSpan.color,
 
   hover: {
     background: color.selectedSpan.backgroundColor_hover,
-    border: `1px double ${color.selectedSpan.borderColor}`,
+    border: `1px solid ${color.selectedSpan.borderColor}`,
     color: color.selectedSpan.color_active,
   },
 };
 
 export const lastInRangeStyles = {
-  borderStyle: 'solid',
-
-  hover: {
-    borderStyle: 'solid',
-  },
+  borderRight: color.core.primary,
 };
 
 export const selectedStyles = {
   background: color.selected.backgroundColor,
-  border: `1px double ${color.selected.borderColor}`,
+  border: `1px solid ${color.selected.borderColor}`,
   color: color.selected.color,
 
   hover: {
     background: color.selected.backgroundColor_hover,
-    border: `1px double ${color.selected.borderColor}`,
+    border: `1px solid ${color.selected.borderColor}`,
     color: color.selected.color_active,
   },
 };
@@ -216,8 +212,7 @@ const defaultProps = {
   phrases: CalendarDayPhrases,
 };
 
-/** @extends React.Component */
-class CustomizableCalendarDay extends BaseClass {
+class CustomizableCalendarDay extends React.Component {
   constructor(...args) {
     super(...args);
 
@@ -226,6 +221,10 @@ class CustomizableCalendarDay extends BaseClass {
     };
 
     this.setButtonRef = this.setButtonRef.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState);
   }
 
   componentDidUpdate(prevProps) {
@@ -370,4 +369,4 @@ export default withStyles(({ reactDates: { font } }) => ({
   CalendarDay__defaultCursor: {
     cursor: 'default',
   },
-}), { pureComponent: pureComponentAvailable })(CustomizableCalendarDay);
+}))(CustomizableCalendarDay);

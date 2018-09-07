@@ -22,6 +22,7 @@ const event = { preventDefault() {}, stopPropagation() {} };
 describe('DayPicker', () => {
   beforeEach(() => {
     sinon.stub(PureDayPicker.prototype, 'adjustDayPickerHeight');
+    sinon.stub(PureDayPicker.prototype, 'updateStateAfterMonthTransition');
   });
 
   afterEach(() => {
@@ -422,52 +423,6 @@ describe('DayPicker', () => {
     });
   });
 
-  describe('#onMonthChange', () => {
-    it('sets state.monthTransition to "month_selection"', () => {
-      const wrapper = shallow(<DayPicker />).dive();
-      const date = moment();
-      wrapper.instance().onMonthChange(date);
-      expect(wrapper.state().monthTransition).to.equal('month_selection');
-    });
-
-    it('sets state.nextFocusedDate to passed in date', () => {
-      const wrapper = shallow(<DayPicker />).dive();
-      const date = moment();
-      wrapper.instance().onMonthChange(date);
-      expect(wrapper.state().nextFocusedDate).to.equal(date);
-    });
-
-    it('sets state.currentMonth to passed in month', () => {
-      const wrapper = shallow(<DayPicker />).dive();
-      const date = moment();
-      wrapper.instance().onMonthChange(date);
-      expect(wrapper.state().currentMonth).to.equal(date);
-    });
-  });
-
-  describe('#onYearChange', () => {
-    it('sets state.yearTransition to "year_selection"', () => {
-      const wrapper = shallow(<DayPicker />).dive();
-      const date = moment();
-      wrapper.instance().onYearChange(date);
-      expect(wrapper.state().monthTransition).to.equal('year_selection');
-    });
-
-    it('sets state.nextFocusedDate to passed in date', () => {
-      const wrapper = shallow(<DayPicker />).dive();
-      const date = moment();
-      wrapper.instance().onYearChange(date);
-      expect(wrapper.state().nextFocusedDate).to.equal(date);
-    });
-
-    it('sets state.currentMonth to passed in year', () => {
-      const wrapper = shallow(<DayPicker />).dive();
-      const date = moment();
-      wrapper.instance().onYearChange(date);
-      expect(wrapper.state().currentMonth).to.equal(date);
-    });
-  });
-
   describe('#onPrevMonthClick', () => {
     it('sets state.monthTransition to "prev"', () => {
       const wrapper = shallow(<DayPicker />).dive();
@@ -796,23 +751,6 @@ describe('DayPicker', () => {
           expect(adjustDayPickerHeightSpy.calledTwice).to.equal(false);
         });
 
-        it('calls adjustDayPickerHeight if orientation has changed from HORIZONTAL_ORIENTATION to VERTICAL_ORIENTATION', () => {
-          const wrapper = mount(<DayPicker orientation={HORIZONTAL_ORIENTATION} />);
-          wrapper.setState({
-            orientation: VERTICAL_ORIENTATION,
-          });
-          expect(adjustDayPickerHeightSpy).to.have.property('callCount', 2);
-        });
-
-        it('calls adjustDayPickerHeight if daySize has changed', () => {
-          const wrapper = mount(<DayPicker daySize={39} orientation={HORIZONTAL_ORIENTATION} />);
-          wrapper.setState({
-            daySize: 40,
-            orientation: HORIZONTAL_ORIENTATION,
-          });
-          expect(adjustDayPickerHeightSpy).to.have.property('callCount', 2);
-        });
-
         it('calls updateStateAfterMonthTransition if state.monthTransition is truthy', () => {
           const wrapper = mount(<DayPicker orientation={HORIZONTAL_ORIENTATION} />);
           wrapper.setState({
@@ -845,23 +783,6 @@ describe('DayPicker', () => {
             monthTransition: null,
           });
           expect(adjustDayPickerHeightSpy.called).to.equal(false);
-        });
-
-        it('calls adjustDayPickerHeight if orientation has changed from VERTICAL_ORIENTATION to HORIZONTAL_ORIENTATION', () => {
-          const wrapper = mount(<DayPicker orientation={VERTICAL_ORIENTATION} />);
-          wrapper.setState({
-            orientation: HORIZONTAL_ORIENTATION,
-          });
-          expect(adjustDayPickerHeightSpy).to.have.property('callCount', 2);
-        });
-
-        it('calls adjustDayPickerHeight if daySize has changed', () => {
-          const wrapper = mount(<DayPicker daySize={39} orientation={VERTICAL_ORIENTATION} />);
-          wrapper.setState({
-            daySize: 40,
-            orientation: VERTICAL_ORIENTATION,
-          });
-          expect(adjustDayPickerHeightSpy).to.have.property('callCount', 2);
         });
 
         it('calls updateStateAfterMonthTransition if state.monthTransition is truthy', () => {

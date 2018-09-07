@@ -31,16 +31,6 @@ describe('DateInput', () => {
         expect(wrapper.find('input').props().value).to.equal(DATE_STRING);
       });
 
-      it('props.displayValue overrides dateString when not null', () => {
-        const DATE_STRING = 'foobar';
-        const DISPLAY_VALUE = 'display-value';
-        const wrapper = shallow(<DateInput id="date" />).dive();
-        wrapper.setState({ dateString: DATE_STRING });
-        expect(wrapper.find('input').props().value).to.equal(DATE_STRING);
-        wrapper.setProps({ displayValue: DISPLAY_VALUE });
-        expect(wrapper.find('input').props().value).to.equal(DISPLAY_VALUE);
-      });
-
       describe('props.readOnly is truthy', () => {
         it('sets readOnly', () => {
           const wrapper = shallow(<DateInput id="date" readOnly />).dive();
@@ -239,10 +229,12 @@ describe('DateInput', () => {
 
     describe('focus/isFocused', () => {
       const el = {
+        blur() {},
         focus() {},
       };
 
       beforeEach(() => {
+        sinon.spy(el, 'blur');
         sinon.spy(el, 'focus');
       });
 
@@ -260,7 +252,22 @@ describe('DateInput', () => {
 
         wrapper.setProps({ focused: true, isFocused: true });
 
+        expect(el.blur).to.have.property('callCount', 0);
         expect(el.focus).to.have.property('callCount', 1);
+      });
+
+      it('blurs when becoming unfocused', () => {
+        const wrapper = shallow(
+          <DateInput id="date" focused isFocused />,
+          { disableLifecycleMethods: false },
+        ).dive();
+
+        wrapper.instance().inputRef = el;
+
+        wrapper.setProps({ focused: false, isFocused: false });
+
+        expect(el.blur).to.have.property('callCount', 1);
+        expect(el.focus).to.have.property('callCount', 0);
       });
     });
 

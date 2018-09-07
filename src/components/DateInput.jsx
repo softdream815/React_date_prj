@@ -7,7 +7,6 @@ import isTouchDevice from 'is-touch-device';
 
 import getInputHeight from '../utils/getInputHeight';
 import openDirectionShape from '../shapes/OpenDirectionShape';
-import BaseClass, { pureComponentAvailable } from '../utils/baseClass';
 import {
   OPEN_DOWN,
   OPEN_UP,
@@ -78,8 +77,7 @@ const defaultProps = {
   isFocused: false,
 };
 
-/** @extends React.Component */
-class DateInput extends BaseClass {
+class DateInput extends React.Component {
   constructor(props) {
     super(props);
 
@@ -99,8 +97,7 @@ class DateInput extends BaseClass {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dateString } = this.state;
-    if (dateString && nextProps.displayValue) {
+    if (this.state.dateString && nextProps.displayValue) {
       this.setState({
         dateString: '',
       });
@@ -113,6 +110,8 @@ class DateInput extends BaseClass {
 
     if (focused && isFocused) {
       this.inputRef.focus();
+    } else {
+      this.inputRef.blur();
     }
   }
 
@@ -189,7 +188,7 @@ class DateInput extends BaseClass {
       theme: { reactDates },
     } = this.props;
 
-    const value = dateString || displayValue || '';
+    const value = displayValue || dateString || '';
     const screenReaderMessageId = `DateInput__screen-reader-message-${id}`;
 
     const withFang = showCaret && focused;
@@ -381,4 +380,4 @@ export default withStyles(({
     stroke: color.core.border,
     fill: 'transparent',
   },
-}), { pureComponent: pureComponentAvailable })(DateInput);
+}))(DateInput);

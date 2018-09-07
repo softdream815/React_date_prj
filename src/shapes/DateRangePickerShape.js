@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
-import { mutuallyExclusiveProps, nonNegativeInteger } from 'airbnb-prop-types';
+import { nonNegativeInteger } from 'airbnb-prop-types';
 
 import { DateRangePickerPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
-import FocusedInputShape from './FocusedInputShape';
-import IconPositionShape from './IconPositionShape';
-import OrientationShape from './OrientationShape';
-import DisabledShape from './DisabledShape';
-import anchorDirectionShape from './AnchorDirectionShape';
-import openDirectionShape from './OpenDirectionShape';
-import DayOfWeekShape from './DayOfWeekShape';
-import CalendarInfoPositionShape from './CalendarInfoPositionShape';
+import FocusedInputShape from '../shapes/FocusedInputShape';
+import IconPositionShape from '../shapes/IconPositionShape';
+import OrientationShape from '../shapes/OrientationShape';
+import DisabledShape from '../shapes/DisabledShape';
+import anchorDirectionShape from '../shapes/AnchorDirectionShape';
+import openDirectionShape from '../shapes/OpenDirectionShape';
+import DayOfWeekShape from '../shapes/DayOfWeekShape';
+import CalendarInfoPositionShape from '../shapes/CalendarInfoPositionShape';
 
 export default {
   // required props for a functional interactive DateRangePicker
@@ -47,8 +47,7 @@ export default {
   keepFocusOnInput: PropTypes.bool,
 
   // calendar presentation and interaction related props
-  renderMonthText: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'),
-  renderMonthElement: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'),
+  renderMonth: PropTypes.func,
   orientation: OrientationShape,
   anchorDirection: anchorDirectionShape,
   openDirection: openDirectionShape,
