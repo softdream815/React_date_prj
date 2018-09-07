@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
-import { nonNegativeInteger } from 'airbnb-prop-types';
+import { mutuallyExclusiveProps, nonNegativeInteger } from 'airbnb-prop-types';
 
 import { SingleDatePickerPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
-import IconPositionShape from '../shapes/IconPositionShape';
-import OrientationShape from '../shapes/OrientationShape';
-import anchorDirectionShape from '../shapes/AnchorDirectionShape';
-import openDirectionShape from '../shapes/OpenDirectionShape';
-import DayOfWeekShape from '../shapes/DayOfWeekShape';
-import CalendarInfoPositionShape from '../shapes/CalendarInfoPositionShape';
+import IconPositionShape from './IconPositionShape';
+import OrientationShape from './OrientationShape';
+import anchorDirectionShape from './AnchorDirectionShape';
+import openDirectionShape from './OpenDirectionShape';
+import DayOfWeekShape from './DayOfWeekShape';
+import CalendarInfoPositionShape from './CalendarInfoPositionShape';
 
 export default {
   // required props for a functional interactive SingleDatePicker
@@ -40,7 +40,8 @@ export default {
   keepFocusOnInput: PropTypes.bool,
 
   // calendar presentation and interaction related props
-  renderMonth: PropTypes.func,
+  renderMonthText: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'),
+  renderMonthElement: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'),
   orientation: OrientationShape,
   anchorDirection: anchorDirectionShape,
   openDirection: openDirectionShape,
@@ -61,6 +62,7 @@ export default {
   isRTL: PropTypes.bool,
   verticalHeight: nonNegativeInteger,
   transitionDuration: nonNegativeInteger,
+  horizontalMonthPadding: nonNegativeInteger,
 
   // navigation related props
   navPrev: PropTypes.node,

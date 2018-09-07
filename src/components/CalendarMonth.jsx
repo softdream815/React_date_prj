@@ -2,9 +2,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import shallowCompare from 'react-addons-shallow-compare';
 import momentPropTypes from 'react-moment-proptypes';
-import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
+import { forbidExtraProps, mutuallyExclusiveProps, nonNegativeInteger } from 'airbnb-prop-types';
 import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 import moment from 'moment';
 
@@ -19,12 +18,13 @@ import getCalendarMonthWeeks from '../utils/getCalendarMonthWeeks';
 import isSameDay from '../utils/isSameDay';
 import toISODateString from '../utils/toISODateString';
 
+import ModifiersShape from '../shapes/ModifiersShape';
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
+import BaseClass, { pureComponentAvailable } from '../utils/baseClass';
 
 import {
   HORIZONTAL_ORIENTATION,
-  VERTICAL_ORIENTATION,
   VERTICAL_SCROLLABLE,
   DAY_SIZE,
 } from '../constants';
@@ -32,19 +32,23 @@ import {
 const propTypes = forbidExtraProps({
   ...withStylesPropTypes,
   month: momentPropTypes.momentObj,
+  horizontalMonthPadding: nonNegativeInteger,
   isVisible: PropTypes.bool,
   enableOutsideDays: PropTypes.bool,
-  modifiers: PropTypes.object,
+  modifiers: PropTypes.objectOf(ModifiersShape),
   orientation: ScrollableOrientationShape,
   daySize: nonNegativeInteger,
   onDayClick: PropTypes.func,
   onDayMouseEnter: PropTypes.func,
   onDayMouseLeave: PropTypes.func,
-  renderMonth: PropTypes.func,
+  onMonthSelect: PropTypes.func,
+  onYearSelect: PropTypes.func,
+  renderMonthText: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'),
   renderCalendarDay: PropTypes.func,
   renderDayContents: PropTypes.func,
+  renderMonthElement: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'),
   firstDayOfWeek: DayOfWeekShape,
-  setMonthHeight: PropTypes.func,
+  setMonthTitleHeight: PropTypes.func,
   verticalBorderSpacing: nonNegativeInteger,
 
   focusedDate: momentPropTypes.momentObj, // indicates focusable day
@@ -58,6 +62,7 @@ const propTypes = forbidExtraProps({
 
 const defaultProps = {
   month: moment(),
+  horizontalMonthPadding: 13,
   isVisible: true,
   enableOutsideDays: false,
   modifiers: {},
@@ -66,11 +71,14 @@ const defaultProps = {
   onDayClick() {},
   onDayMouseEnter() {},
   onDayMouseLeave() {},
-  renderMonth: null,
+  onMonthSelect() {},
+  onYearSelect() {},
+  renderMonthText: null,
   renderCalendarDay: props => (<CalendarDay {...props} />),
   renderDayContents: null,
+  renderMonthElement: null,
   firstDayOfWeek: null,
-  setMonthHeight() {},
+  setMonthTitleHeight: null,
 
   focusedDate: null,
   isFocused: false,
@@ -82,7 +90,8 @@ const defaultProps = {
   verticalBorderSpacing: undefined,
 };
 
-class CalendarMonth extends React.Component {
+/** @extends React.Component */
+class CalendarMonth extends BaseClass {
   constructor(props) {
     super(props);
 
@@ -95,19 +104,25 @@ class CalendarMonth extends React.Component {
     };
 
     this.setCaptionRef = this.setCaptionRef.bind(this);
-    this.setGridRef = this.setGridRef.bind(this);
-    this.setMonthHeight = this.setMonthHeight.bind(this);
+    this.setMonthTitleHeight = this.setMonthTitleHeight.bind(this);
   }
 
   componentDidMount() {
-    this.setMonthHeightTimeout = setTimeout(this.setMonthHeight, 0);
+    this.setMonthTitleHeightTimeout = setTimeout(this.setMonthTitleHeight, 0);
   }
 
   componentWillReceiveProps(nextProps) {
     const { month, enableOutsideDays, firstDayOfWeek } = nextProps;
-    if (!month.isSame(this.props.month)
-        || enableOutsideDays !== this.props.enableOutsideDays
-        || firstDayOfWeek !== this.props.firstDayOfWeek) {
+    const {
+      month: prevMonth,
+      enableOutsideDays: prevEnableOutsideDays,
+      firstDayOfWeek: prevFirstDayOfWeek,
+    } = this.props;
+    if (
+      !month.isSame(prevMonth)
+      || enableOutsideDays !== prevEnableOutsideDays
+      || firstDayOfWeek !== prevFirstDayOfWeek
+    ) {
       this.setState({
         weeks: getCalendarMonthWeeks(
           month,
@@ -118,56 +133,52 @@ class CalendarMonth extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return shallowCompare(this, nextProps, nextState);
-  }
-
   componentWillUnmount() {
-    if (this.setMonthHeightTimeout) {
-      clearTimeout(this.setMonthHeightTimeout);
+    if (this.setMonthTitleHeightTimeout) {
+      clearTimeout(this.setMonthTitleHeightTimeout);
     }
   }
 
-  setMonthHeight() {
-    const { setMonthHeight } = this.props;
-    const captionHeight = calculateDimension(this.captionRef, 'height', true, true);
-    const gridHeight = calculateDimension(this.gridRef, 'height');
-
-    setMonthHeight(captionHeight + gridHeight + 1);
+  setMonthTitleHeight() {
+    const { setMonthTitleHeight } = this.props;
+    if (setMonthTitleHeight) {
+      const captionHeight = calculateDimension(this.captionRef, 'height', true, true);
+      setMonthTitleHeight(captionHeight);
+    }
   }
 
   setCaptionRef(ref) {
     this.captionRef = ref;
   }
 
-  setGridRef(ref) {
-    this.gridRef = ref;
-  }
-
   render() {
     const {
-      month,
-      monthFormat,
-      orientation,
+      dayAriaLabelFormat,
+      daySize,
+      focusedDate,
+      horizontalMonthPadding,
+      isFocused,
       isVisible,
       modifiers,
+      month,
+      monthFormat,
       onDayClick,
       onDayMouseEnter,
       onDayMouseLeave,
-      renderMonth,
+      onMonthSelect,
+      onYearSelect,
+      orientation,
+      phrases,
       renderCalendarDay,
       renderDayContents,
-      daySize,
-      focusedDate,
-      isFocused,
+      renderMonthElement,
+      renderMonthText,
       styles,
-      phrases,
-      dayAriaLabelFormat,
       verticalBorderSpacing,
     } = this.props;
 
     const { weeks } = this.state;
-    const monthTitle = renderMonth ? renderMonth(month) : month.format(monthFormat);
+    const monthTitle = renderMonthText ? renderMonthText(month) : month.format(monthFormat);
 
     const verticalScrollable = orientation === VERTICAL_SCROLLABLE;
 
@@ -175,9 +186,7 @@ class CalendarMonth extends React.Component {
       <div
         {...css(
           styles.CalendarMonth,
-          orientation === HORIZONTAL_ORIENTATION && styles.CalendarMonth__horizontal,
-          orientation === VERTICAL_ORIENTATION && styles.CalendarMonth__vertical,
-          verticalScrollable && styles.CalendarMonth__verticalScrollable,
+          { padding: `0 ${horizontalMonthPadding}px` },
         )}
         data-visible={isVisible}
       >
@@ -188,7 +197,13 @@ class CalendarMonth extends React.Component {
             verticalScrollable && styles.CalendarMonth_caption__verticalScrollable,
           )}
         >
-          <strong>{monthTitle}</strong>
+          {renderMonthElement ? (
+            renderMonthElement({ month, onMonthSelect, onYearSelect })
+          ) : (
+            <strong>
+              {monthTitle}
+            </strong>
+          )}
         </div>
 
         <table
@@ -199,7 +214,7 @@ class CalendarMonth extends React.Component {
           )}
           role="presentation"
         >
-          <tbody ref={this.setGridRef}>
+          <tbody>
             {weeks.map((week, i) => (
               <CalendarWeek key={i}>
                 {week.map((day, dayOfWeek) => renderCalendarDay({
@@ -233,7 +248,6 @@ export default withStyles(({ reactDates: { color, font, spacing } }) => ({
   CalendarMonth: {
     background: color.background,
     textAlign: 'center',
-    padding: '0 13px',
     verticalAlign: 'top',
     userSelect: 'none',
   },
@@ -260,5 +274,4 @@ export default withStyles(({ reactDates: { color, font, spacing } }) => ({
     paddingTop: 12,
     paddingBottom: 7,
   },
-}))(CalendarMonth);
-
+}), { pureComponent: pureComponentAvailable })(CalendarMonth);
