@@ -1,4 +1,4 @@
-import getPhrase from './getPhrase';
+import getPhrase from '../utils/getPhrase';
 import { BLOCKED_MODIFIER } from '../constants';
 
 export default function getCalendarDaySettings(day, ariaLabelFormat, daySize, modifiers, phrases) {

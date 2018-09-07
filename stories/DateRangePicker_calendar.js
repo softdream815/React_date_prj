@@ -6,27 +6,31 @@ import { VERTICAL_ORIENTATION, ANCHOR_RIGHT, OPEN_UP } from '../src/constants';
 
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
 
-function CustomMonthNav({ children, style }) {
-  return (
-    <span
-      style={{
-        border: '1px solid #dce0e0',
-        borderRadius: 2,
-        backgroundColor: '#fff',
-        color: '#484848',
-        fontSize: 24,
-        padding: '0 3px',
-        position: 'absolute',
-        marginTop: -2,
-        top: 30,
-        left: 26,
-        ...style,
-      }}
-    >
-      {children}
-    </span>
-  );
-}
+const TestPrevIcon = () => (
+  <span
+    style={{
+      border: '1px solid #dce0e0',
+      backgroundColor: '#fff',
+      color: '#484848',
+      padding: '3px',
+    }}
+  >
+    Prev
+  </span>
+);
+
+const TestNextIcon = () => (
+  <span
+    style={{
+      border: '1px solid #dce0e0',
+      backgroundColor: '#fff',
+      color: '#484848',
+      padding: '3px',
+    }}
+  >
+    Next
+  </span>
+);
 
 const TestCustomInfoPanel = () => (
   <div
@@ -122,17 +126,8 @@ storiesOf('DRP - Calendar Props', module)
   ))
   .addWithInfo('with custom month navigation', () => (
     <DateRangePickerWrapper
-      navPrev={<CustomMonthNav>&#8249;</CustomMonthNav>}
-      navNext={<CustomMonthNav style={{ left: 48 }}>&#8250;</CustomMonthNav>}
-      numberOfMonths={1}
-      autoFocus
-    />
-  ))
-  .addWithInfo('vertical with custom month navigation', () => (
-    <DateRangePickerWrapper
-      orientation={VERTICAL_ORIENTATION}
-      navPrev={<CustomMonthNav>&#8249;</CustomMonthNav>}
-      navNext={<CustomMonthNav style={{ left: 48 }}>&#8250;</CustomMonthNav>}
+      navPrev={<TestPrevIcon />}
+      navNext={<TestNextIcon />}
       autoFocus
     />
   ))

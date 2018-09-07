@@ -54,7 +54,7 @@ storiesOf('SingleDatePicker (SDP)', module)
     return (
       <SingleDatePickerWrapper
         placeholder="تقویم فارسی"
-        renderMonthText={month => momentJalaali(month).format('jMMMM jYYYY')}
+        renderMonth={month => momentJalaali(month).format('jMMMM jYYYY')}
         renderDayContents={day => momentJalaali(day).format('jD')}
       />
     );
