@@ -727,7 +727,6 @@ class DayPicker extends BaseClass {
           activeElement
           && activeElement !== document.body
           && this.container.contains(activeElement)
-          && activeElement.blur
         ) {
           activeElement.blur();
         }
