@@ -105,9 +105,6 @@ class DayPickerKeyboardShortcuts extends React.PureComponent {
     // amounts to a very basic focus trap. The user can exit the panel by "pressing" the
     // close button or hitting escape
     switch (e.key) {
-      case 'Enter':
-      case ' ':
-      case 'Spacebar': // for older browsers
       case 'Escape':
         closeKeyboardShortcutsPanel();
         break;
@@ -190,13 +187,6 @@ class DayPickerKeyboardShortcuts extends React.PureComponent {
           type="button"
           aria-label={toggleButtonText}
           onClick={this.onShowKeyboardShortcutsButtonClick}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-            } else if (e.key === 'Space') {
-              this.onShowKeyboardShortcutsButtonClick(e);
-            }
-          }}
           onMouseUp={(e) => {
             e.currentTarget.blur();
           }}
@@ -285,62 +275,40 @@ export default withStyles(({ reactDates: { color, font, zIndex } }) => ({
   },
 
   DayPickerKeyboardShortcuts_show: {
-    width: 33,
-    height: 26,
+    width: 22,
     position: 'absolute',
     zIndex: zIndex + 2,
-
-    '::before': {
-      content: '""',
-      display: 'block',
-      position: 'absolute',
-    },
   },
 
   DayPickerKeyboardShortcuts_show__bottomRight: {
+    borderTop: '26px solid transparent',
+    borderRight: `33px solid ${color.core.primary}`,
     bottom: 0,
     right: 0,
 
-    '::before': {
-      borderTop: '26px solid transparent',
-      borderRight: `33px solid ${color.core.primary}`,
-      bottom: 0,
-      right: 0,
-    },
-
-    ':hover::before': {
+    ':hover': {
       borderRight: `33px solid ${color.core.primary_dark}`,
     },
   },
 
   DayPickerKeyboardShortcuts_show__topRight: {
+    borderBottom: '26px solid transparent',
+    borderRight: `33px solid ${color.core.primary}`,
     top: 0,
     right: 0,
 
-    '::before': {
-      borderBottom: '26px solid transparent',
-      borderRight: `33px solid ${color.core.primary}`,
-      top: 0,
-      right: 0,
-    },
-
-    ':hover::before': {
+    ':hover': {
       borderRight: `33px solid ${color.core.primary_dark}`,
     },
   },
 
   DayPickerKeyboardShortcuts_show__topLeft: {
+    borderBottom: '26px solid transparent',
+    borderLeft: `33px solid ${color.core.primary}`,
     top: 0,
     left: 0,
 
-    '::before': {
-      borderBottom: '26px solid transparent',
-      borderLeft: `33px solid ${color.core.primary}`,
-      top: 0,
-      left: 0,
-    },
-
-    ':hover::before': {
+    ':hover': {
       borderLeft: `33px solid ${color.core.primary_dark}`,
     },
   },
@@ -352,17 +320,17 @@ export default withStyles(({ reactDates: { color, font, zIndex } }) => ({
 
   DayPickerKeyboardShortcuts_showSpan__bottomRight: {
     bottom: 0,
-    right: 5,
+    right: -28,
   },
 
   DayPickerKeyboardShortcuts_showSpan__topRight: {
     top: 1,
-    right: 5,
+    right: -28,
   },
 
   DayPickerKeyboardShortcuts_showSpan__topLeft: {
     top: 1,
-    left: 5,
+    left: -28,
   },
 
   DayPickerKeyboardShortcuts_panel: {
