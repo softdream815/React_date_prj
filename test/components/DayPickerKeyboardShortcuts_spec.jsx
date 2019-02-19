@@ -54,7 +54,7 @@ describe('DayPickerKeyboardShortcuts', () => {
     const openKeyboardShortcutsPanelStub = sinon.stub();
     const showButtonFocusStub = sinon.stub();
 
-    before(() => {
+    beforeEach(() => {
       const wrapper = shallow(<DayPickerKeyboardShortcuts
         openKeyboardShortcutsPanel={openKeyboardShortcutsPanelStub}
       />).dive();
@@ -133,6 +133,17 @@ describe('DayPickerKeyboardShortcuts', () => {
           const buttonWrapper = wrapper.children().find('button');
           buttonWrapper.prop('onMouseUp')(mockEvent);
           expect(mockEvent.currentTarget.blur.callCount).to.equal(1);
+        });
+      });
+
+      describe('renderKeyboardShortcutsButton', () => {
+        it('renders the provided button', () => {
+          function Button() {
+            return (<button type="button">Success!</button>);
+          }
+          const props = { renderKeyboardShortcutsButton: () => (<Button />) };
+          const wrapper = shallow(<DayPickerKeyboardShortcuts {...props} />).dive();
+          expect(wrapper.children().find(Button)).to.have.lengthOf(1);
         });
       });
     });

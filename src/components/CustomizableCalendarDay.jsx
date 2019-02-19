@@ -4,6 +4,7 @@ import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps, nonNegativeInteger, or } from 'airbnb-prop-types';
 import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 import moment from 'moment';
+import raf from 'raf';
 
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
@@ -68,6 +69,8 @@ const propTypes = forbidExtraProps({
   selectedStartStyles: DayStyleShape,
   selectedEndStyles: DayStyleShape,
   afterHoveredStartStyles: DayStyleShape,
+  hoveredStartFirstPossibleEndStyles: DayStyleShape,
+  hoveredStartBlockedMinNightsStyles: DayStyleShape,
 
   // internationalization
   phrases: PropTypes.shape(getPhrasePropTypes(CalendarDayPhrases)),
@@ -204,6 +207,8 @@ const defaultProps = {
   afterHoveredStartStyles: {},
   firstDayOfWeekStyles: {},
   lastDayOfWeekStyles: {},
+  hoveredStartFirstPossibleEndStyles: {},
+  hoveredStartBlockedMinNightsStyles: {},
 
   // internationalization
   phrases: CalendarDayPhrases,
@@ -224,7 +229,11 @@ class CustomizableCalendarDay extends React.PureComponent {
     const { isFocused, tabIndex } = this.props;
     if (tabIndex === 0) {
       if (isFocused || tabIndex !== prevProps.tabIndex) {
-        this.buttonRef.focus();
+        raf(() => {
+          if (this.buttonRef) {
+            this.buttonRef.focus();
+          }
+        });
       }
     }
   }
@@ -289,6 +298,8 @@ class CustomizableCalendarDay extends React.PureComponent {
       selectedStartStyles: selectedStartStylesWithHover,
       selectedEndStyles: selectedEndStylesWithHover,
       afterHoveredStartStyles: afterHoveredStartStylesWithHover,
+      hoveredStartFirstPossibleEndStyles: hoveredStartFirstPossibleEndStylesWithHover,
+      hoveredStartBlockedMinNightsStyles: hoveredStartBlockedMinNightsStylesWithHover,
     } = this.props;
 
     const { isHovered } = this.state;
@@ -315,6 +326,8 @@ class CustomizableCalendarDay extends React.PureComponent {
           modifiers.has('today') && getStyles(todayStylesWithHover, isHovered),
           modifiers.has('first-day-of-week') && getStyles(firstDayOfWeekStylesWithHover, isHovered),
           modifiers.has('last-day-of-week') && getStyles(lastDayOfWeekStylesWithHover, isHovered),
+          modifiers.has('hovered-start-first-possible-end') && getStyles(hoveredStartFirstPossibleEndStylesWithHover, isHovered),
+          modifiers.has('hovered-start-blocked-minimum-nights') && getStyles(hoveredStartBlockedMinNightsStylesWithHover, isHovered),
           modifiers.has('highlighted-calendar') && getStyles(highlightedCalendarStylesWithHover, isHovered),
           modifiers.has('blocked-minimum-nights') && getStyles(blockedMinNightsStylesWithHover, isHovered),
           modifiers.has('blocked-calendar') && getStyles(blockedCalendarStylesWithHover, isHovered),
