@@ -51,8 +51,6 @@ const defaultProps = {
   // input related props
   startDatePlaceholderText: 'Start Date',
   endDatePlaceholderText: 'End Date',
-  startDateAriaLabel: undefined,
-  endDateAriaLabel: undefined,
   startDateOffset: undefined,
   endDateOffset: undefined,
   disabled: false,
@@ -318,11 +316,7 @@ class DateRangePicker extends React.PureComponent {
   responsivizePickerPosition() {
     // It's possible the portal props have been changed in response to window resizes
     // So let's ensure we reset this back to the base state each time
-    const { dayPickerContainerStyles } = this.state;
-
-    if (Object.keys(dayPickerContainerStyles).length > 0) {
-      this.setState({ dayPickerContainerStyles: {} });
-    }
+    this.setState({ dayPickerContainerStyles: {} });
 
     if (!this.isOpened()) {
       return;
@@ -336,6 +330,7 @@ class DateRangePicker extends React.PureComponent {
       withFullScreenPortal,
       appendToBody,
     } = this.props;
+    const { dayPickerContainerStyles } = this.state;
 
     const isAnchoredLeft = anchorDirection === ANCHOR_LEFT;
     if (!withPortal && !withFullScreenPortal) {
@@ -545,11 +540,9 @@ class DateRangePicker extends React.PureComponent {
       startDate,
       startDateId,
       startDatePlaceholderText,
-      startDateAriaLabel,
       endDate,
       endDateId,
       endDatePlaceholderText,
-      endDateAriaLabel,
       focusedInput,
       screenReaderInputMessage,
       showClearDates,
@@ -593,12 +586,10 @@ class DateRangePicker extends React.PureComponent {
         startDateId={startDateId}
         startDatePlaceholderText={startDatePlaceholderText}
         isStartDateFocused={focusedInput === START_DATE}
-        startDateAriaLabel={startDateAriaLabel}
         endDate={endDate}
         endDateId={endDateId}
         endDatePlaceholderText={endDatePlaceholderText}
         isEndDateFocused={focusedInput === END_DATE}
-        endDateAriaLabel={endDateAriaLabel}
         displayFormat={displayFormat}
         showClearDates={showClearDates}
         showCaret={!withPortal && !withFullScreenPortal && !hideFang}

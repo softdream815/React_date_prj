@@ -4,7 +4,6 @@ import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
 import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 import moment from 'moment';
-import raf from 'raf';
 
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
@@ -59,11 +58,7 @@ class CalendarDay extends React.PureComponent {
     const { isFocused, tabIndex } = this.props;
     if (tabIndex === 0) {
       if (isFocused || tabIndex !== prevProps.tabIndex) {
-        raf(() => {
-          if (this.buttonRef) {
-            this.buttonRef.focus();
-          }
-        });
+        this.buttonRef.focus();
       }
     }
   }
@@ -84,7 +79,9 @@ class CalendarDay extends React.PureComponent {
   }
 
   onKeyDown(day, e) {
-    const { onDayClick } = this.props;
+    const {
+      onDayClick,
+    } = this.props;
 
     const { key } = e;
     if (key === 'Enter' || key === ' ') {
@@ -131,16 +128,15 @@ class CalendarDay extends React.PureComponent {
           modifiers.has('first-day-of-week') && styles.CalendarDay__firstDayOfWeek,
           modifiers.has('last-day-of-week') && styles.CalendarDay__lastDayOfWeek,
           modifiers.has('hovered-offset') && styles.CalendarDay__hovered_offset,
-          modifiers.has('hovered-start-first-possible-end') && styles.CalendarDay__hovered_start_first_possible_end,
-          modifiers.has('hovered-start-blocked-minimum-nights') && styles.CalendarDay__hovered_start_blocked_min_nights,
           modifiers.has('highlighted-calendar') && styles.CalendarDay__highlighted_calendar,
           modifiers.has('blocked-minimum-nights') && styles.CalendarDay__blocked_minimum_nights,
           modifiers.has('blocked-calendar') && styles.CalendarDay__blocked_calendar,
           hoveredSpan && styles.CalendarDay__hovered_span,
           modifiers.has('selected-span') && styles.CalendarDay__selected_span,
+          modifiers.has('last-in-range') && styles.CalendarDay__last_in_range,
           modifiers.has('selected-start') && styles.CalendarDay__selected_start,
           modifiers.has('selected-end') && styles.CalendarDay__selected_end,
-          selected && !modifiers.has('selected-span') && styles.CalendarDay__selected,
+          selected && styles.CalendarDay__selected,
           isOutsideRange && styles.CalendarDay__blocked_out_of_range,
           daySizeStyles,
         )}
@@ -258,6 +254,14 @@ export default withStyles(({ reactDates: { color, font } }) => ({
     },
   },
 
+  CalendarDay__last_in_range: {
+    borderStyle: 'solid',
+
+    ':hover': {
+      borderStyle: 'solid',
+    },
+  },
+
   CalendarDay__selected: {
     background: color.selected.backgroundColor,
     border: `1px double ${color.selected.borderColor}`,
@@ -328,16 +332,6 @@ export default withStyles(({ reactDates: { color, font } }) => ({
       border: `1px solid ${color.blocked_out_of_range.borderColor}`,
       color: color.blocked_out_of_range.color_active,
     },
-  },
-
-  CalendarDay__hovered_start_first_possible_end: {
-    background: color.core.borderLighter,
-    border: `1px double ${color.core.borderLighter}`,
-  },
-
-  CalendarDay__hovered_start_blocked_min_nights: {
-    background: color.core.borderLighter,
-    border: `1px double ${color.core.borderLight}`,
   },
 
   CalendarDay__selected_start: {},

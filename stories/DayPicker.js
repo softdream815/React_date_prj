@@ -10,39 +10,29 @@ import {
 } from '../src/constants';
 
 const TestPrevIcon = () => (
-  <div
+  <span
     style={{
       border: '1px solid #dce0e0',
       backgroundColor: '#fff',
       color: '#484848',
-      left: '22px',
       padding: '3px',
-      position: 'absolute',
-      top: '20px',
-      width: '40px',
     }}
-    tabindex="0"
   >
     Prev
-  </div>
+  </span>
 );
 
 const TestNextIcon = () => (
-  <div
+  <span
     style={{
       border: '1px solid #dce0e0',
       backgroundColor: '#fff',
       color: '#484848',
       padding: '3px',
-      position: 'absolute',
-      right: '22px',
-      top: '20px',
-      width: '40px',
     }}
-    tabindex="0"
   >
     Next
-  </div>
+  </span>
 );
 
 const TestCustomInfoPanel = () => (

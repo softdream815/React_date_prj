@@ -197,12 +197,7 @@ class CalendarMonth extends React.PureComponent {
           )}
         >
           {renderMonthElement ? (
-            renderMonthElement({
-              month,
-              onMonthSelect,
-              onYearSelect,
-              isVisible,
-            })
+            renderMonthElement({ month, onMonthSelect, onYearSelect })
           ) : (
             <strong>
               {monthTitle}

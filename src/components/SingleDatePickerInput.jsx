@@ -20,8 +20,7 @@ const propTypes = forbidExtraProps({
   ...withStylesPropTypes,
   id: PropTypes.string.isRequired,
   children: PropTypes.node,
-  placeholder: PropTypes.string,
-  ariaLabel: PropTypes.string,
+  placeholder: PropTypes.string, // also used as label
   displayValue: PropTypes.string,
   screenReaderMessage: PropTypes.string,
   focused: PropTypes.bool,
@@ -58,7 +57,6 @@ const propTypes = forbidExtraProps({
 const defaultProps = {
   children: null,
   placeholder: 'Select Date',
-  ariaLabel: undefined,
   displayValue: '',
   screenReaderMessage: '',
   focused: false,
@@ -96,7 +94,6 @@ function SingleDatePickerInput({
   id,
   children,
   placeholder,
-  ariaLabel,
   displayValue,
   focused,
   isFocused,
@@ -139,7 +136,7 @@ function SingleDatePickerInput({
     />
   );
 
-  const screenReaderText = screenReaderMessage || phrases.keyboardForwardNavigationInstructions;
+  const screenReaderText = screenReaderMessage || phrases.keyboardNavigationInstructions;
   const inputIcon = (showDefaultInputIcon || customInputIcon !== null) && (
     <button
       {...css(styles.SingleDatePickerInput_calendarIcon)}
@@ -167,8 +164,7 @@ function SingleDatePickerInput({
 
       <DateInput
         id={id}
-        placeholder={placeholder}
-        ariaLabel={ariaLabel}
+        placeholder={placeholder} // also used as label
         displayValue={displayValue}
         screenReaderMessage={screenReaderText}
         focused={focused}

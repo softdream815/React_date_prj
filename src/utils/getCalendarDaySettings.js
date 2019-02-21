@@ -1,24 +1,6 @@
 import getPhrase from './getPhrase';
 import { BLOCKED_MODIFIER } from '../constants';
 
-function isSelected(modifiers) {
-  return modifiers.has('selected')
-  || modifiers.has('selected-span')
-  || modifiers.has('selected-start')
-  || modifiers.has('selected-end');
-}
-
-function shouldUseDefaultCursor(modifiers) {
-  return modifiers.has('blocked-minimum-nights')
-  || modifiers.has('blocked-calendar')
-  || modifiers.has('blocked-out-of-range');
-}
-
-function isHoveredSpan(modifiers) {
-  if (isSelected(modifiers)) return false;
-  return modifiers.has('hovered-span') || modifiers.has('after-hovered-start');
-}
-
 function getAriaLabel(phrases, modifiers, day, ariaLabelFormat) {
   const {
     chooseAvailableDate,
@@ -36,13 +18,30 @@ function getAriaLabel(phrases, modifiers, day, ariaLabelFormat) {
     return getPhrase(dateIsSelectedAsStartDate, formattedDate);
   } if (modifiers.has('selected-end') && dateIsSelectedAsEndDate) {
     return getPhrase(dateIsSelectedAsEndDate, formattedDate);
-  } if (isSelected(modifiers) && dateIsSelected) {
+  } if (modifiers.has('selected') && dateIsSelected) {
     return getPhrase(dateIsSelected, formattedDate);
   } if (modifiers.has(BLOCKED_MODIFIER)) {
     return getPhrase(dateIsUnavailable, formattedDate);
   }
 
   return getPhrase(chooseAvailableDate, formattedDate);
+}
+
+function isSelected(modifiers) {
+  return modifiers.has('selected')
+  || modifiers.has('selected-start')
+  || modifiers.has('selected-end');
+}
+
+function shouldUseDefaultCursor(modifiers) {
+  return modifiers.has('blocked-minimum-nights')
+  || modifiers.has('blocked-calendar')
+  || modifiers.has('blocked-out-of-range');
+}
+
+function isHoveredSpan(modifiers) {
+  if (isSelected(modifiers)) return false;
+  return modifiers.has('hovered-span') || modifiers.has('after-hovered-start');
 }
 
 export default function getCalendarDaySettings(day, ariaLabelFormat, daySize, modifiers, phrases) {

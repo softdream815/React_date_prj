@@ -12,7 +12,7 @@ module.exports = function pureComponentFallback({ types: t, template }) {
         t.stringLiteral('shouldComponentUpdate')
       ),
       [t.identifier('nextProps'), t.identifier('nextState')],
-      t.blockStatement([template('return !shallowEqual(this.props, nextProps) || !shallowEqual(this.state, nextState);')()]),
+      t.blockStatement([template('return shallowCompare(this, nextProps, nextState);')()]),
       true
     );
     return method;
@@ -38,11 +38,11 @@ module.exports = function pureComponentFallback({ types: t, template }) {
     visitor: {
       Program: {
         exit({ node }, { file }) {
-          if (file.get('addShallowEqualImport')) {
-            const shallowEqualImportDeclaration = t.importDeclaration([
-              t.importDefaultSpecifier(t.identifier('shallowEqual')),
-            ], t.stringLiteral('enzyme-shallow-equal'));
-            node.body.unshift(shallowEqualImportDeclaration);
+          if (file.get('addShallowCompareImport')) {
+            const shallowCompareImportDeclaration = t.importDeclaration([
+              t.importDefaultSpecifier(t.identifier('shallowCompare')),
+            ], t.stringLiteral('react-addons-shallow-compare'));
+            node.body.unshift(shallowCompareImportDeclaration);
           }
         },
       },
@@ -60,7 +60,7 @@ module.exports = function pureComponentFallback({ types: t, template }) {
           ));
 
           if (!existingSCU) {
-            file.set('addShallowEqualImport', true);
+            file.set('addShallowCompareImport', true);
             path.get('body').unshiftContainer('body', buildShouldComponentUpdate());
           }
         }

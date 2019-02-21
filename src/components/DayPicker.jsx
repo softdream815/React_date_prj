@@ -71,7 +71,6 @@ const propTypes = forbidExtraProps({
   transitionDuration: nonNegativeInteger,
   verticalBorderSpacing: nonNegativeInteger,
   horizontalMonthPadding: nonNegativeInteger,
-  renderKeyboardShortcutsButton: PropTypes.func,
 
   // navigation props
   disablePrev: PropTypes.bool,
@@ -132,7 +131,6 @@ export const defaultProps = {
   transitionDuration: undefined,
   verticalBorderSpacing: undefined,
   horizontalMonthPadding: 13,
-  renderKeyboardShortcutsButton: undefined,
 
   // navigation props
   disablePrev: false,
@@ -212,7 +210,6 @@ class DayPicker extends React.PureComponent {
 
     this.calendarMonthGridHeight = 0;
     this.setCalendarInfoWidthTimeout = null;
-    this.setCalendarMonthGridHeightTimeout = null;
 
     this.onKeyDown = this.onKeyDown.bind(this);
     this.throttledKeyDown = throttle(this.onFinalKeyDown, 200, { trailing: false });
@@ -354,7 +351,6 @@ class DayPicker extends React.PureComponent {
 
   componentWillUnmount() {
     clearTimeout(this.setCalendarInfoWidthTimeout);
-    clearTimeout(this.setCalendarMonthGridHeightTimeout);
   }
 
   onKeyDown(e) {
@@ -773,7 +769,7 @@ class DayPicker extends React.PureComponent {
     if (monthHeight !== this.calendarMonthGridHeight) {
       this.transitionContainer.style.height = `${monthHeight}px`;
       if (!this.calendarMonthGridHeight) {
-        this.setCalendarMonthGridHeightTimeout = setTimeout(() => {
+        setTimeout(() => {
           this.setState({ hasSetHeight: true });
         }, 0);
       }
@@ -932,7 +928,6 @@ class DayPicker extends React.PureComponent {
       renderDayContents,
       renderCalendarInfo,
       renderMonthElement,
-      renderKeyboardShortcutsButton,
       calendarInfoPosition,
       hideKeyboardShortcutsPanel,
       onOutsideClick,
@@ -1124,7 +1119,6 @@ class DayPicker extends React.PureComponent {
                   openKeyboardShortcutsPanel={this.openKeyboardShortcutsPanel}
                   closeKeyboardShortcutsPanel={this.closeKeyboardShortcutsPanel}
                   phrases={phrases}
-                  renderKeyboardShortcutsButton={renderKeyboardShortcutsButton}
                 />
               )}
             </div>
