@@ -138,8 +138,6 @@ The following is a list of other *OPTIONAL* props you may provide to the `DateRa
 // input related props
 startDatePlaceholderText: PropTypes.string,
 endDatePlaceholderText: PropTypes.string,
-startDateAriaLabel: PropTypes.string,
-endDateAriaLabel: PropTypes.string,
 disabled: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf([START_DATE, END_DATE])]),
 required: PropTypes.bool,
 readOnly: PropTypes.bool,
@@ -173,7 +171,7 @@ numberOfMonths: PropTypes.number,
 keepOpenOnDateSelect: PropTypes.bool,
 reopenPickerOnClearDates: PropTypes.bool,
 renderCalendarInfo: PropTypes.func,
-renderMonthElement: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'), PropTypes.func, // ({ month, onMonthSelect, onYearSelect, isVisible }) => PropTypes.node,
+renderMonthElement: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'), PropTypes.func, // ({ month, onMonthSelect, onYearSelect }) => PropTypes.node,
 hideKeyboardShortcutsPanel: PropTypes.bool,
 
 // navigation related props
@@ -223,7 +221,6 @@ The following is a list of other *OPTIONAL* props you may provide to the `Single
 ```js
 // input related props
 placeholder: PropTypes.string,
-ariaLabel: PropTypes.string,
 disabled: PropTypes.bool,
 required: PropTypes.bool,
 readOnly: PropTypes.bool,
@@ -254,7 +251,7 @@ numberOfMonths: PropTypes.number,
 keepOpenOnDateSelect: PropTypes.bool,
 reopenPickerOnClearDate: PropTypes.bool,
 renderCalendarInfo: PropTypes.func,
-renderMonthElement: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'), // ({ month, onMonthSelect, onYearSelect, isVisible }) => PropTypes.node,
+renderMonthElement: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'), // ({ month, onMonthSelect, onYearSelect }) => PropTypes.node,
 hideKeyboardShortcutsPanel: PropTypes.bool,
 daySize: nonNegativeInteger,
 isRTL: PropTypes.bool,
@@ -296,7 +293,6 @@ Here is the minimum *REQUIRED* setup you need to get the `DayPickerRangeControll
   onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
   focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
   onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
-  initialVisibleMonth={() => moment().add(2, "M")} // PropTypes.func or null,
 />
 ```
 
@@ -309,7 +305,7 @@ The following is a list of other *OPTIONAL* props you may provide to the `DayPic
   withPortal: PropTypes.bool,
   initialVisibleMonth: PropTypes.func,
   renderCalendarInfo: PropTypes.func,
-  renderMonthElement: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'), // ({ month, onMonthSelect, onYearSelect, isVisible }) => PropTypes.node,
+  renderMonthElement: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'), // ({ month, onMonthSelect, onYearSelect }) => PropTypes.node,
   onOutsideClick: PropTypes.func,
   keepOpenOnDateSelect: PropTypes.bool,
   noBorder: PropTypes.bool,

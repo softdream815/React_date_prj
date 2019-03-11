@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
-import { withStyles, withStylesPropTypes } from 'react-with-styles';
+import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 
 import { DateRangePickerInputPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
@@ -32,12 +32,10 @@ const propTypes = forbidExtraProps({
 
   startDateId: PropTypes.string,
   startDatePlaceholderText: PropTypes.string,
-  startDateAriaLabel: PropTypes.string,
   screenReaderMessage: PropTypes.string,
 
   endDateId: PropTypes.string,
   endDatePlaceholderText: PropTypes.string,
-  endDateAriaLabel: PropTypes.string,
 
   onStartDateFocus: PropTypes.func,
   onEndDateFocus: PropTypes.func,
@@ -86,8 +84,6 @@ const defaultProps = {
   endDateId: END_DATE,
   startDatePlaceholderText: 'Start Date',
   endDatePlaceholderText: 'End Date',
-  startDateAriaLabel: undefined,
-  endDateAriaLabel: undefined,
   screenReaderMessage: '',
   onStartDateFocus() {},
   onEndDateFocus() {},
@@ -132,7 +128,6 @@ const defaultProps = {
 
 function DateRangePickerInput({
   children,
-  css,
   startDate,
   startDateId,
   startDatePlaceholderText,
@@ -141,7 +136,6 @@ function DateRangePickerInput({
   onStartDateChange,
   onStartDateFocus,
   onStartDateShiftTab,
-  startDateAriaLabel,
   endDate,
   endDateId,
   endDatePlaceholderText,
@@ -149,7 +143,6 @@ function DateRangePickerInput({
   onEndDateChange,
   onEndDateFocus,
   onEndDateTab,
-  endDateAriaLabel,
   onKeyDownArrowDown,
   onKeyDownQuestionMark,
   onClearDates,
@@ -191,11 +184,7 @@ function DateRangePickerInput({
     />
   );
 
-  const screenReaderStartDateText = screenReaderMessage
-    || phrases.keyboardForwardNavigationInstructions;
-  const screenReaderEndDateText = screenReaderMessage
-    || phrases.keyboardBackwardNavigationInstructions;
-
+  const screenReaderText = screenReaderMessage || phrases.keyboardNavigationInstructions;
   const inputIcon = (showDefaultInputIcon || customInputIcon !== null) && (
     <button
       {...css(styles.DateRangePickerInput_calendarIcon)}
@@ -227,9 +216,8 @@ function DateRangePickerInput({
       <DateInput
         id={startDateId}
         placeholder={startDatePlaceholderText}
-        ariaLabel={startDateAriaLabel}
         displayValue={startDate}
-        screenReaderMessage={screenReaderStartDateText}
+        screenReaderMessage={screenReaderText}
         focused={isStartDateFocused}
         isFocused={isFocused}
         disabled={startDateDisabled}
@@ -247,8 +235,6 @@ function DateRangePickerInput({
         regular={regular}
       />
 
-      {children}
-
       {
         <div
           {...css(styles.DateRangePickerInput_arrow)}
@@ -259,12 +245,13 @@ function DateRangePickerInput({
         </div>
       }
 
+      {isStartDateFocused && children}
+
       <DateInput
         id={endDateId}
         placeholder={endDatePlaceholderText}
-        ariaLabel={endDateAriaLabel}
         displayValue={endDate}
-        screenReaderMessage={screenReaderEndDateText}
+        screenReaderMessage={screenReaderText}
         focused={isEndDateFocused}
         isFocused={isFocused}
         disabled={endDateDisabled}
@@ -282,6 +269,7 @@ function DateRangePickerInput({
         regular={regular}
       />
 
+      {isEndDateFocused && children}
 
       {showClearDates && (
         <button

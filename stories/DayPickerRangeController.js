@@ -31,37 +31,29 @@ const dayPickerRangeControllerInfo = `The ${monospace('DayPickerRangeController'
   implement your own inputs.`;
 
 const TestPrevIcon = () => (
-  <div
+  <span
     style={{
       border: '1px solid #dce0e0',
       backgroundColor: '#fff',
       color: '#484848',
-      left: '22px',
       padding: '3px',
-      position: 'absolute',
-      top: '20px',
     }}
-    tabindex="0"
   >
     Prev
-  </div>
+  </span>
 );
 
 const TestNextIcon = () => (
-  <div
+  <span
     style={{
       border: '1px solid #dce0e0',
       backgroundColor: '#fff',
       color: '#484848',
       padding: '3px',
-      position: 'absolute',
-      right: '22px',
-      top: '20px',
     }}
-    tabindex="0"
   >
     Next
-  </div>
+  </span>
 );
 
 const TestCustomInfoPanel = () => (
@@ -272,7 +264,7 @@ storiesOf('DayPickerRangeController', module)
         verticalHeight={300}
         navNext={(
           <div style={{ position: 'relative' }}>
-            <span
+  <span
               style={{
                 position: 'absolute',
                 bottom: 20,
@@ -285,8 +277,8 @@ storiesOf('DayPickerRangeController', module)
             >
               Show More Months
             </span>
-          </div>
-        )}
+</div>
+)}
       />
     </div>
   )))
@@ -301,8 +293,8 @@ storiesOf('DayPickerRangeController', module)
   )))
   .add('with custom month navigation and blocked navigation (minDate and maxDate)', withInfo()(() => (
     <DayPickerRangeControllerWrapper
-      minDate={moment().subtract(2, 'months').startOf('month')}
-      maxDate={moment().add(2, 'months').endOf('month')}
+      minDate={moment('2018-07-01')}
+      maxDate={moment('2018-10-20')}
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
@@ -391,8 +383,8 @@ storiesOf('DayPickerRangeController', module)
   )))
   .add('with navigation blocked (minDate and maxDate)', withInfo()(() => (
     <DayPickerRangeControllerWrapper
-      minDate={moment().subtract(2, 'months').startOf('month')}
-      maxDate={moment().add(2, 'months').endOf('month')}
+      minDate={moment('2018-07-01')}
+      maxDate={moment('2018-10-20')}
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}

@@ -32,8 +32,6 @@ export default {
   endDateOffset: PropTypes.func,
   endDateId: PropTypes.string.isRequired,
   endDatePlaceholderText: PropTypes.string,
-  startDateAriaLabel: PropTypes.string,
-  endDateAriaLabel: PropTypes.string,
   disabled: DisabledShape,
   required: PropTypes.bool,
   readOnly: PropTypes.bool,

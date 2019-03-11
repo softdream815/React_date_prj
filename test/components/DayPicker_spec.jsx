@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment/min/moment-with-locales';
+import moment from 'moment';
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
 import { mount, shallow } from 'enzyme';
@@ -16,8 +16,7 @@ import {
   VERTICAL_SCROLLABLE,
 } from '../../src/constants';
 
-
-const today = moment().locale('en');
+const today = moment();
 const event = { preventDefault() {}, stopPropagation() {} };
 
 describe('DayPicker', () => {
@@ -803,15 +802,6 @@ describe('DayPicker', () => {
       });
       wrapper.instance().closeKeyboardShortcutsPanel();
       expect(onKeyboardShortcutsPanelCloseStub.callCount).to.equal(1);
-    });
-  });
-
-  describe('#weekHeaderNames', () => {
-    it('returns weekheaders in fr', () => {
-      const INITIAL_MONTH = moment().locale('fr');
-      const wrapper = shallow(<DayPicker initialVisibleMonth={() => INITIAL_MONTH} />).dive();
-      const instance = wrapper.instance();
-      expect(instance.getWeekHeaders()).to.be.eql(INITIAL_MONTH.localeData().weekdaysMin());
     });
   });
 

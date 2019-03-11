@@ -18,7 +18,7 @@ import { VERTICAL_SCROLLABLE } from '../../src/constants';
 const today = moment().startOf('day').hours(12);
 
 function getCallsByModifier(stub, modifier) {
-  return stub.getCalls().filter((call) => call.args[call.args.length - 1] === modifier);
+  return stub.getCalls().filter(call => call.args[call.args.length - 1] === modifier);
 }
 
 describe('DayPickerSingleDateController', () => {
@@ -111,9 +111,9 @@ describe('DayPickerSingleDateController', () => {
             const startOfMonth = today.clone().startOf('month');
             visibleDays = {
               [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: new Set(),
-                [toISODateString(startOfMonth.clone().add(1, 'day'))]: new Set(),
-                [toISODateString(startOfMonth.clone().add(2, 'days'))]: new Set(),
+                [toISODateString(startOfMonth)]: [],
+                [toISODateString(startOfMonth.clone().add(1, 'day'))]: [],
+                [toISODateString(startOfMonth.clone().add(2, 'days'))]: [],
               },
             };
           });
@@ -194,9 +194,9 @@ describe('DayPickerSingleDateController', () => {
             const startOfMonth = today.clone().startOf('month');
             visibleDays = {
               [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: new Set(),
-                [toISODateString(startOfMonth.clone().add(1, 'day'))]: new Set(),
-                [toISODateString(startOfMonth.clone().add(2, 'days'))]: new Set(),
+                [toISODateString(startOfMonth)]: [],
+                [toISODateString(startOfMonth.clone().add(1, 'day'))]: [],
+                [toISODateString(startOfMonth.clone().add(2, 'days'))]: [],
               },
             };
           });
@@ -289,9 +289,9 @@ describe('DayPickerSingleDateController', () => {
             const startOfMonth = today.clone().startOf('month');
             visibleDays = {
               [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: new Set(),
-                [toISODateString(startOfMonth.clone().add(1, 'day'))]: new Set(),
-                [toISODateString(startOfMonth.clone().add(2, 'days'))]: new Set(),
+                [toISODateString(startOfMonth)]: [],
+                [toISODateString(startOfMonth.clone().add(1, 'day'))]: [],
+                [toISODateString(startOfMonth.clone().add(2, 'days'))]: [],
               },
             };
           });
@@ -372,9 +372,9 @@ describe('DayPickerSingleDateController', () => {
             const startOfMonth = today.clone().startOf('month');
             visibleDays = {
               [toISOMonthString(startOfMonth)]: {
-                [toISODateString(startOfMonth)]: new Set(),
-                [toISODateString(startOfMonth.clone().add(1, 'day'))]: new Set(),
-                [toISODateString(startOfMonth.clone().add(2, 'days'))]: new Set(),
+                [toISODateString(startOfMonth)]: [],
+                [toISODateString(startOfMonth.clone().add(1, 'day'))]: [],
+                [toISODateString(startOfMonth.clone().add(2, 'days'))]: [],
               },
             };
           });
@@ -1087,7 +1087,7 @@ describe('DayPickerSingleDateController', () => {
           onFocusChange={sinon.stub()}
         />
       ));
-      const modifiers = wrapper.instance().addModifier({}, today, 'foo');
+      const modifiers = wrapper.instance().addModifier({}, today);
       expect(Object.keys(modifiers)).to.contain(toISOMonthString(today));
     });
 
@@ -1098,18 +1098,6 @@ describe('DayPickerSingleDateController', () => {
           onFocusChange={sinon.stub()}
         />
       ));
-      const modifiers = wrapper.instance().addModifier({}, today);
-      expect(Object.keys(modifiers[toISOMonthString(today)])).to.contain(toISODateString(today));
-    });
-
-    it('is resilient when visibleDays is an empty object', () => {
-      const wrapper = shallow((
-        <DayPickerSingleDateController
-          onDateChange={sinon.stub()}
-          onFocusChange={sinon.stub()}
-        />
-      ));
-      wrapper.instance().setState({ visibleDays: {} });
       const modifiers = wrapper.instance().addModifier({}, today);
       expect(Object.keys(modifiers[toISOMonthString(today)])).to.contain(toISODateString(today));
     });
@@ -1177,30 +1165,6 @@ describe('DayPickerSingleDateController', () => {
       const modifiers = wrapper.instance().addModifier(updatedDays, nextMonth, modifierToAdd);
       expect(Array.from(modifiers[nextMonthISO][nextMonthDayISO])).to.contain(modifierToAdd);
     });
-
-    it('return value now has modifier arg for day after multiplying number of months', () => {
-      const modifierToAdd = 'foo';
-      const numberOfMonths = 2;
-      const nextMonth = today.clone().add(numberOfMonths, 'month');
-      const nextMonthISO = toISOMonthString(nextMonth);
-      const nextMonthDayISO = toISODateString(nextMonth);
-      const updatedDays = {
-        [nextMonthISO]: { [nextMonthDayISO]: new Set(['bar', 'baz']) },
-      };
-      const wrapper = shallow((
-        <DayPickerSingleDateController
-          onDatesChange={sinon.stub()}
-          onFocusChange={sinon.stub()}
-          numberOfMonths={numberOfMonths}
-          orientation={VERTICAL_SCROLLABLE}
-        />
-      )).instance();
-      let modifiers = wrapper.addModifier(updatedDays, nextMonth, modifierToAdd);
-      expect(Array.from(modifiers[nextMonthISO][nextMonthDayISO])).to.not.contain(modifierToAdd);
-      wrapper.onMultiplyScrollableMonths();
-      modifiers = wrapper.addModifier(updatedDays, nextMonth, modifierToAdd);
-      expect(Array.from(modifiers[nextMonthISO][nextMonthDayISO])).to.contain(modifierToAdd);
-    });
   });
 
   describe('#deleteModifier', () => {
@@ -1236,14 +1200,8 @@ describe('DayPickerSingleDateController', () => {
           onFocusChange={sinon.stub()}
         />
       ));
-
-      const isoMonth = toISOMonthString(today);
-      const isoDate = toISODateString(today);
-      const modifiers = wrapper.instance()
-        .deleteModifier({ [isoMonth]: { [isoDate]: new Set(['foo']) } }, today, 'foo');
-
-      expect(Object.keys(modifiers)).to.contain(isoMonth);
-      expect(modifiers[isoMonth][isoDate].size).to.equal(0);
+      const modifiers = wrapper.instance().deleteModifier({}, today);
+      expect(Object.keys(modifiers)).to.contain(toISOMonthString(today));
     });
 
     it('has day ISO as key one layer down', () => {
@@ -1255,17 +1213,6 @@ describe('DayPickerSingleDateController', () => {
       ));
       const modifiers = wrapper.instance().addModifier({}, today);
       expect(Object.keys(modifiers[toISOMonthString(today)])).to.contain(toISODateString(today));
-    });
-
-    it('is resilient when visibleDays is an empty object', () => {
-      const wrapper = shallow((
-        <DayPickerSingleDateController
-          onDateChange={sinon.stub()}
-          onFocusChange={sinon.stub()}
-        />
-      ));
-      wrapper.instance().setState({ visibleDays: {} });
-      expect(() => { wrapper.instance().deleteModifier({}, today); }).to.not.throw();
     });
 
     it('return value no longer has modifier arg for day if was in first arg', () => {

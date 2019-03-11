@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps, mutuallyExclusiveProps, nonNegativeInteger } from 'airbnb-prop-types';
-import { withStyles, withStylesPropTypes } from 'react-with-styles';
+import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
 import moment from 'moment';
 
 import { CalendarDayPhrases } from '../defaultPhrases';
@@ -74,7 +74,7 @@ const defaultProps = {
   onMonthSelect() {},
   onYearSelect() {},
   renderMonthText: null,
-  renderCalendarDay: (props) => (<CalendarDay {...props} />),
+  renderCalendarDay: props => (<CalendarDay {...props} />),
   renderDayContents: null,
   renderMonthElement: null,
   firstDayOfWeek: null,
@@ -152,7 +152,6 @@ class CalendarMonth extends React.PureComponent {
 
   render() {
     const {
-      css,
       dayAriaLabelFormat,
       daySize,
       focusedDate,
@@ -198,12 +197,7 @@ class CalendarMonth extends React.PureComponent {
           )}
         >
           {renderMonthElement ? (
-            renderMonthElement({
-              month,
-              onMonthSelect,
-              onYearSelect,
-              isVisible,
-            })
+            renderMonthElement({ month, onMonthSelect, onYearSelect })
           ) : (
             <strong>
               {monthTitle}

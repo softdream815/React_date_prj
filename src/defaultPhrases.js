@@ -1,5 +1,4 @@
 const calendarLabel = 'Calendar';
-const roleDescription = 'datepicker';
 const closeDatePicker = 'Close';
 const focusStartDate = 'Interact with the calendar and add the check-in date for your trip.';
 const clearDate = 'Clear Date';
@@ -23,8 +22,8 @@ const moveFocusByOneWeek = 'Move backward (up) and forward (down) by one week.';
 const moveFocusByOneMonth = 'Switch months.';
 const moveFocustoStartAndEndOfWeek = 'Go to the first or last day of a week.';
 const returnFocusToInput = 'Return to the date input field.';
-const keyboardForwardNavigationInstructions = 'Navigate forward to interact with the calendar and select a date. Press the question mark key to get the keyboard shortcuts for changing dates.';
-const keyboardBackwardNavigationInstructions = 'Navigate backward to interact with the calendar and select a date. Press the question mark key to get the keyboard shortcuts for changing dates.';
+const keyboardNavigationInstructions = `Press the down arrow key to interact with the calendar and
+  select a date. Press the question mark key to get the keyboard shortcuts for changing dates.`;
 
 const chooseAvailableStartDate = ({ date }) => `Choose ${date} as your check-in date. It’s available.`;
 const chooseAvailableEndDate = ({ date }) => `Choose ${date} as your check-out date. It’s available.`;
@@ -36,7 +35,6 @@ const dateIsSelectedAsEndDate = ({ date }) => `Selected as end date. ${date}`;
 
 export default {
   calendarLabel,
-  roleDescription,
   closeDatePicker,
   focusStartDate,
   clearDate,
@@ -60,8 +58,7 @@ export default {
   moveFocusByOneMonth,
   moveFocustoStartAndEndOfWeek,
   returnFocusToInput,
-  keyboardForwardNavigationInstructions,
-  keyboardBackwardNavigationInstructions,
+  keyboardNavigationInstructions,
 
   chooseAvailableStartDate,
   chooseAvailableEndDate,
@@ -73,7 +70,6 @@ export default {
 
 export const DateRangePickerPhrases = {
   calendarLabel,
-  roleDescription,
   closeDatePicker,
   clearDates,
   focusStartDate,
@@ -96,8 +92,7 @@ export const DateRangePickerPhrases = {
   moveFocusByOneMonth,
   moveFocustoStartAndEndOfWeek,
   returnFocusToInput,
-  keyboardForwardNavigationInstructions,
-  keyboardBackwardNavigationInstructions,
+  keyboardNavigationInstructions,
   chooseAvailableStartDate,
   chooseAvailableEndDate,
   dateIsUnavailable,
@@ -109,13 +104,11 @@ export const DateRangePickerPhrases = {
 export const DateRangePickerInputPhrases = {
   focusStartDate,
   clearDates,
-  keyboardForwardNavigationInstructions,
-  keyboardBackwardNavigationInstructions,
+  keyboardNavigationInstructions,
 };
 
 export const SingleDatePickerPhrases = {
   calendarLabel,
-  roleDescription,
   closeDatePicker,
   clearDate,
   jumpToPrevMonth,
@@ -137,8 +130,7 @@ export const SingleDatePickerPhrases = {
   moveFocusByOneMonth,
   moveFocustoStartAndEndOfWeek,
   returnFocusToInput,
-  keyboardForwardNavigationInstructions,
-  keyboardBackwardNavigationInstructions,
+  keyboardNavigationInstructions,
   chooseAvailableDate,
   dateIsUnavailable,
   dateIsSelected,
@@ -146,13 +138,11 @@ export const SingleDatePickerPhrases = {
 
 export const SingleDatePickerInputPhrases = {
   clearDate,
-  keyboardForwardNavigationInstructions,
-  keyboardBackwardNavigationInstructions,
+  keyboardNavigationInstructions,
 };
 
 export const DayPickerPhrases = {
   calendarLabel,
-  roleDescription,
   jumpToPrevMonth,
   jumpToNextMonth,
   keyboardShortcuts,

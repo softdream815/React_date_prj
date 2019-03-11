@@ -11,7 +11,6 @@ module.exports = (config) => {
     files: ['test/browser-main.js'],
 
     webpack: {
-      mode: 'development',
       externals: {
         sinon: true,
       },
@@ -33,15 +32,11 @@ module.exports = (config) => {
               path.join(__dirname, 'test'),
               require.resolve('airbnb-js-shims'),
             ],
-            options: {
-              presets: [
-                // setting modules to false so it does not transform twice
-                ['airbnb', { modules: false }],
-                // transform to cjs so sinon can stub properly
-                ['@babel/preset-env', { modules: 'cjs' }],
-              ],
+            query: {
+              presets: ['airbnb'],
             },
           },
+          { test: /\.json$/, loader: 'json-loader' },
 
           // Inject the Airbnb shims into the bundle
           { test: /test\/_helpers/, loader: 'imports-loader?shims=airbnb-js-shims' },

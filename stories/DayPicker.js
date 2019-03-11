@@ -15,10 +15,9 @@ const TestPrevIcon = () => (
       border: '1px solid #dce0e0',
       backgroundColor: '#fff',
       color: '#484848',
-      left: '22px',
+      left: '24px',
       padding: '3px',
       position: 'absolute',
-      top: '20px',
       width: '40px',
     }}
     tabindex="0"
@@ -35,8 +34,7 @@ const TestNextIcon = () => (
       color: '#484848',
       padding: '3px',
       position: 'absolute',
-      right: '22px',
-      top: '20px',
+      right: '24px',
       width: '40px',
     }}
     tabindex="0"

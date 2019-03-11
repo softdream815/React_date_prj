@@ -8,7 +8,6 @@ module.exports = {
         use: ['style-loader', 'raw-loader', 'sass-loader'],
         include: [
           path.resolve(__dirname, '../css/'),
-          /@storybook\/addon-info/,
         ],
       },
       {
