@@ -58,7 +58,7 @@ const propTypes = forbidExtraProps({
 const defaultProps = {
   children: null,
   placeholder: 'Select Date',
-  ariaLabel: undefined,
+  ariaLabel: null,
   displayValue: '',
   screenReaderMessage: '',
   focused: false,

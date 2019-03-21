@@ -90,13 +90,13 @@ const defaultProps = {
   startDateId: START_DATE,
   startDatePlaceholderText: 'Start Date',
   isStartDateFocused: false,
-  startDateAriaLabel: undefined,
+  startDateAriaLabel: null,
 
   endDate: null,
   endDateId: END_DATE,
   endDatePlaceholderText: 'End Date',
   isEndDateFocused: false,
-  endDateAriaLabel: undefined,
+  endDateAriaLabel: null,
 
   screenReaderMessage: '',
   showClearDates: false,

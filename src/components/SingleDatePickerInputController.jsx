@@ -79,7 +79,7 @@ const defaultProps = {
   focused: false,
 
   placeholder: '',
-  ariaLabel: undefined,
+  ariaLabel: null,
   screenReaderMessage: 'Date',
   showClearDate: false,
   showCaret: false,

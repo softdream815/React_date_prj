@@ -48,7 +48,7 @@ const defaultProps = {
   // input related props
   id: 'date',
   placeholder: 'Date',
-  ariaLabel: undefined,
+  ariaLabel: null,
   disabled: false,
   required: false,
   readOnly: false,
@@ -249,7 +249,7 @@ class SingleDatePicker extends React.PureComponent {
 
   onFocusOut(e) {
     const { onFocusChange } = this.props;
-    if (this.dayPickerContainer.contains(e.relatedTarget || e.target) || this.dayPickerContainer.contains(e.target)) return;
+    if (this.dayPickerContainer.contains(e.relatedTarget || e.target)) return;
     onFocusChange({ focused: false });
   }
 
