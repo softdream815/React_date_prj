@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
-import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
+import { withStyles, withStylesPropTypes } from 'react-with-styles';
 import moment from 'moment';
+import raf from 'raf';
 
 import { CalendarDayPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
@@ -58,7 +59,11 @@ class CalendarDay extends React.PureComponent {
     const { isFocused, tabIndex } = this.props;
     if (tabIndex === 0) {
       if (isFocused || tabIndex !== prevProps.tabIndex) {
-        this.buttonRef.focus();
+        raf(() => {
+          if (this.buttonRef) {
+            this.buttonRef.focus();
+          }
+        });
       }
     }
   }
@@ -102,6 +107,7 @@ class CalendarDay extends React.PureComponent {
       tabIndex,
       styles,
       phrases,
+      css,
     } = this.props;
 
     if (!day) return <td />;

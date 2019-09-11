@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
-import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
+import { withStyles, withStylesPropTypes } from 'react-with-styles';
 import throttle from 'lodash/throttle';
 import isTouchDevice from 'is-touch-device';
 
@@ -26,8 +26,9 @@ const FANG_STROKE_BOTTOM = `M0,0 ${FANG_WIDTH_PX / 2},${FANG_HEIGHT_PX} ${FANG_W
 const propTypes = forbidExtraProps({
   ...withStylesPropTypes,
   id: PropTypes.string.isRequired,
-  placeholder: PropTypes.string, // also used as label
+  placeholder: PropTypes.string,
   displayValue: PropTypes.string,
+  ariaLabel: PropTypes.string,
   screenReaderMessage: PropTypes.string,
   focused: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -55,6 +56,7 @@ const propTypes = forbidExtraProps({
 const defaultProps = {
   placeholder: 'Select Date',
   displayValue: '',
+  ariaLabel: undefined,
   screenReaderMessage: '',
   focused: false,
   disabled: false,
@@ -172,6 +174,7 @@ class DateInput extends React.PureComponent {
     const {
       id,
       placeholder,
+      ariaLabel,
       displayValue,
       screenReaderMessage,
       focused,
@@ -187,6 +190,7 @@ class DateInput extends React.PureComponent {
       block,
       styles,
       theme: { reactDates },
+      css,
     } = this.props;
 
     const value = dateString || displayValue || '';
@@ -217,7 +221,7 @@ class DateInput extends React.PureComponent {
             focused && styles.DateInput_input__focused,
             disabled && styles.DateInput_input__disabled,
           )}
-          aria-label={placeholder}
+          aria-label={ariaLabel === undefined ? placeholder : ariaLabel}
           type="text"
           id={id}
           name={id}
