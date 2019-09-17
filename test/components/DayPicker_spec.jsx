@@ -3,7 +3,6 @@ import moment from 'moment/min/moment-with-locales';
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
 import { mount, shallow } from 'enzyme';
-import { cloneDeep } from 'lodash';
 
 import * as isDayVisible from '../../src/utils/isDayVisible';
 
@@ -15,7 +14,6 @@ import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_ORIENTATION,
   VERTICAL_SCROLLABLE,
-  NAV_POSITION_BOTTOM,
 } from '../../src/constants';
 
 
@@ -108,32 +106,6 @@ describe('DayPicker', () => {
       });
     });
 
-    describe('DayPickerNavigation', () => {
-      it('is rendered before CalendarMonthGrid in DayPicker_focusRegion', () => {
-        const wrapper = shallow(<DayPicker />).dive();
-        expect(wrapper.find(DayPickerNavigation)).to.have.lengthOf(1);
-        expect(
-          wrapper
-            .find('[className^="DayPicker_focusRegion"]')
-            .childAt(0)
-            .type(),
-        ).to.equal(DayPickerNavigation);
-      });
-
-      describe('navPosition === NAV_POSITION_BOTTOM', () => {
-        it('is rendered after CalendarMonthGrid in DayPicker_focusRegion', () => {
-          const wrapper = shallow(<DayPicker navPosition={NAV_POSITION_BOTTOM} />).dive();
-          expect(wrapper.find(DayPickerNavigation)).to.have.lengthOf(1);
-          expect(
-            wrapper
-              .find('[className^="DayPicker_focusRegion"]')
-              .childAt(1)
-              .type(),
-          ).to.equal(DayPickerNavigation);
-        });
-      });
-    });
-
     describe('DayPickerKeyboardShortcuts', () => {
       it('component exists if state.isTouchDevice is false and hideKeyboardShortcutsPanel is false', () => {
         const wrapper = shallow(<DayPicker hideKeyboardShortcutsPanel={false} />).dive();
@@ -162,18 +134,6 @@ describe('DayPicker', () => {
         expect(dayPickerKeyboardShortcuts.prop('renderKeyboardShortcutsButton'))
           .to
           .eql(testRenderKeyboardShortcutsButton);
-      });
-
-      it('component exists with custom panel render function if renderKeyboardShortcutsPanel is passed down', () => {
-        const testRenderKeyboardShortcutsPanel = () => {};
-        const wrapper = shallow(
-          <DayPicker renderKeyboardShortcutsPanel={testRenderKeyboardShortcutsPanel} />,
-        ).dive();
-        const dayPickerKeyboardShortcuts = wrapper.find(DayPickerKeyboardShortcuts);
-        expect(dayPickerKeyboardShortcuts).to.have.lengthOf(1);
-        expect(dayPickerKeyboardShortcuts.prop('renderKeyboardShortcutsPanel'))
-          .to
-          .eql(testRenderKeyboardShortcutsPanel);
       });
     });
   });
@@ -869,23 +829,6 @@ describe('DayPicker', () => {
       const wrapper = shallow(<DayPicker initialVisibleMonth={() => INITIAL_MONTH} />).dive();
       const instance = wrapper.instance();
       expect(instance.getWeekHeaders()).to.be.eql(INITIAL_MONTH.localeData().weekdaysMin());
-    });
-  });
-
-  describe('#getWeekHeaders', () => {
-    it('returns unmutated weekday headers for currentMonth in a future', () => {
-      sinon.stub(PureDayPicker.prototype, 'render');
-
-      const getWeekHeadersSpy = sinon.spy(PureDayPicker.prototype, 'getWeekHeaders');
-      const INITIAL_MONTH = moment().add(2, 'Months').week(3).weekday(3);
-      const wrapper = shallow(<DayPicker initialVisibleMonth={() => INITIAL_MONTH} />).dive();
-      const instance = wrapper.instance();
-      const state = cloneDeep(wrapper.state());
-
-      expect(instance.getWeekHeaders()).to.be.eql(INITIAL_MONTH.localeData().weekdaysMin());
-      expect(instance.state).not.to.equal(state);
-      expect(instance.state).to.eql(state);
-      expect(getWeekHeadersSpy).to.have.property('callCount', 1);
     });
   });
 

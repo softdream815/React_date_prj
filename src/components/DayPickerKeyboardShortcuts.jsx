@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
-import { css, withStyles, withStylesPropTypes } from 'react-with-styles';
+import { withStyles, withStylesPropTypes } from 'react-with-styles';
 
 import { DayPickerKeyboardShortcutsPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
@@ -164,6 +164,7 @@ class DayPickerKeyboardShortcuts extends React.PureComponent {
     const {
       block,
       buttonLocation,
+      css,
       showKeyboardShortcutsPanel,
       closeKeyboardShortcutsPanel,
       styles,
@@ -218,8 +219,8 @@ class DayPickerKeyboardShortcuts extends React.PureComponent {
             </span>
           </button>
         )}
-        {showKeyboardShortcutsPanel && (
-          renderKeyboardShortcutsPanel ? (
+        {showKeyboardShortcutsPanel
+          && (renderKeyboardShortcutsPanel ? (
             renderKeyboardShortcutsPanel({
               closeButtonAriaLabel: phrases.hideKeyboardShortcutsPanel,
               keyboardShortcuts: this.keyboardShortcuts,
@@ -271,8 +272,7 @@ class DayPickerKeyboardShortcuts extends React.PureComponent {
                 ))}
               </ul>
             </div>
-          )
-        )}
+          ))}
       </div>
     );
   }
