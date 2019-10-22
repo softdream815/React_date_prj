@@ -16,7 +16,7 @@ function shouldUseDefaultCursor(modifiers) {
 
 function isHoveredSpan(modifiers) {
   if (isSelected(modifiers)) return false;
-  return modifiers.has('hovered-span') || modifiers.has('after-hovered-start') || modifiers.has('before-hovered-end');
+  return modifiers.has('hovered-span') || modifiers.has('after-hovered-start');
 }
 
 function getAriaLabel(phrases, modifiers, day, ariaLabelFormat) {
