@@ -327,28 +327,6 @@ describe('DayPickerRangeController', () => {
           expect(isSameDay(afterHoverStartCalls[0].args[1], dayAfterStartDate)).to.equal(true);
           expect(isSameDay(afterHoverStartCalls[0].args[2], firstAvailableDate)).to.equal(true);
         });
-
-        it('calls getStateForNewMonth with nextProps when date is not visible', () => {
-          const getStateForNewMonthSpy = sinon.spy(
-            DayPickerRangeController.prototype,
-            'getStateForNewMonth',
-          );
-          const startDate = moment();
-          const nextStartDate = startDate.clone().add(2, 'months');
-
-          const wrapper = shallow((
-            <DayPickerRangeController {...props} startDate={startDate} />
-          ));
-
-          getStateForNewMonthSpy.resetHistory();
-
-          wrapper.instance().componentWillReceiveProps({
-            ...props,
-            startDate: nextStartDate,
-          });
-
-          expect(getStateForNewMonthSpy.callCount).to.equal(1);
-        });
       });
 
       describe('endDate changed from one date to another', () => {
@@ -400,8 +378,6 @@ describe('DayPickerRangeController', () => {
             ...props,
             endDate: nextEndDate,
           });
-
-          expect(getStateForNewMonthSpy.callCount).to.equal(1);
         });
       });
     });
@@ -1637,7 +1613,7 @@ describe('DayPickerRangeController', () => {
         describe('start date has changed, previous start date is falsey, start and end date is truthy', () => {
           it('calls deleteModifier with `no-selected-start-before-selected-end` if day is before selected end date', () => {
             const deleteModifierSpy = sinon.spy(DayPickerRangeController.prototype, 'deleteModifier');
-            const endDate = moment('1993-10-27');
+            const endDate = today.clone().add(10, 'days');
             const wrapper = shallow(
               <DayPickerRangeController
                 {...props}
@@ -1645,15 +1621,18 @@ describe('DayPickerRangeController', () => {
                 endDate={endDate}
               />,
             );
-            const newStartDate = endDate.clone().subtract(10, 'days');
-            const numberVisibleDays = 91;
+            const newStartDate = today;
+            const visibleDays = wrapper.instance().state.visibleDays;
+            const numberOfVisibleDays = Object.values(visibleDays).reduce((total, visibleDayArray) => {
+              return total + Object.keys(visibleDayArray).length;
+            }, 0);
             wrapper.instance().componentWillReceiveProps({
               ...props,
               endDate,
               startDate: newStartDate,
             });
             const noSelectedStartBeforeSelectedEndCalls = getCallsByModifier(deleteModifierSpy, 'no-selected-start-before-selected-end');
-            expect(noSelectedStartBeforeSelectedEndCalls.length).to.equal(numberVisibleDays);
+            expect(noSelectedStartBeforeSelectedEndCalls.length).to.equal(numberOfVisibleDays);
           });
         });
       });
