@@ -259,8 +259,7 @@ export default class DayPickerRangeController extends React.PureComponent {
     this.onNextMonthClick = this.onNextMonthClick.bind(this);
     this.onMonthChange = this.onMonthChange.bind(this);
     this.onYearChange = this.onYearChange.bind(this);
-    this.onGetNextScrollableMonths = this.onGetNextScrollableMonths.bind(this);
-    this.onGetPrevScrollableMonths = this.onGetPrevScrollableMonths.bind(this);
+    this.onMultiplyScrollableMonths = this.onMultiplyScrollableMonths.bind(this);
     this.getFirstFocusableDay = this.getFirstFocusableDay.bind(this);
   }
 
@@ -990,7 +989,7 @@ export default class DayPickerRangeController extends React.PureComponent {
     });
   }
 
-  onGetNextScrollableMonths() {
+  onMultiplyScrollableMonths() {
     const { numberOfMonths, enableOutsideDays } = this.props;
     const { currentMonth, visibleDays } = this.state;
 
@@ -999,22 +998,6 @@ export default class DayPickerRangeController extends React.PureComponent {
     const newVisibleDays = getVisibleDays(nextMonth, numberOfMonths, enableOutsideDays, true);
 
     this.setState({
-      visibleDays: {
-        ...visibleDays,
-        ...this.getModifiers(newVisibleDays),
-      },
-    });
-  }
-
-  onGetPrevScrollableMonths() {
-    const { numberOfMonths, enableOutsideDays } = this.props;
-    const { currentMonth, visibleDays } = this.state;
-
-    const firstPreviousMonth = currentMonth.clone().subtract(numberOfMonths, 'month');
-    const newVisibleDays = getVisibleDays(firstPreviousMonth, numberOfMonths, enableOutsideDays, true);
-
-    this.setState({
-      currentMonth: firstPreviousMonth.clone(),
       visibleDays: {
         ...visibleDays,
         ...this.getModifiers(newVisibleDays),
@@ -1334,8 +1317,7 @@ export default class DayPickerRangeController extends React.PureComponent {
         onTab={onTab}
         onShiftTab={onShiftTab}
         onYearChange={this.onYearChange}
-        onGetNextScrollableMonths={this.onGetNextScrollableMonths}
-        onGetPrevScrollableMonths={this.onGetPrevScrollableMonths}
+        onMultiplyScrollableMonths={this.onMultiplyScrollableMonths}
         monthFormat={monthFormat}
         renderMonthText={renderMonthText}
         renderWeekHeaderElement={renderWeekHeaderElement}

@@ -51,8 +51,6 @@ const PREV_TRANSITION = 'prev';
 const NEXT_TRANSITION = 'next';
 const MONTH_SELECTION_TRANSITION = 'month_selection';
 const YEAR_SELECTION_TRANSITION = 'year_selection';
-const PREV_NAV = 'prev_nav';
-const NEXT_NAV = 'next_nav';
 
 const propTypes = forbidExtraProps({
   ...withStylesPropTypes,
@@ -93,8 +91,7 @@ const propTypes = forbidExtraProps({
   onNextMonthClick: PropTypes.func,
   onMonthChange: PropTypes.func,
   onYearChange: PropTypes.func,
-  onGetNextScrollableMonths: PropTypes.func, // VERTICAL_SCROLLABLE daypickers only
-  onGetPrevScrollableMonths: PropTypes.func, // VERTICAL_SCROLLABLE daypickers only
+  onMultiplyScrollableMonths: PropTypes.func, // VERTICAL_SCROLLABLE daypickers only
 
   // month props
   renderMonthText: mutuallyExclusiveProps(PropTypes.func, 'renderMonthText', 'renderMonthElement'),
@@ -161,8 +158,7 @@ export const defaultProps = {
   onNextMonthClick() {},
   onMonthChange() {},
   onYearChange() {},
-  onGetNextScrollableMonths() {},
-  onGetPrevScrollableMonths() {},
+  onMultiplyScrollableMonths() {},
 
   // month props
   renderMonthText: null,
@@ -242,8 +238,7 @@ class DayPicker extends React.PureComponent {
     this.onMonthChange = this.onMonthChange.bind(this);
     this.onYearChange = this.onYearChange.bind(this);
 
-    this.getNextScrollableMonths = this.getNextScrollableMonths.bind(this);
-    this.getPrevScrollableMonths = this.getPrevScrollableMonths.bind(this);
+    this.multiplyScrollableMonths = this.multiplyScrollableMonths.bind(this);
     this.updateStateAfterMonthTransition = this.updateStateAfterMonthTransition.bind(this);
 
     this.openKeyboardShortcutsPanel = this.openKeyboardShortcutsPanel.bind(this);
@@ -709,25 +704,13 @@ class DayPicker extends React.PureComponent {
     return false;
   }
 
-  getNextScrollableMonths(e) {
-    const { onGetNextScrollableMonths } = this.props;
+  multiplyScrollableMonths(e) {
+    const { onMultiplyScrollableMonths } = this.props;
     if (e) e.preventDefault();
 
-    if (onGetNextScrollableMonths) onGetNextScrollableMonths(e);
+    if (onMultiplyScrollableMonths) onMultiplyScrollableMonths(e);
 
     this.setState(({ scrollableMonthMultiple }) => ({
-      scrollableMonthMultiple: scrollableMonthMultiple + 1,
-    }));
-  }
-
-  getPrevScrollableMonths(e) {
-    const { numberOfMonths, onGetPrevScrollableMonths } = this.props;
-    if (e) e.preventDefault();
-
-    if (onGetPrevScrollableMonths) onGetPrevScrollableMonths(e);
-
-    this.setState(({ currentMonth, scrollableMonthMultiple }) => ({
-      currentMonth: currentMonth.clone().subtract(numberOfMonths, 'month'),
       scrollableMonthMultiple: scrollableMonthMultiple + 1,
     }));
   }
@@ -859,7 +842,7 @@ class DayPicker extends React.PureComponent {
     });
   }
 
-  renderNavigation(navDirection = null) {
+  renderNavigation() {
     const {
       dayPickerNavigationInlineStyles,
       disablePrev,
@@ -879,22 +862,16 @@ class DayPicker extends React.PureComponent {
       return null;
     }
 
-    const onPrevMonthClick =
-      orientation === VERTICAL_SCROLLABLE
-        ? this.getPrevScrollableMonths
-        : this.onPrevMonthClick;
-
-    const onNextMonthClick =
-      orientation === VERTICAL_SCROLLABLE
-        ? this.getNextScrollableMonths
-        : this.onNextMonthClick;
+    const onNextMonthClick = orientation === VERTICAL_SCROLLABLE
+      ? this.multiplyScrollableMonths
+      : this.onNextMonthClick;
 
     return (
       <DayPickerNavigation
         disablePrev={disablePrev}
         disableNext={disableNext}
         inlineStyles={dayPickerNavigationInlineStyles}
-        onPrevMonthClick={onPrevMonthClick}
+        onPrevMonthClick={this.onPrevMonthClick}
         onNextMonthClick={onNextMonthClick}
         navPosition={navPosition}
         navPrev={navPrev}
@@ -904,12 +881,6 @@ class DayPicker extends React.PureComponent {
         orientation={orientation}
         phrases={phrases}
         isRTL={isRTL}
-        showNavNextButton={
-          !(orientation === VERTICAL_SCROLLABLE && navDirection === PREV_NAV)
-        }
-        showNavPrevButton={
-          !(orientation === VERTICAL_SCROLLABLE && navDirection === NEXT_NAV)
-        }
       />
     );
   }
@@ -1147,7 +1118,6 @@ class DayPicker extends React.PureComponent {
                 )}
                 ref={this.setTransitionContainerRef}
               >
-                {verticalScrollable && this.renderNavigation(PREV_NAV)}
                 <CalendarMonthGrid
                   setMonthTitleHeight={!monthTitleHeight ? this.setMonthTitleHeight : undefined}
                   translationValue={translationValue}
@@ -1180,7 +1150,7 @@ class DayPicker extends React.PureComponent {
                   verticalBorderSpacing={verticalBorderSpacing}
                   horizontalMonthPadding={horizontalMonthPadding}
                 />
-                {verticalScrollable && this.renderNavigation(NEXT_NAV)}
+                {verticalScrollable && this.renderNavigation()}
               </div>
 
               {!verticalScrollable
