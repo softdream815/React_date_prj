@@ -363,10 +363,4 @@ storiesOf('DayPickerSingleDateController', module)
       onNextMonthClick={action('DayPickerSingleDateController::onNextMonthClick')}
       verticalBorderSpacing={16}
     />
-  )))
-  .add('with no nav buttons', withInfo()(() => (
-    <DayPickerSingleDateControllerWrapper
-      onOutsideClick={action('DayPickerSingleDateController::onOutsideClick')}
-      noNavButtons
-    />
   )));
